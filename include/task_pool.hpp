@@ -55,8 +55,6 @@ public:
 	template<typename FunctionType>
 	auto run(FunctionType&& f)
 	{
-		std::cout << "Running task" << std::endl;
-
 		using result_type = std::invoke_result_t<std::decay_t<FunctionType>>;
 
 		std::packaged_task<result_type()> task(std::forward<FunctionType>(f));
@@ -74,7 +72,7 @@ private:
 	std::atomic_bool _is_running;
 	std::vector<std::thread> _threads;
 
-	std::queue<task> _task_queue;
+	std::queue<ts::task> _task_queue;
 	std::condition_variable _task_cv;
 	std::mutex _task_mtx;
 
