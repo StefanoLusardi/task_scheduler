@@ -85,7 +85,7 @@ namespace ts
             return at(
                 std::forward<ts::clock::time_point>(duration + ts::clock::now()), 
                 std::forward<TaskFunction>(func),
-                std::forward<Args>(args)...)
+                std::forward<Args>(args)...
             );
         }  
 
