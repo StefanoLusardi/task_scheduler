@@ -71,7 +71,6 @@ public:
 private:
 	std::atomic_bool _is_running;
 	std::vector<std::thread> _threads;
-
 	std::queue<ts::task> _task_queue;
 	std::condition_variable _task_cv;
 	std::mutex _task_mtx;

@@ -11,30 +11,22 @@ class task
 {
 	struct task_base
 	{
-		virtual void call() = 0;
-		virtual ~task_base() {}
+		virtual ~task_base() { }
+		virtual void invoke() = 0;
 	};
 
 	template<typename FunctionType>
 	struct task_impl : task_base
 	{
-		FunctionType func;
-
-		task_impl(FunctionType&& f) : func{ std::move(f) }
-		{
-			static_assert(std::is_invocable_v<decltype(f)>);
-		}
-
-		void call()
-		{
-			if constexpr (std::is_invocable_v<decltype(func)>)
-				func();
-		}
+		task_impl(FunctionType&& f) : _func{ std::move(f) } { static_assert(std::is_invocable_v<decltype(f)>); }
+		void invoke() override { _func(); }
+		FunctionType _func;
 	};
 
 public:
 	template<typename FunctionType>
-	task(FunctionType&& f) : _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } { }
+	task(FunctionType&& f) 
+	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } { }
 	
     task(task&) = delete;
     task(const task&) = delete;
@@ -47,7 +39,8 @@ public:
 		return *this;
 	}
 
-	void operator()() { _impl->call(); }
+	void operator()() { _impl->invoke(); }
+	void invoke() { _impl->invoke(); }
 
 private:
 	std::unique_ptr<task_base> _impl;
