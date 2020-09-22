@@ -27,7 +27,7 @@ public:
 	template<typename FunctionType>
 	task(FunctionType&& f) 
 	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } { }
-	
+
     task(task&) = delete;
     task(const task&) = delete;
 	task& operator=(const task&) = delete;
@@ -40,9 +40,8 @@ public:
 	}
 
 	void operator()() { _impl->invoke(); }
-	void invoke() { _impl->invoke(); }
 
-private:
+protected:
 	std::unique_ptr<task_base> _impl;
 };
 

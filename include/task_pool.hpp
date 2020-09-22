@@ -13,7 +13,6 @@
 namespace ts
 {
 
-
 class task_pool
 {
 public:
