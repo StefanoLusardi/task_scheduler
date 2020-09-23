@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-project(task_scheduler 
+project(ssts 
     VERSION 1.0.0
     LANGUAGES CXX
     DESCRIPTION "ssTs: Small & Simple Task Scheduler for C++17"
@@ -18,22 +18,30 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-add_library(task_scheduler INTERFACE)
-target_include_directories(task_scheduler INTERFACE
+add_library(ssts INTERFACE)
+target_include_directories(ssts INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
     "$<INSTALL_INTERFACE:CMAKE_INSTALL_INCLUDEDIR>")
 
-option(TS_BUILD_EXAMPLES "Build library examples" ON)
-if(${TS_BUILD_EXAMPLES})
+option(SSTS_BUILD_EXAMPLES "Build library examples" ON)
+if(${SSTS_BUILD_EXAMPLES})
     message(STATUS "Building examples")
     add_subdirectory(examples)
 endif()
 
-option(TS_INSTALL "Install library" ON)
-if(${TS_INSTALL})
+option(SSTS_BUILD_TESTS "Build library tests" ON)
+if(${SSTS_BUILD_TESTS})
+    message(STATUS "Building tests")
+    add_subdirectory(tests)
+endif()
+
+option(SSTS_INSTALL "Install library" ON)
+if(${SSTS_INSTALL})
     message(STATUS "Installing library")
     include(GNUInstallDirs)
     install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-    install(TARGETS task_scheduler EXPORT task_scheduler DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    install(TARGETS ssts EXPORT ssts DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library)" ON)
 endif()

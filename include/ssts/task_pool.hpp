@@ -10,7 +10,7 @@
 #include <condition_variable>
 #include <future>
 
-namespace ts
+namespace ssts
 {
 
 class task_pool
@@ -21,7 +21,7 @@ public:
 		const auto thread_count = std::min(num_threads, std::thread::hardware_concurrency());
 		try
 		{
-			for (auto i = 0; i < thread_count; ++i)
+			for (unsigned i = 0; i < thread_count; ++i)
 			{
 				_threads.emplace_back([this] { worker_thread(); });
 			}
@@ -70,7 +70,7 @@ public:
 private:
 	std::atomic_bool _is_running;
 	std::vector<std::thread> _threads;
-	std::queue<ts::task> _task_queue;
+	std::queue<ssts::task> _task_queue;
 	std::condition_variable _task_cv;
 	std::mutex _task_mtx;
 

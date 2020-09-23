@@ -4,11 +4,12 @@
 #include <utility>
 #include <type_traits>
 
-namespace ts
+namespace ssts
 {
 
 class task
 {
+private:
 	struct task_base
 	{
 		virtual ~task_base() { }
@@ -41,7 +42,7 @@ public:
 
 	void operator()() { _impl->invoke(); }
 
-protected:
+private:
 	std::unique_ptr<task_base> _impl;
 };
 

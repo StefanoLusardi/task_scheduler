@@ -12,7 +12,7 @@
 
 using namespace std::chrono_literals;
 
-namespace ts
+namespace ssts
 {
 
 using clock = std::chrono::steady_clock;
@@ -27,27 +27,27 @@ private:
     public:
         template<typename FunctionType>
         schedulable_task(FunctionType&& f) 
-        : _task{ts::task(std::forward<FunctionType>(f))}
+        : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         { }
 
         template<typename FunctionType>
         schedulable_task(FunctionType&& f, size_t hash) 
-        : _task{ts::task(std::forward<FunctionType>(f))}
+        : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
         { }
 
         template<typename FunctionType>
-        schedulable_task(FunctionType&& f, ts::clock::duration interval) 
-        : _task{ts::task(std::forward<FunctionType>(f))}
+        schedulable_task(FunctionType&& f, ssts::clock::duration interval) 
+        : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _interval{interval}
         { }
 
         template<typename FunctionType>
-        schedulable_task(FunctionType&& f, size_t hash, ts::clock::duration interval) 
-        : _task{ts::task(std::forward<FunctionType>(f))}
+        schedulable_task(FunctionType&& f, size_t hash, ssts::clock::duration interval) 
+        : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
         , _interval{interval}
@@ -77,15 +77,15 @@ private:
 
     	void invoke() { _task(); }
 
-        ts::task _task;
+        ssts::task _task;
         bool _is_enabled;
-        std::optional<ts::clock::duration> _interval;
+        std::optional<ssts::clock::duration> _interval;
         std::optional<size_t> _hash;
     };
 
 public:
     task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
-    : _tp{ts::task_pool(num_threads)}, _is_running{true}
+    : _tp{ssts::task_pool(num_threads)}, _is_running{true}
     {
         _update_task_thread = std::thread([this] {
             while (_is_running)
@@ -103,7 +103,7 @@ public:
                 {
                     _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] 
                     {
-                        return ts::clock::now() >= _tasks.begin()->first || !_is_running;
+                        return ssts::clock::now() >= _tasks.begin()->first || !_is_running;
                     });
                 }
 
@@ -172,7 +172,7 @@ public:
     }
 
     template <typename TaskFunction>
-    auto at(ts::clock::time_point &&timepoint, TaskFunction &&func)
+    auto at(ssts::clock::time_point &&timepoint, TaskFunction &&func)
         -> std::future<std::invoke_result_t<TaskFunction>>
     {
         auto task = [t = std::forward<TaskFunction>(func)] 
@@ -189,7 +189,7 @@ public:
     }
 
     template <typename TaskFunction, typename... Args>
-    auto at(ts::clock::time_point &&timepoint, TaskFunction &&func, Args &&... args)
+    auto at(ssts::clock::time_point &&timepoint, TaskFunction &&func, Args &&... args)
         -> std::future<std::invoke_result_t<TaskFunction, Args...>>
     {
         auto task = [t = std::forward<TaskFunction>(func), params = std::make_tuple(std::forward<Args>(args)...)] 
@@ -206,7 +206,7 @@ public:
     }
 
     template <typename TaskFunction, typename... Args>
-    auto at(std::string&& task_id, ts::clock::time_point &&timepoint, TaskFunction &&func, Args &&... args)
+    auto at(std::string&& task_id, ssts::clock::time_point &&timepoint, TaskFunction &&func, Args &&... args)
         -> std::future<std::invoke_result_t<TaskFunction, Args...>>
     {
         auto task = [t = std::forward<TaskFunction>(func), params = std::make_tuple(std::forward<Args>(args)...)] 
@@ -224,77 +224,77 @@ public:
 
 
     template <typename TaskFunction>
-    auto in(ts::clock::duration&& duration, TaskFunction &&func)
+    auto in(ssts::clock::duration&& duration, TaskFunction &&func)
         -> std::future<std::invoke_result_t<TaskFunction>>
     {
         return at(
-            std::forward<ts::clock::time_point>(ts::clock::now() + duration),
+            std::forward<ssts::clock::time_point>(ssts::clock::now() + duration),
             std::forward<TaskFunction>(func));
     }
 
     template <typename TaskFunction, typename... Args>
-    auto in(ts::clock::duration&& duration, TaskFunction &&func, Args &&... args)
+    auto in(ssts::clock::duration&& duration, TaskFunction &&func, Args &&... args)
         -> std::future<std::invoke_result_t<TaskFunction, Args...>>
     {
         return at(
-            std::forward<ts::clock::time_point>(ts::clock::now() + duration),
+            std::forward<ssts::clock::time_point>(ssts::clock::now() + duration),
             std::forward<TaskFunction>(func),
             std::forward<Args>(args)...);
     }
 
     template <typename TaskFunction, typename... Args>
-    auto in(std::string&& task_id, ts::clock::duration&& duration, TaskFunction &&func, Args &&... args)
+    auto in(std::string&& task_id, ssts::clock::duration&& duration, TaskFunction &&func, Args &&... args)
         -> std::future<std::invoke_result_t<TaskFunction, Args...>>
     {
         return at(
             std::forward<std::string>(task_id),
-            std::forward<ts::clock::time_point>(ts::clock::now() + duration),
+            std::forward<ssts::clock::time_point>(ssts::clock::now() + duration),
             std::forward<TaskFunction>(func),
             std::forward<Args>(args)...);
     }
 
 
     template <typename TaskFunction>
-    auto every(ts::clock::duration&& interval, TaskFunction &&func)
+    auto every(ssts::clock::duration&& interval, TaskFunction &&func)
     {
         auto task = [t = std::forward<TaskFunction>(func)] 
         {
             return t(); 
         };
-        add_task(std::move(ts::clock::now() + interval), schedulable_task(std::move(task), interval));
+        add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), interval));
     }
 
     template <typename TaskFunction, typename... Args>
-    auto every(ts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
+    auto every(ssts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
     {
         auto task = [t = std::forward<TaskFunction>(func), params = std::make_tuple(std::forward<Args>(args)...)] 
         {
             return std::apply(t, params);
         };
-        add_task(std::move(ts::clock::now() + interval), schedulable_task(std::move(task), interval));
+        add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), interval));
     }
 
     template <typename TaskFunction, typename... Args>
-    auto every(std::string&& task_id, ts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
+    auto every(std::string&& task_id, ssts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
     {
         auto task = [t = std::forward<TaskFunction>(func), params = std::make_tuple(std::forward<Args>(args)...)] 
         {
             return std::apply(t, params);
         };
-        add_task(std::move(ts::clock::now() + interval), schedulable_task(std::move(task), _hasher(task_id), interval));
+        add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), _hasher(task_id), interval));
     }
 
 private:
-    ts::task_pool _tp;
+    ssts::task_pool _tp;
     std::atomic_bool _is_running;
-    std::multimap<ts::clock::time_point, schedulable_task> _tasks;
+    std::multimap<ssts::clock::time_point, schedulable_task> _tasks;
     std::unordered_set<size_t> _tasks_to_delete;
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
     std::thread _update_task_thread;
     std::hash<std::string> _hasher;
 
-    void add_task(ts::clock::time_point&& timepoint, schedulable_task&& st)
+    void add_task(ssts::clock::time_point&& timepoint, schedulable_task&& st)
     {
         if (!_is_running)
             return;
@@ -310,7 +310,7 @@ private:
     {
         std::scoped_lock lock(_update_tasks_mtx);
 
-        auto last_task_to_process = _tasks.upper_bound(ts::clock::now());
+        auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
         for (auto it = _tasks.begin(); it != last_task_to_process; it++)
         {
             // If a task has been marked to be deleted, just clean it up from the _tasks_to_delete set.
@@ -331,7 +331,7 @@ private:
                     t->invoke(); 
 
                 if (t->_interval.has_value())
-                    add_task(ts::clock::now() + t->_interval.value(), std::move(*t)); 
+                    add_task(ssts::clock::now() + t->_interval.value(), std::move(*t)); 
             });
         }
 

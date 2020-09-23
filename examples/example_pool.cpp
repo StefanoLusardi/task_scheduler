@@ -1,12 +1,12 @@
 #include <iostream>
-#include <task_scheduler.hpp>
+#include <ssts/task_scheduler.hpp>
 
 int main()
 {
-    std::cout << ts::version() << "\n\n";
+    std::cout << ssts::version() << "\n\n";
 
     std::vector<std::future<int>> futures;
-    ts::task_pool tp(8);
+    ssts::task_pool tp(8);
     int sum = 0;
 
     const int num_task = 1'000'000;

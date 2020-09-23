@@ -8,7 +8,7 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-namespace ts::utils
+namespace ssts::utils
 {
 
 void log(const std::string& msg)
@@ -25,9 +25,9 @@ void log_test(const std::string& msg, unsigned line_width = 40)
         << std::endl;
 }
 
-auto check_scheduled = [](ts::task_scheduler& s, unsigned num_tasks)
+auto check_scheduled = [](ssts::task_scheduler& s, unsigned num_tasks)
 {
-    for(auto i = 1; i <= num_tasks; ++i)
+    for(unsigned i = 1; i <= num_tasks; ++i)
     {
         const auto task_id = "task_id_"s + std::to_string(i);
         std::cout << std::boolalpha << task_id << " scheduled: " << s.is_scheduled(task_id) << std::endl;
@@ -35,9 +35,9 @@ auto check_scheduled = [](ts::task_scheduler& s, unsigned num_tasks)
     std::cout << "\n" << std::endl;
 };
 
-auto check_enabled = [](ts::task_scheduler& s, unsigned num_tasks)
+auto check_enabled = [](ssts::task_scheduler& s, unsigned num_tasks)
 {
-    for(auto i = 1; i <= num_tasks; ++i)
+    for(unsigned i = 1; i <= num_tasks; ++i)
     {
         const auto task_id = "task_id_"s + std::to_string(i);
         std::cout << std::boolalpha << task_id << " enabled: " << s.is_enabled(task_id) << std::endl;
@@ -45,7 +45,7 @@ auto check_enabled = [](ts::task_scheduler& s, unsigned num_tasks)
     std::cout << "\n" << std::endl;
 };
 
-auto check_tasks = [](const std::string& msg, ts::task_scheduler& s, unsigned num_tasks, std::chrono::seconds wait_time = 5s)
+auto check_tasks = [](const std::string& msg, ssts::task_scheduler& s, unsigned num_tasks, std::chrono::seconds wait_time = 5s)
 {
     std::this_thread::sleep_for(wait_time);
     log(msg);
