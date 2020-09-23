@@ -1,6 +1,40 @@
 trigger:
 - master
 
+parameters:
+- name: SSTS_BUILD_TYPE
+  type: string
+  values:
+  - Debug
+  - Release
+- name: SSTS_INSTALL_LIBRARY
+  type: string
+  values:
+  - ON
+  - OFF
+- name: SSTS_BUILD_TESTS
+  type: string
+  values:
+  - ON
+  - OFF
+- name: SSTS_BUILD_EXAMPLES
+  type: string
+  values:
+  - ON
+  - OFF
+- name: SSTS_INSTALL_EXAMPLES
+  type: string
+  values:
+  - ON
+  - OFF
+
+variables:
+  BUILD_TYPE: ${{ parameters.SSTS_BUILD_TYPE }}
+  INSTALL_LIBRARY: ${{ parameters.SSTS_INSTALL_LIBRARY }}
+  BUILD_TESTS: ${{ parameters.SSTS_BUILD_TESTS }}
+  BUILD_EXAMPLES: ${{ parameters.SSTS_BUILD_EXAMPLES }}
+  INSTALL_EXAMPLES: ${{ parameters.SSTS_INSTALL_EXAMPLES }}
+
 schedules:
 # Every day @ 18:00(UTC) / 20:00(local)
 - cron: "0 18 * * *"
@@ -36,7 +70,14 @@ jobs:
     displayName: 'CMake - configure'
     inputs:
       workingDirectory: build/$(BUILD_TYPE)
-      cmakeArgs: '../.. -G "Ninja" -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE)'
+      cmakeArgs: '-G "Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+        ../..'
   - task: CMake@1
     displayName: 'CMake - build'
     inputs:
@@ -83,7 +124,14 @@ jobs:
     displayName: 'CMake - configure'
     inputs:
       workingDirectory: build/$(BUILD_TYPE)
-      cmakeArgs: '../.. -G "Ninja" -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE)'
+      cmakeArgs: '-G "Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+        ../..'
   - task: CMake@1
     displayName: 'CMake - build'
     inputs:
@@ -119,7 +167,13 @@ jobs:
     displayName: 'CMake - Configure'
     inputs:
       workingDirectory: build/$(BUILD_TYPE)
-      cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE)'
+      cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
   - task: CMake@1
     displayName: 'CMake - Build'
     inputs:
@@ -148,7 +202,13 @@ jobs:
     displayName: 'CMake - Configure'
     inputs:
       workingDirectory: build/$(BUILD_TYPE)
-      cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE)'
+      cmakeArgs: '../.. -G"Visual Studio 15 2017" -A x64
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
   - task: CMake@1
     displayName: 'CMake - Build'
     inputs:
