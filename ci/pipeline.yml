@@ -5,10 +5,10 @@ parameters:
 - name: SSTS_BUILD_TYPE
   type: string
   values:
-  - Debug
   - Release
+  - Debug
 - name: SSTS_INSTALL_LIBRARY
-  type: string
+  type: boolean
   values:
   - ON
   - OFF
@@ -86,7 +86,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
-      script: ctest .
+      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
       workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
   - task: CmdLine@2
     displayName: 'CMake - Run CPack'
@@ -140,7 +140,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
-      script: ctest .
+      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
       workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
   - task: CmdLine@2
     displayName: 'CMake - Run CPack'
@@ -182,7 +182,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
-      script: ctest . -T Test
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
       workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
   - task: PublishTestResults@2
     inputs:
@@ -217,7 +217,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
-      script: ctest . -T Test
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
       workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
   - task: PublishTestResults@2
     inputs:
