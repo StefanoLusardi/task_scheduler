@@ -141,7 +141,7 @@ jobs:
 
   pool:
     # Windows Server 2016 with Visual Studio 2017
-    vmImage: 'win2016'
+    vmImage: 'vs2017-win2016'
 
   steps:
   - task: CMake@1
