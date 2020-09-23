@@ -1,5 +1,5 @@
 /build*
 /install*
 /.git
-/.vs
+/.vs*
 CMakeSettings.json

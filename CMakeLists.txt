@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(task_scheduler 
     VERSION 1.0.0
     LANGUAGES CXX
+    DESCRIPTION "ssTs: Small & Simple Task Scheduler for C++17"
+	HOMEPAGE_URL "https://github.com/StefanoLusardi/task_scheduler"
 )
 
 set(CMAKE_CXX_STANDARD 17)

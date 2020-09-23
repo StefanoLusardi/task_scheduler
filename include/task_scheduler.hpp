@@ -19,8 +19,6 @@ using clock = std::chrono::steady_clock;
 
 std::string version() { return "Task Scheduler v1.0.0"; }
 
-// using schedulable_task = ts::task;
-
 class task_scheduler
 {
 private:
