@@ -8,7 +8,7 @@ parameters:
   - Release
   - Debug
 - name: SSTS_INSTALL_LIBRARY
-  type: boolean
+  type: string
   values:
   - ON
   - OFF
