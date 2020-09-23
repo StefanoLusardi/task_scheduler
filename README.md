@@ -1,6 +1,6 @@
 # ssTs: Small &amp; Simple Task Scheduler for C++17
 
-Time-based Task Scheduler, written in modern C++
+Time-based Task Scheduler, written in modern C++.  
 Header only, with [no external dependencies](#tests).
 
 ![ssTs](/logo/ssTs_logo.png)
@@ -9,14 +9,14 @@ Header only, with [no external dependencies](#tests).
 
 ### Header only
 Copy the [include](/include) folder, that contains the 3 header files [task.hpp](/include/ssts/task.hpp), [task_pool.hpp](/include/ssts/task_pool.hpp) and [task_scheduler.hpp](/include/ssts/task_scheduler.hpp) within your project or set your include path to it and just build your code.  
-**ssTs** Requires a *C++17* compiler.
+**ssTs** requires a *C++17* compiler.
 
 ### CMake
 It is possible to *install* the library using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -DSSTS_INSTALL=ON -DCMAKE_INSTALL_PREFIX=</install/folder/path> ..
+$ cmake -DSSTS_INSTALL_LIBRARY=ON -DCMAKE_INSTALL_PREFIX=</install/folder/path> ..
 $ cmake --build . --config Release --target install 
 ```
 
@@ -102,16 +102,16 @@ s.stop();
 
 ## Examples
 *Examples* are located within the [examples](/examples) folder.  
-It is possible to build all the *examples* using:
+It is possible to build and install the *examples* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake --build . --config Release -DSSTS_BUILD_EXAMPLES=ON
+$ cmake --build . --config Release -DSSTS_BUILD_EXAMPLES=ON -DSSTS_INSTALL_EXAMPLES=ON
 ```
 
 ## Tests
 *Tests* are located within the [tests](/tests) folder.  
-*Googletest* is the only 3rd party library used and it is required only to build the tests target.
+[GoogleTest](https://github.com/google/googletest) is the only 3rd party library used and it is required only to build the tests target.
 It is integrated using [DownloadGoogleTest.cmake](/cmake/DownloadGoogleTest.cmake) script. 
 It is possible to build the *tests* using:
 ```console
