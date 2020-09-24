@@ -4,31 +4,31 @@ trigger:
 parameters:
 - name: SSTS_BUILD_TYPE
   type: string
-  default: 'ON'
+  default: Release
   values:
   - Release
   - Debug
 - name: SSTS_INSTALL_LIBRARY
   type: string
-  default: 'ON'
+  default: ON
   values:
   - ON
   - OFF
 - name: SSTS_BUILD_TESTS
   type: string
-  default: 'ON'
+  default: ON
   values:
   - ON
   - OFF
 - name: SSTS_BUILD_EXAMPLES
   type: string
-  default: 'ON'
+  default: ON
   values:
   - ON
   - OFF
 - name: SSTS_INSTALL_EXAMPLES
   type: string
-  default: 'ON'
+  default: ON
   values:
   - ON
   - OFF
