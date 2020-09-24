@@ -29,7 +29,7 @@ public:
 	task(FunctionType&& f) 
 	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } { }
 
-    task(task&) = delete;
+    // task(task&) = delete; // MSVC 2017 issue
     task(const task&) = delete;
 	task& operator=(const task&) = delete;
 	

@@ -55,7 +55,7 @@ private:
 
         ~schedulable_task() { }
 
-        schedulable_task(schedulable_task&) = delete;
+        // schedulable_task(schedulable_task&) = delete;  // MSVC 2017 issue
         schedulable_task(const schedulable_task&) = delete;
         schedulable_task& operator=(const schedulable_task&) = delete;
         

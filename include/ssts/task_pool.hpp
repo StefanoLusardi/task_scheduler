@@ -7,8 +7,8 @@
 #include <queue>
 #include <mutex> 
 #include <thread>
-#include <condition_variable>
 #include <future>
+#include <condition_variable>
 
 namespace ssts
 {
@@ -33,8 +33,8 @@ public:
 		}
 	}
 
+    // task_pool(task_pool&) = delete; // MSVC 2017 issue
     task_pool(const task_pool&) = delete;
-    task_pool(task_pool&) = delete;
 	task_pool& operator=(const task_pool&) = delete;
 	
     task_pool(task_pool&&) = delete;
