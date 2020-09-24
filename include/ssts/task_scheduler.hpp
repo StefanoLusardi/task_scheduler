@@ -346,6 +346,7 @@ private:
             {
                 return hash == it.second._hash.value();
             }
+            return false;
         });
     }
 };
