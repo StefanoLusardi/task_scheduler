@@ -1,11 +1,16 @@
 #pragma once
 
+#include <atomic>
 #include <chrono>
-#include <functional>
 #include <map>
 #include <unordered_set>
 #include <optional>
 #include <string>
+#include <mutex>
+#include <thread>
+#include <future>
+#include <condition_variable>
+#include <functional>
 
 #include "task.hpp"
 #include "task_pool.hpp"
@@ -55,7 +60,7 @@ private:
 
         ~schedulable_task() { }
 
-        // schedulable_task(schedulable_task&) = delete;  // MSVC 2017 issue
+        // schedulable_task(schedulable_task&) = delete; // MSVC 2017 issue: C4521 multiple copy constructors specified
         schedulable_task(const schedulable_task&) = delete;
         schedulable_task& operator=(const schedulable_task&) = delete;
         

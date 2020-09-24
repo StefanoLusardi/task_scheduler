@@ -39,6 +39,7 @@ variables:
   BUILD_TESTS: ${{ parameters.SSTS_BUILD_TESTS }}
   BUILD_EXAMPLES: ${{ parameters.SSTS_BUILD_EXAMPLES }}
   INSTALL_EXAMPLES: ${{ parameters.SSTS_INSTALL_EXAMPLES }}
+  BUILD_DIRECTORY: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
 
 schedules:
 # Every day @ 18:00(UTC) / 20:00(local)
@@ -52,6 +53,8 @@ schedules:
   always: true
 
 jobs:
+
+# Ubuntu 20.04 with GCC 9.3
 - job: Ubuntu2004_GCC9
   dependsOn: []
 
@@ -74,7 +77,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - configure'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '-G "Ninja" 
         -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
         -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
@@ -86,26 +89,27 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - build'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '--build . --config $(BUILD_TYPE)'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
       script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: CmdLine@2
     displayName: 'CMake - Run CPack'
     enabled: false
     inputs:
       script: cpack .
-      workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: PublishTestResults@2
     displayName: 'Publish test results'
     inputs:
       testResultsFormat: 'cTest'
-      testResultsFiles: '$(Build.SourcesDirectory)/build/$(BUILD_TYPE)/Testing/*/Test.xml'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'
 
+# Ubuntu 18.04 with GCC 9.3
 - job: Ubuntu1804_GCC9
   dependsOn: []
 
@@ -128,7 +132,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - configure'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '-G "Ninja" 
         -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
         -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
@@ -140,38 +144,38 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - build'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '--build . --config $(BUILD_TYPE)'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
       script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: CmdLine@2
     displayName: 'CMake - Run CPack'
     enabled: false
     inputs:
       script: cpack .
-      workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: PublishTestResults@2
     displayName: 'Publish test results'
     inputs:
       testResultsFormat: 'cTest'
-      testResultsFiles: '$(Build.SourcesDirectory)/build/$(BUILD_TYPE)/Testing/*/Test.xml'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'
 
+# Windows Server 2019 with Visual Studio 2019
 - job: Windows2019_VisualStudio2019
   dependsOn: []
   
   pool:
-    # Windows Server 2019 with Visual Studio 2019
     vmImage: 'windows-2019'
 
   steps:
   - task: CMake@1
     displayName: 'CMake - Configure'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 
         -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
         -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
@@ -182,31 +186,32 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - Build'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '--build . --config $(BUILD_TYPE)'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
       script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'cTest'
-      testResultsFiles: '$(Build.SourcesDirectory)/build/$(BUILD_TYPE)/Testing/*/Test.xml'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'
 
+# Windows Server 2016 with Visual Studio 2017
 - job: Windows2016_VisualStudio2017
   dependsOn: []
+  condition: false
 
   pool:
-    # Windows Server 2016 with Visual Studio 2017
     vmImage: 'vs2017-win2016'
 
   steps:
   - task: CMake@1
     displayName: 'CMake - Configure'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '../.. -G"Visual Studio 15 2017" -A x64
         -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
         -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
@@ -217,15 +222,15 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - Build'
     inputs:
-      workingDirectory: build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '--build . --config $(BUILD_TYPE)'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
       script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'cTest'
-      testResultsFiles: '$(Build.SourcesDirectory)/build/$(BUILD_TYPE)/Testing/*/Test.xml'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <utility>
+#include <algorithm>
 #include <type_traits>
 
 namespace ssts
@@ -29,7 +29,7 @@ public:
 	task(FunctionType&& f) 
 	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } { }
 
-    // task(task&) = delete; // MSVC 2017 issue
+    // task(task&) = delete; // MSVC 2017 issue: C4521 multiple copy constructors specified
     task(const task&) = delete;
 	task& operator=(const task&) = delete;
 	

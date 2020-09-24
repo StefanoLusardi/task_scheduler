@@ -16,8 +16,8 @@ It is possible to *install* the library using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -DSSTS_INSTALL_LIBRARY=ON -DCMAKE_INSTALL_PREFIX=</install/folder/path> ..
-$ cmake --build . --config Release --target install 
+$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_INSTALL_LIBRARY=ON -DCMAKE_INSTALL_PREFIX=</install/folder/path> ..
+$ cmake --build . --config <Debug|Release> --target install 
 ```
 
 ## Platforms & Compilers
@@ -26,6 +26,8 @@ Developed and tested on:
 *   Windows 10 - Clang 10.0
 *   Windows 10 - Clang 9.0
 *   Ubuntu 20.04 - GCC 9.3
+*   Ubuntu 20.04 - Clang 9.0
+*   Ubuntu 20.04 - Clang 10.0
 
 Supported *CI* platforms:
 *   Windows Server 2019 - Visual Studio 2019
@@ -114,7 +116,8 @@ It is possible to build and install the *examples* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake --build . --config Release -DSSTS_BUILD_EXAMPLES=ON -DSSTS_INSTALL_EXAMPLES=ON
+$ cmake -G<GENERATOR>  -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_EXAMPLES=ON  -DSSTS_INSTALL_LIBRARY=ON -DSSTS_INSTALL_EXAMPLES=ON ..
+$ cmake --build . --config <Debug|Release>
 ```
 
 ## Tests
@@ -125,5 +128,6 @@ It is possible to build the *tests* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake --build . --config Release -DSSTS_BUILD_TESTS=ON
+$ cmake -G<GENERATOR>  -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_TESTS=ON ..
+$ cmake --build . --config <Debug|Release>
 ```
