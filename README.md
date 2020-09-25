@@ -36,29 +36,47 @@ Windows Server 2019 - Visual Studio 2019
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_VisualStudio2017)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Windows Server 2016 - Visual Studio 2017
 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2019 - Clang 10.0
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2016 - Clang 10.0
+
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - GCC 9.3
 
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - GCC 9.3
 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2019 - Clang 10.0
 
-Coming soon:
-*   Windows Server 2019 - Clang 10.0
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 18.04 - GCC 7.5
 
-*   Ubuntu 18.04 - GCC 7.5
-*   Ubuntu 18.04 - GCC 8.4
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 18.04 - GCC 8.4
 
-*   Ubuntu 20.04 - GCC 7.5
-*   Ubuntu 20.04 - GCC 8.4
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 20.04 - GCC 7.5
 
-*   Ubuntu 18.04 - Clang 8.0
-*   Ubuntu 18.04 - Clang 9.0
-*   Ubuntu 18.04 - Clang 10.0
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 20.04 - GCC 8.4
 
-*   Ubuntu 20.04 - Clang 8.0
-*   Ubuntu 20.04 - Clang 9.0
-*   Ubuntu 20.04 - Clang 10.0
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_Clang8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 18.04 - Clang 8.0
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_Clang9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 18.04 - Clang 9.0
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 20.04 - Clang 8.0
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 20.04 - Clang 9.0
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Ubuntu 20.04 - Clang 10.0
 
 ## Basic Usage
 * Running a task is as simple as:

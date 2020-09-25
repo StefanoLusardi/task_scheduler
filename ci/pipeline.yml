@@ -774,7 +774,7 @@ jobs:
   variables:
     CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
     CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/Tools/VsDevCmd.bat"
+    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/Common7/Tools/VsDevCmd.bat"
 
   steps:
   - task: CmdLine@2
