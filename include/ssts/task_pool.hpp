@@ -16,7 +16,7 @@ namespace ssts
 class task_pool
 {
 public:
-	task_pool(const unsigned int num_threads = std::thread::hardware_concurrency()) : _is_running{ true }
+	explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency()) : _is_running{ true }
 	{
 		const auto thread_count = std::min(num_threads, std::thread::hardware_concurrency());
 		try

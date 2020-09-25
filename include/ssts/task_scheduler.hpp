@@ -31,27 +31,27 @@ private:
     {
     public:
         template<typename FunctionType>
-        schedulable_task(FunctionType&& f) 
+        explicit schedulable_task(FunctionType&& f) 
         : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         { }
 
         template<typename FunctionType>
-        schedulable_task(FunctionType&& f, size_t hash) 
+        explicit schedulable_task(FunctionType&& f, size_t hash) 
         : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
         { }
 
         template<typename FunctionType>
-        schedulable_task(FunctionType&& f, ssts::clock::duration interval) 
+        explicit schedulable_task(FunctionType&& f, ssts::clock::duration interval) 
         : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _interval{interval}
         { }
 
         template<typename FunctionType>
-        schedulable_task(FunctionType&& f, size_t hash, ssts::clock::duration interval) 
+        explicit schedulable_task(FunctionType&& f, size_t hash, ssts::clock::duration interval) 
         : _task{ssts::task(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
@@ -89,7 +89,7 @@ private:
     };
 
 public:
-    task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
+    explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _tp{num_threads}, _is_running{true}
     {
         _update_task_thread = std::thread([this] {
@@ -292,11 +292,11 @@ public:
 private:
     ssts::task_pool _tp;
     std::atomic_bool _is_running;
+    std::thread _update_task_thread;
     std::multimap<ssts::clock::time_point, schedulable_task> _tasks;
     std::unordered_set<size_t> _tasks_to_delete;
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
-    std::thread _update_task_thread;
     std::hash<std::string> _hasher;
 
     void add_task(ssts::clock::time_point&& timepoint, schedulable_task&& st)

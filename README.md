@@ -22,90 +22,88 @@ $ cmake --build . --config <Debug|Release> --target install
 
 ## Platforms & Compilers
 
-### Developed and tested on:
-*   Windows 10 - Visual Studio 2019
-*   Windows 10 - Clang 10.0
-*   Windows 10 - Clang 9.0
-*   Ubuntu 20.04 - GCC 9.3
-*   Ubuntu 20.04 - Clang 9.0
-*   Ubuntu 20.04 - Clang 10.0
+### Developed and tested on
+*  Windows 10 - Visual Studio 2019
+*  Windows 10 - Clang 10.0
+*  Windows 10 - Clang 9.0
+*  Ubuntu 20.04 - GCC 9.3
+*  Ubuntu 20.04 - Clang 9.0
+*  Ubuntu 20.04 - Clang 10.0
 
-### Supported CI platforms:
+### Supported CI platforms
 
-#### Linux:
+#### Linux
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - GCC 9.3
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - GCC 9.3
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - GCC 7.5
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - GCC 8.4
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - GCC 7.5
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - GCC 8.4
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_Clang8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_Clang8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - Clang 8.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_Clang9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_Clang9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - Clang 9.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - Clang 8.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - Clang 9.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - Clang 10.0
 
+#### Windows
 
-#### Windows:
-
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_VisualStudio2019)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_VisualStudio2019)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Windows Server 2019 - Visual Studio 2019
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_VisualStudio2017)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_VisualStudio2017)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Windows Server 2016 - Visual Studio 2017
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Windows Server 2019 - Clang 10.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Windows Server 2016 - Clang 10.0
 
+#### MacOS
 
-#### MacOS:
-
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Mojave 10.14 - Clang 10.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Mojave 10.14 - GCC 8.4
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Mojave 10.14 - GCC 9.3
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Catalina 10.15 - Clang 10.0
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Catalina 10.15 - GCC 8.4
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+*  [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Catalina 10.15 - GCC 9.3
 
-
 ## Basic Usage
-* Running a task is as simple as:
+
+*  Running a task is as simple as:
 ```cpp
 // Allow literal suffixes (e.g. 3s, 250ms)
 using namespace std::chrono_literals;
@@ -117,7 +115,7 @@ ts::task_scheduler s(2);
 s.in(5s, []{std::cout << "Hello!" << std::endl;});
 ```
 
-* To retrieve a task result you can do:
+*  To retrieve a task result you can do:
 ```cpp
 // Launch a task with parameters and wait for its return value
 std::future f = s.at(std::chrono::steady_clock::now() + 2s, 
@@ -129,7 +127,7 @@ std::future f = s.at(std::chrono::steady_clock::now() + 2s,
 std::cout << "Task result: " << f.get() << std::endl; // prints 43
 ```
 
-* It's possible to start a task giving it a task id to be able to manipulate it later.
+*  It's possible to start a task giving it a task id to be able to manipulate it later.
 ```cpp
 // Check if a task is currently scheduled 
 // (i.e. already inserted in the scheduler)

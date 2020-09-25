@@ -19,7 +19,7 @@ private:
 	template<typename FunctionType>
 	struct task_impl : task_base
 	{
-		task_impl(FunctionType&& f) : _func{ std::move(f) } { static_assert(std::is_invocable_v<decltype(f)>); }
+		explicit task_impl(FunctionType&& f) : _func{ std::move(f) } { static_assert(std::is_invocable_v<decltype(f)>); }
 		void invoke() override { _func(); }
 		FunctionType _func;
 	};
