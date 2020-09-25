@@ -54,9 +54,9 @@ schedules:
 
 jobs:
 
-######################
+#######################################################################################
 ## Ubuntu 20.04 GCC
-######################
+#######################################################################################
 
 # Ubuntu 20.04 with GCC 7.5
 - job: Ubuntu2004_GCC7
@@ -225,9 +225,9 @@ jobs:
 
 
 
-######################
+#######################################################################################
 ## Ubuntu 20.04 Clang
-######################
+#######################################################################################
 
 # Ubuntu 20.04 with Clang 8.0
 - job: Ubuntu2004_Clang8
@@ -396,9 +396,9 @@ jobs:
 
 
 
-######################
+#######################################################################################
 ## Ubuntu 18.04 GCC
-######################
+#######################################################################################
 
 # Ubuntu 18.04 with GCC 7.5
 - job: Ubuntu1804_GCC7
@@ -567,9 +567,9 @@ jobs:
 
 
 
-######################
+#######################################################################################
 ## Ubuntu 18.04 Clang
-######################
+#######################################################################################
 
 # Ubuntu 18.04 with Clang 8.0
 - job: Ubuntu1804_Clang8
@@ -683,9 +683,9 @@ jobs:
 
 
 
-######################
+#######################################################################################
 ## Windows MSVC 
-######################
+#######################################################################################
 
 # Windows Server 2019 with Visual Studio 2019
 - job: Windows2019_VisualStudio2019
@@ -760,9 +760,9 @@ jobs:
 
 
 
-######################
+#######################################################################################
 ## Windows Clang
-######################
+#######################################################################################
 
 # Windows Server 2019 with Clang 10.0
 - job: Windows2019_Clang10
@@ -889,3 +889,277 @@ jobs:
       testResultsFormat: 'cTest'
       testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'
+
+
+
+#######################################################################################
+## MacOS Clang
+#######################################################################################
+
+# MacOS X Catalina 10.15 with Clang 10.0
+- job: MacOSCatalina1015_Clang10
+  dependsOn: []
+  
+  pool:
+    vmImage: 'macOS-10.15'
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        brew install ninja
+        ninja --version
+  - task: CMake@1
+    displayName: 'CMake - Configure'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '../.. -G"Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+  - task: CMake@1
+    displayName: 'CMake - Build'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '--build . --config $(BUILD_TYPE)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+
+# MacOS X Mojave 10.14 with Clang 10.0
+- job: MacOSMojave1014_Clang10
+  dependsOn: []
+  
+  pool:
+    vmImage: 'macOS-10.14'
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        brew install ninja
+        ninja --version
+  - task: CMake@1
+    displayName: 'CMake - Configure'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '../.. -G"Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+  - task: CMake@1
+    displayName: 'CMake - Build'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '--build . --config $(BUILD_TYPE)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+
+
+#######################################################################################
+## MacOS GCC
+#######################################################################################
+
+# MacOS X Catalina 10.15 with GCC 8.4
+- job: MacOSCatalina1015_GCC8
+  dependsOn: []
+  
+  pool:
+    vmImage: 'macOS-10.15'
+  
+  variables:
+    CC: gcc-8
+    CXX: gcc++-8
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        brew install ninja
+        ninja --version
+  - task: CMake@1
+    displayName: 'CMake - Configure'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '../.. -G"Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+  - task: CMake@1
+    displayName: 'CMake - Build'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '--build . --config $(BUILD_TYPE)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+
+# MacOS X Catalina 10.15 with GCC 9.3
+- job: MacOSCatalina1015_GCC9
+  dependsOn: []
+  
+  pool:
+    vmImage: 'macOS-10.15'
+  
+  variables:
+    CC: gcc-9
+    CXX: g++-9
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        brew install ninja
+        ninja --version
+  - task: CMake@1
+    displayName: 'CMake - Configure'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '../.. -G"Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+  - task: CMake@1
+    displayName: 'CMake - Build'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '--build . --config $(BUILD_TYPE)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+
+# MacOS X Mojave 10.14 with GCC 8.4
+- job: MacOSMojave1014_GCC8
+  dependsOn: []
+  
+  pool:
+    vmImage: 'macOS-10.14'
+
+  variables:
+    CC: gcc-8
+    CXX: g++-8
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        brew install ninja
+        ninja --version
+  - task: CMake@1
+    displayName: 'CMake - Configure'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '../.. -G"Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+  - task: CMake@1
+    displayName: 'CMake - Build'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '--build . --config $(BUILD_TYPE)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+
+# MacOS X Mojave 10.14 with GCC 9.3
+- job: MacOSMojave1014_GCC9
+  dependsOn: []
+  
+  pool:
+    vmImage: 'macOS-10.14'
+
+  variables:
+    CC: gcc-9
+    CXX: g++-9
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        brew install ninja
+        ninja --version
+  - task: CMake@1
+    displayName: 'CMake - Configure'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '../.. -G"Ninja" 
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+  - task: CMake@1
+    displayName: 'CMake - Build'
+    inputs:
+      workingDirectory: $(BUILD_DIRECTORY)
+      cmakeArgs: '--build . --config $(BUILD_TYPE)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+

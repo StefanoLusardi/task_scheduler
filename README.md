@@ -21,7 +21,8 @@ $ cmake --build . --config <Debug|Release> --target install
 ```
 
 ## Platforms & Compilers
-Developed and tested on:
+
+### Developed and tested on:
 *   Windows 10 - Visual Studio 2019
 *   Windows 10 - Clang 10.0
 *   Windows 10 - Clang 9.0
@@ -29,27 +30,15 @@ Developed and tested on:
 *   Ubuntu 20.04 - Clang 9.0
 *   Ubuntu 20.04 - Clang 10.0
 
-Supported *CI* platforms:
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_VisualStudio2019)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
-Windows Server 2019 - Visual Studio 2019
+### Supported CI platforms:
 
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_VisualStudio2017)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
-Windows Server 2016 - Visual Studio 2017
-
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
-Windows Server 2019 - Clang 10.0
-
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
-Windows Server 2016 - Clang 10.0
+#### Linux:
 
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - GCC 9.3
 
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - GCC 9.3
-
-* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
-Windows Server 2019 - Clang 10.0
 
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu1804_GCC7)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 18.04 - GCC 7.5
@@ -77,6 +66,43 @@ Ubuntu 20.04 - Clang 9.0
 
 * [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Ubuntu2004_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 Ubuntu 20.04 - Clang 10.0
+
+
+#### Windows:
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_VisualStudio2019)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2019 - Visual Studio 2019
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_VisualStudio2017)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2016 - Visual Studio 2017
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2019_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2019 - Clang 10.0
+
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=Windows2016_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
+Windows Server 2016 - Clang 10.0
+
+
+#### MacOS [coming soon]:
+
+* 
+MacOS X Mojave 10.14 - Clang 10.0
+
+* 
+MacOS X Mojave 10.14 - GCC 8.4
+
+* 
+MacOS X Mojave 10.14 - GCC 9.3
+
+* 
+MacOS X Catalina 10.15 - Clang 10.0
+
+* 
+MacOS X Catalina 10.15 - GCC 8.4
+
+* 
+MacOS X Catalina 10.15 - GCC 9.3
+
 
 ## Basic Usage
 * Running a task is as simple as:
