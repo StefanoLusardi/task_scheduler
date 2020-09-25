@@ -83,24 +83,24 @@ Windows Server 2019 - Clang 10.0
 Windows Server 2016 - Clang 10.0
 
 
-#### MacOS [coming soon]:
+#### MacOS:
 
-* 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Mojave 10.14 - Clang 10.0
 
-* 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Mojave 10.14 - GCC 8.4
 
-* 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSMojave1014_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Mojave 10.14 - GCC 9.3
 
-* 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_Clang10)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Catalina 10.15 - Clang 10.0
 
-* 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_GCC8)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Catalina 10.15 - GCC 8.4
 
-* 
+* [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master&jobName=MacOSCatalina1015_GCC9)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master)
 MacOS X Catalina 10.15 - GCC 9.3
 
 
