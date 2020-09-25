@@ -787,7 +787,6 @@ jobs:
     inputs:
       script: |
         choco install --accept-license -y llvm
-        clang-cl.exe --version
   - task: CmdLine@2
     displayName: 'Create build directory'
     inputs:
@@ -850,7 +849,6 @@ jobs:
     inputs:
       script: |
         choco install --accept-license -y llvm
-        clang-cl.exe --version
   - task: CmdLine@2
     displayName: 'Create build directory'
     inputs:
