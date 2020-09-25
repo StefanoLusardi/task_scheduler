@@ -777,6 +777,9 @@ jobs:
     MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
   steps:
+  - task: ChocolateyToolInstaller@0
+    inputs:
+      force: true
   - task: CmdLine@2
     displayName: 'Install Ninja'
     inputs:
@@ -840,6 +843,9 @@ jobs:
     MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
   steps:
+  - task: ChocolateyToolInstaller@0
+    inputs:
+      force: true
   - task: CmdLine@2
     displayName: 'Install Ninja'
     inputs:
