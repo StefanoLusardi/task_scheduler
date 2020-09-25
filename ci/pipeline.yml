@@ -764,8 +764,8 @@ jobs:
 ## Windows Clang
 ######################
 
-# Windows Server 2019 with Clang
-- job: Windows2019_Clang
+# Windows Server 2019 with Clang 10.0
+- job: Windows2019_Clang10
   dependsOn: []
   
   pool:
@@ -774,7 +774,7 @@ jobs:
   variables:
     CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
     CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/Tools/VsDevCmd.bat"
 
   steps:
   - task: CmdLine@2
@@ -799,7 +799,7 @@ jobs:
     displayName: 'CMake - Configure'
     inputs:
       script: |
-        call $(MSVC_DEV_ENV)
+        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
         cmake -G"Ninja" ^
         -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
         -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
@@ -813,7 +813,7 @@ jobs:
     displayName: 'CMake build'
     inputs:
       script: |
-        call $(MSVC_DEV_ENV)
+        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
         cmake --build . --config $(BUILD_TYPE)
       workingDirectory: '$(BUILD_DIRECTORY)'
   - task: CmdLine@2
@@ -827,8 +827,8 @@ jobs:
       testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'
 
-# Windows Server 2016 with Clang
-- job: Windows2016_Clang
+# Windows Server 2016 with Clang 10.0
+- job: Windows2016_Clang10
   dependsOn: []
 
   pool:
@@ -837,7 +837,7 @@ jobs:
   variables:
     CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
     CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/Tools/VsDevCmd.bat"
 
   steps:
   - task: CmdLine@2
@@ -862,7 +862,7 @@ jobs:
     displayName: 'CMake - Configure'
     inputs:
       script: |
-        call $(MSVC_DEV_ENV)
+        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
         cmake -G"Ninja" ^
         -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
         -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
@@ -876,7 +876,7 @@ jobs:
     displayName: 'CMake build'
     inputs:
       script: |
-        call $(MSVC_DEV_ENV)
+        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
         cmake --build . --config $(BUILD_TYPE)
       workingDirectory: '$(BUILD_DIRECTORY)'
   - task: CmdLine@2
