@@ -991,7 +991,7 @@ jobs:
   
   variables:
     CC: gcc-8
-    CXX: gcc++-8
+    CXX: g++-8
 
   steps:
   - task: CmdLine@2
