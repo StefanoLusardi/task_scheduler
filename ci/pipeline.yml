@@ -764,4 +764,128 @@ jobs:
 ## Windows Clang
 ######################
 
-# not there yet...
+# Windows Server 2019 with Clang
+- job: Windows2019_Clang
+  dependsOn: []
+  
+  pool:
+    vmImage: 'windows-2019'
+
+  variables:
+    CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
+    CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
+    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        'choco install --accept-license -y Ninja'
+        ninja --version
+  - task: CmdLine@2
+    displayName: 'Install Clang'
+    inputs:
+      script: |
+        'choco install --accept-license -y llvm'
+        "C:/Program Files/LLVM/bin/clang-cl.exe" --version
+  - task: CmdLine@2
+    displayName: 'Create build directory'
+    inputs:
+      script: |
+        mkdir build && cd build
+        mkdir $(BUILD_TYPE) && cd $(BUILD_TYPE)
+  - task: CmdLine@2
+    displayName: 'CMake - Configure'
+    inputs:
+      script: |
+        call $(MSVC_DEV_ENV)
+        cmake -G"Ninja" ^
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
+        ../.. 
+      workingDirectory: '$(BUILD_DIR)'
+  - task: CmdLine@2
+    displayName: 'CMake build'
+    inputs:
+      script: |
+        call $(MSVC_DEV_ENV)
+        cmake --build . --config $(BUILD_TYPE)
+      workingDirectory: '$(BUILD_DIR)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
+
+# Windows Server 2016 with Clang
+- job: Windows2016_Clang
+  dependsOn: []
+
+  pool:
+    vmImage: 'vs2017-win2016'
+
+  variables:
+    CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
+    CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
+    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+
+  steps:
+  - task: CmdLine@2
+    displayName: 'Install Ninja'
+    inputs:
+      script: |
+        'choco install --accept-license -y Ninja'
+        ninja --version
+  - task: CmdLine@2
+    displayName: 'Install Clang'
+    inputs:
+      script: |
+        'choco install --accept-license -y llvm'
+        "C:/Program Files/LLVM/bin/clang-cl.exe" --version
+  - task: CmdLine@2
+    displayName: 'Create build directory'
+    inputs:
+      script: |
+        mkdir build && cd build
+        mkdir $(BUILD_TYPE) && cd $(BUILD_TYPE)
+  - task: CmdLine@2
+    displayName: 'CMake - Configure'
+    inputs:
+      script: |
+        call $(MSVC_DEV_ENV)
+        cmake -G"Ninja" ^
+        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
+        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
+        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
+        -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
+        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
+        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
+        ../.. 
+      workingDirectory: '$(BUILD_DIR)'
+  - task: CmdLine@2
+    displayName: 'CMake build'
+    inputs:
+      script: |
+        call $(MSVC_DEV_ENV)
+        cmake --build . --config $(BUILD_TYPE)
+      workingDirectory: '$(BUILD_DIR)'
+  - task: CmdLine@2
+    displayName: 'CMake - Run CTest'
+    inputs:
+      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+      workingDirectory: $(BUILD_DIRECTORY)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'cTest'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+      testRunTitle: 'Test Results'
