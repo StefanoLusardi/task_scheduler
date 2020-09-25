@@ -5,6 +5,33 @@ Header only, with [no external dependencies](#tests).
 
 ![ssTs](/logo/ssTs_logo.png)
 
+![GitHub](https://img.shields.io/github/license/stefanolusardi/task_scheduler) 
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/alerts/)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/context:cpp)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/145999f67a5f4d25acec749b0896e47d)](https://www.codacy.com/manual/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Grade)
+
+![GitHub top language](https://img.shields.io/github/languages/top/stefanolusardi/task_scheduler) 
+![GitHub language count](https://img.shields.io/github/languages/count/stefanolusardi/task_scheduler) 
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stefanolusardi/task_scheduler) 
+![GitHub repo size](https://img.shields.io/github/repo-size/stefanolusardi/task_scheduler)
+![GitHub Issues](https://img.shields.io/github/issues/stefanolusardi/task_scheduler)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/stefanolusardi/task_scheduler) 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/stefanolusardi/task_scheduler) 
+![GitHub Release Date](https://img.shields.io/github/release-date/stefanolusardi/task_scheduler) 
+
+- [Integration](#integration)
+  - [Header only](#header-only)
+  - [CMake](#cmake)
+- [Supported OS and Compilers](#supported-os-and-compilers)
+  - [Development platforms](#development-platforms)
+  - [CI platforms](#ci-platforms)
+- [Basic Usage](#basic-usage)
+- [Examples](#examples)
+- [Tests](#tests)
+
 ## Integration
 
 ### Header only
@@ -20,9 +47,9 @@ $ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_INSTALL_LIBRARY=
 $ cmake --build . --config <Debug|Release> --target install 
 ```
 
-## Platforms & Compilers
+## Supported OS and Compilers
 
-### Developed and tested on
+### Development platforms
 *  Windows 10 - Visual Studio 2019
 *  Windows 10 - Clang 10.0
 *  Windows 10 - Clang 9.0
@@ -30,7 +57,7 @@ $ cmake --build . --config <Debug|Release> --target install
 *  Ubuntu 20.04 - Clang 9.0
 *  Ubuntu 20.04 - Clang 10.0
 
-### Supported CI platforms
+### CI platforms
 
 #### Linux
 
