@@ -60,7 +60,7 @@ private:
 
         ~schedulable_task() { }
 
-        // schedulable_task(schedulable_task&) = delete; // MSVC 2017 issue: C4521 multiple copy constructors specified
+        schedulable_task(schedulable_task&) = delete;
         schedulable_task(const schedulable_task&) = delete;
         schedulable_task& operator=(const schedulable_task&) = delete;
         
@@ -90,7 +90,7 @@ private:
 
 public:
     task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
-    : _tp{ssts::task_pool(num_threads)}, _is_running{true}
+    : _tp{num_threads}, _is_running{true}
     {
         _update_task_thread = std::thread([this] {
             while (_is_running)

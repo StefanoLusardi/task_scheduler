@@ -725,7 +725,6 @@ jobs:
 # Windows Server 2016 with Visual Studio 2017
 - job: Windows2016_VisualStudio2017
   dependsOn: []
-  condition: false
 
   pool:
     vmImage: 'vs2017-win2016'
