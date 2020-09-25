@@ -777,20 +777,17 @@ jobs:
     MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
   steps:
-  - task: ChocolateyToolInstaller@0
-    inputs:
-      force: true
   - task: CmdLine@2
     displayName: 'Install Ninja'
     inputs:
       script: |
-        'choco install --accept-license -y Ninja'
+        choco install --accept-license -y Ninja
         ninja --version
   - task: CmdLine@2
     displayName: 'Install Clang'
     inputs:
       script: |
-        'choco install --accept-license -y llvm'
+        choco install --accept-license -y llvm
         "C:/Program Files/LLVM/bin/clang-cl.exe" --version
   - task: CmdLine@2
     displayName: 'Create build directory'
@@ -843,20 +840,17 @@ jobs:
     MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
   steps:
-  - task: ChocolateyToolInstaller@0
-    inputs:
-      force: true
   - task: CmdLine@2
     displayName: 'Install Ninja'
     inputs:
       script: |
-        'choco install --accept-license -y Ninja'
+        choco install --accept-license -y Ninja
         ninja --version
   - task: CmdLine@2
     displayName: 'Install Clang'
     inputs:
       script: |
-        'choco install --accept-license -y llvm'
+        choco install --accept-license -y llvm
         "C:/Program Files/LLVM/bin/clang-cl.exe" --version
   - task: CmdLine@2
     displayName: 'Create build directory'
