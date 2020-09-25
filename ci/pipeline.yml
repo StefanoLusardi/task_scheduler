@@ -771,8 +771,8 @@ jobs:
     vmImage: 'windows-2019'
 
   variables:
-    CC: "clang-cl.exe"
-    CXX: "clang-cl.exe"
+    CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
+    CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
     MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/Common7/Tools/VsDevCmd.bat"
 
   steps:
@@ -833,8 +833,8 @@ jobs:
     vmImage: 'vs2017-win2016'
 
   variables:
-    CC: "clang-cl.exe"
-    CXX: "clang-cl.exe"
+    CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
+    CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
     MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/Tools/VsDevCmd.bat"
 
   steps:
