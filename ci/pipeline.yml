@@ -808,14 +808,14 @@ jobs:
         -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
         -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
         ../.. 
-      workingDirectory: '$(BUILD_DIR)'
+      workingDirectory: '$(BUILD_DIRECTORY)'
   - task: CmdLine@2
     displayName: 'CMake build'
     inputs:
       script: |
         call $(MSVC_DEV_ENV)
         cmake --build . --config $(BUILD_TYPE)
-      workingDirectory: '$(BUILD_DIR)'
+      workingDirectory: '$(BUILD_DIRECTORY)'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
@@ -871,14 +871,14 @@ jobs:
         -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
         -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
         ../.. 
-      workingDirectory: '$(BUILD_DIR)'
+      workingDirectory: '$(BUILD_DIRECTORY)'
   - task: CmdLine@2
     displayName: 'CMake build'
     inputs:
       script: |
         call $(MSVC_DEV_ENV)
         cmake --build . --config $(BUILD_TYPE)
-      workingDirectory: '$(BUILD_DIR)'
+      workingDirectory: '$(BUILD_DIRECTORY)'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
