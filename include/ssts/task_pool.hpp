@@ -33,7 +33,7 @@ public:
 		}
 	}
 
-    // task_pool(task_pool&) = delete; // MSVC 2017 issue: C4521 multiple copy constructors specified
+    task_pool(task_pool&) = delete;
     task_pool(const task_pool&) = delete;
 	task_pool& operator=(const task_pool&) = delete;
 	
