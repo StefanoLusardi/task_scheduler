@@ -16,13 +16,14 @@
 #include "task_pool.hpp"
 
 using namespace std::chrono_literals;
+using namespace std::string_literals;
 
 namespace ssts
 {
 
 using clock = std::chrono::steady_clock;
 
-std::string version() { return "Task Scheduler v1.0.0"; }
+inline std::string version() { return "Task Scheduler v1.0.0"; }
 
 class task_scheduler
 {
@@ -124,7 +125,7 @@ public:
             stop();
     }
 
-    void stop(bool wait_for_running_tasks = true)
+    void stop()
     {        
         _is_running = false;
         _update_tasks_cv.notify_all();

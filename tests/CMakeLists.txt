@@ -14,11 +14,12 @@ add_executable(${PROJECT_NAME}
 	src/test_in.cpp
 	src/test_at.cpp
 	src/test_every.cpp
+	src/test_disable.cpp
+	src/test_remove.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE ssts
-    PUBLIC gtest gmock
-)
+target_link_libraries(${PROJECT_NAME} PRIVATE ssts gtest)
 
 gtest_discover_tests(${PROJECT_NAME})
+
+# gcovr -r . -f '(.*/)?tests(.*/)?task.*\.hpp$' --html-title 'ssTs Code Coverage' --html-details build/Coverage/html/index.html
