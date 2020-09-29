@@ -1,3 +1,9 @@
+/*! 
+ * \file task_pool.hpp 
+ * \author Stefano Lusardi
+ * \date 2020-09-29
+ */
+
 #pragma once
 
 #include <atomic>
@@ -10,11 +16,22 @@
 
 #include "task.hpp"
 
+
+/*! \addtogroup ssts
+ *  @{
+ */
 namespace ssts
 {
 
+/*! \class task_pool
+ *  \brief Task Pool that capable of running \ref ssts::task any callable object.
+ *
+ *  This class is general purpose thread pool that can launch task asyncronously.
+ *  It is possible to get an asyncronous result of a task execution.
+ */
 class task_pool
 {
+//! \private
 public:
 	explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency()) : _is_running{ true }
 	{
@@ -40,6 +57,11 @@ public:
     task_pool(task_pool&&) = delete;
 	task_pool& operator=(task_pool&&) = delete;
 
+	/*!
+	 * \brief Destructor.
+	 * 
+	 * Destructs this after all joinable threads are terminated.
+	 */
 	~task_pool()
 	{
 		_is_running = false;
@@ -51,6 +73,16 @@ public:
 		}
 	}
 
+	/*!
+	 * \brief Run a callable object asynchronously.
+	 * \tparam FunctionType Types of the callable object. 
+	 * \param f Callable object.
+	 * \return std::future task result
+	 * 
+	 * Enqueue a new task with the given callable object.
+	 * The enqueued task will run as soon as a thread is available.
+	 * Returns the result of the asynchronous computation.
+	 */
 	template<typename FunctionType>
 	auto run(FunctionType&& f)
 	{
@@ -67,7 +99,8 @@ public:
 		return future;
 	}
 
-private:
+//! \private
+private: 
 	std::atomic_bool _is_running;
 	std::vector<std::thread> _threads;
 	std::queue<ssts::task> _task_queue;
@@ -95,3 +128,4 @@ private:
 };
 
 }
+/*! @} */
