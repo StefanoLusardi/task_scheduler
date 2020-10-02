@@ -42,7 +42,7 @@ std::string version() { return "Task Scheduler v1.0.0"; }
  *  \brief Task Scheduler that can launch tasks on based several time-based policies.
  *
  *  This class is used to manage a queue of tasks using a fixed number of threads.  
- *  The actual task execution is delgated to \ref ssts::task_pool object.
+ *  The actual task execution is delgated to an internal ssts::task_pool object.
  */
 class task_scheduler
 {
@@ -111,6 +111,13 @@ private:
 
 //! \public
 public:
+    /*!
+	 * \brief Constructor.
+	 * \param num_threads Number of threads that will be used in the underlying ssts::task_pool.
+	 * 
+	 * Creates a ssts::task_scheduler instance. 
+     * The number of threads to be used by the ssts::task_pool defaults to the number of threads supported by the platform.
+	 */
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _tp{num_threads}, _is_running{true}
     {
@@ -173,7 +180,7 @@ public:
 	 * If a task has been started without a task_id it is not possible to query its status.
      * In case a task_id is not found this function return false.
      * If a task is no longer scheduled it must be added using one of the following APIs:
-     * \ref ssts::task_scheduler::in \ref ssts::task_scheduler::at \ref ssts::task_scheduler::every.
+     * ssts::task_scheduler::in, ssts::task_scheduler::at, ssts::task_scheduler::every.
 	 */
     bool is_scheduled(const std::string& task_id)
     { 
@@ -190,7 +197,7 @@ public:
 	 * If a task has been started without a task_id it is not possible to query its status.
      * In case a task_id is not found this function return false.
      * By default new tasks are enabled.
-     * A task can be enabled or disabled by calling \ref ssts::task_scheduler::set_enabled.
+     * A task can be enabled or disabled by calling ssts::task_scheduler::set_enabled.
 	 */
     bool is_enabled(const std::string& task_id)
     { 
@@ -210,7 +217,7 @@ public:
 	 * 
 	 * If a task has been started without a task_id it is not possible to update its status.
      * In case a task_id is not found this function return false.
-     * It is possible to check if a task is enabled or disabled by calling \ref ssts::task_scheduler::is_enabled.
+     * It is possible to check if a task is enabled or disabled by calling ssts::task_scheduler::is_enabled.
 	 */
     bool set_enabled(const std::string& task_id, bool is_enabled) 
     {
@@ -232,7 +239,7 @@ public:
 	 * 
 	 * If a task has been started without a task_id it is not possible to remove it.
      * In case a task_id is not found this function return false.
-     * It is possible to check if a task is scheduled by calling \ref ssts::task_scheduler::is_scheduled.
+     * It is possible to check if a task is scheduled by calling ssts::task_scheduler::is_scheduled.
 	 */
     bool remove_task(const std::string& task_id) 
     {

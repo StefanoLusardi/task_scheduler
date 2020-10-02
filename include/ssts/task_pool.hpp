@@ -24,7 +24,7 @@ namespace ssts
 {
 
 /*! \class task_pool
- *  \brief Task Pool that capable of running \ref ssts::task any callable object.
+ *  \brief Task Pool that can run any callable object.
  *
  *  This class is general purpose thread pool that can launch task asyncronously.
  *  It is possible to get an asyncronous result of a task execution.
@@ -33,6 +33,12 @@ class task_pool
 {
 //! \private
 public:
+    /*!
+	 * \brief Constructor.
+	 * \param num_threads Number of threads that will be used in the underlying ssts::task_pool.
+	 * 
+	 * Creates a ssts::task_pool instance with the given number of threads.
+	 */
 	explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency()) : _is_running{ true }
 	{
 		const auto thread_count = std::min(num_threads, std::thread::hardware_concurrency());

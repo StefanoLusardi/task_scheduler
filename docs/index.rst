@@ -5,8 +5,6 @@ Welcome to ssTs's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
-
 Indices and tables
 ==================
 
@@ -17,8 +15,9 @@ Indices and tables
 Docs
 ====
 
-.. doxygenclass:: ssts::task
-   :members:
+.. doxygenfunction:: version
+
+.. doxygenclass:: task
 
 .. doxygenclass:: ssts::task_pool
    :members:

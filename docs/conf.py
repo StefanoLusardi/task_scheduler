@@ -28,7 +28,7 @@ breathe_projects = {}
 
 if read_the_docs_build:
     input_dir = '../include/ssts'
-    output_dir = '../build/Docs'
+    output_dir = 'build'
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
     breathe_projects['ssts'] = output_dir + '/xml'
