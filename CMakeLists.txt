@@ -25,6 +25,12 @@ target_include_directories(ssts INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
     "$<INSTALL_INTERFACE:CMAKE_INSTALL_INCLUDEDIR>")
 
+option(SSTS_BUILD_DOCS "Build library documentation" OFF)
+if(${SSTS_BUILD_DOCS})
+    message("::ssTs:: Building docs")
+    add_subdirectory(docs)
+endif()
+
 option(SSTS_BUILD_EXAMPLES "Build library examples" ON)
 if(${SSTS_BUILD_EXAMPLES})
     message(STATUS "Building examples")
