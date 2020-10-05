@@ -96,7 +96,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - configure'
     inputs:
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
+      workingDirectory: $(Build.SourcesDirectory)
       cmakeArgs: '-G "Ninja" 
         -DCMAKE_BUILD_TYPE=Debug 
         -DCMAKE_INSTALL_PREFIX=install/Coverage 
