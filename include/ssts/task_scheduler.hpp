@@ -23,6 +23,7 @@
 
 
 using namespace std::chrono_literals;
+using namespace std::string_literals;
 
 namespace ssts
 {
@@ -33,8 +34,8 @@ using clock = std::chrono::steady_clock;
 
 /*! ssts library version.  
  *  \return std::string current ssts version.  
-*/  
-std::string version() { return "Task Scheduler v1.0.0"; }
+*/ 
+inline std::string version() { return "Task Scheduler v1.0.0"; }
 
 /*! \class task_scheduler
  *  \brief Task Scheduler that can launch tasks on based several time-based policies.
@@ -159,7 +160,7 @@ public:
 	 * 
 	 * This function stops the task_scheduler execution and stops all the running tasks.
 	 */
-    void stop(bool wait_for_running_tasks = true)
+    void stop()
     {        
         _is_running = false;
         _update_tasks_cv.notify_all();

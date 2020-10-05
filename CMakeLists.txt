@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 project(ssts 
     VERSION 1.0.0
@@ -25,7 +25,16 @@ target_include_directories(ssts INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
     "$<INSTALL_INTERFACE:CMAKE_INSTALL_INCLUDEDIR>")
 
-option(SSTS_BUILD_DOCS "Build library documentation" ON)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    option(SSTS_ENABLE_CODE_COVERAGE "Enable code coverage" ON)
+    if(${SSTS_ENABLE_CODE_COVERAGE})
+        message(STATUS "::ssTs:: Code coverage enabled")
+        target_compile_options(ssts INTERFACE --coverage -O0 -g -fno-inline -fno-inline-small-functions -fno-default-inline -fkeep-inline-functions)
+        target_link_options(ssts INTERFACE --coverage -fno-inline -fno-inline-small-functions -fno-default-inline -fkeep-inline-functions)
+    endif()
+endif()  
+
+option(SSTS_BUILD_DOCS "Build library documentation" OFF)
 if(${SSTS_BUILD_DOCS})
     message("::ssTs:: Building docs")
     add_subdirectory(docs)
@@ -33,22 +42,27 @@ endif()
 
 option(SSTS_BUILD_EXAMPLES "Build library examples" ON)
 if(${SSTS_BUILD_EXAMPLES})
-    message(STATUS "Building examples")
+    message(STATUS "::ssTs:: Build examples")
     add_subdirectory(examples)
 endif()
 
 option(SSTS_BUILD_TESTS "Build library tests" ON)
 if(${SSTS_BUILD_TESTS})
-    message(STATUS "Building tests")
+    message(STATUS "::ssTs:: Building tests")
     enable_testing()
     add_subdirectory(tests)
 endif()
 
 option(SSTS_INSTALL_LIBRARY "Install library" ON)
 if(${SSTS_INSTALL_LIBRARY})
-    message(STATUS "Installing library")
+    message(STATUS "::ssTs:: Install library")
     include(GNUInstallDirs)
     install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
     install(TARGETS ssts EXPORT ssts DESTINATION "${CMAKE_INSTALL_LIBDIR}")
     option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library)" ON)
+endif()
+
+option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library)" ON)
+if(${SSTS_INSTALL_LIBRARY})
+    message(STATUS "::ssTs:: Install examples")
 endif()
