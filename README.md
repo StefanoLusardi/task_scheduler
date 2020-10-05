@@ -5,21 +5,25 @@ Header only, with [no external dependencies](#tests).
 
 [Try **ssTs** out on Wandbox!](https://wandbox.org/permlink/yTJVogjpcsZzzyNq)
 
-![ssTs](/docs/logo/ssts_logo.png)
+![ssTs](/docs/logo/ssts_logo.png) 
+
 
 ![GitHub](https://img.shields.io/github/license/stefanolusardi/task_scheduler) 
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
-[![Try online](https://img.shields.io/badge/try-online-orange.svg)](https://wandbox.org/permlink/yTJVogjpcsZzzyNq)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues) 
+[![Try online](https://img.shields.io/badge/try-online-orange.svg)](https://wandbox.org/permlink/yTJVogjpcsZzzyNq) 
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/alerts/)
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/context:cpp)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/145999f67a5f4d25acec749b0896e47d)](https://www.codacy.com/manual/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Grade)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/alerts/) 
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/context:cpp) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/145999f67a5f4d25acec749b0896e47d)](https://www.codacy.com/manual/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Grade) 
+
+[![Documentation Status](https://readthedocs.org/projects/task-scheduler/badge/?version=latest)](https://task-scheduler.readthedocs.io/en/latest/?badge=latest) 
+[![Documentation](https://codedocs.xyz/StefanoLusardi/task_scheduler.svg)](https://codedocs.xyz/StefanoLusardi/task_scheduler/) 
 
 ![GitHub top language](https://img.shields.io/github/languages/top/stefanolusardi/task_scheduler) 
 ![GitHub language count](https://img.shields.io/github/languages/count/stefanolusardi/task_scheduler) 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stefanolusardi/task_scheduler) 
-![GitHub repo size](https://img.shields.io/github/repo-size/stefanolusardi/task_scheduler)
-![GitHub Issues](https://img.shields.io/github/issues/stefanolusardi/task_scheduler)
+![GitHub repo size](https://img.shields.io/github/repo-size/stefanolusardi/task_scheduler) 
+![GitHub Issues](https://img.shields.io/github/issues/stefanolusardi/task_scheduler) 
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/stefanolusardi/task_scheduler) 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/stefanolusardi/task_scheduler) 
@@ -32,6 +36,7 @@ Header only, with [no external dependencies](#tests).
   - [Development platforms](#development-platforms)
   - [CI platforms](#ci-platforms)
 - [Basic Usage](#basic-usage)
+- [Documentation](#documentation)
 - [Examples](#examples)
 - [Tests](#tests)
 
@@ -135,9 +140,6 @@ MacOS X Catalina 10.15 - GCC 9.3
 
 *  Running a task is as simple as:
 ```cpp
-// Allow literal suffixes (e.g. 3s, 250ms)
-using namespace std::chrono_literals;
-
 // Create a Task Scheduler instance
 ts::task_scheduler s(2);
 
@@ -157,7 +159,7 @@ std::future f = s.at(std::chrono::steady_clock::now() + 2s,
 std::cout << "Task result: " << f.get() << std::endl; // prints 43
 ```
 
-*  It's possible to start a task giving it a task id to be able to manipulate it later.
+*  It's possible to start a task giving it a task id to be able to manipulate it later:
 ```cpp
 // Check if a task is currently scheduled 
 // (i.e. already inserted in the scheduler)
@@ -186,13 +188,34 @@ s.is_enabled("my_task_id"); // false
 s.stop();
 ```
 
+*  Nested task creation and execution is also supported:
+```cpp
+s.every("parent_task_id", 1s, 
+    [&s]{ 
+        std::cout << "Parent Task!" << std::endl;
+        s.in("inner_task_id", 100ms, []{ std::cout << "Child Task!" << std::endl; });
+    });
+```
+
+## Documentation
+*Documentation* sources are located in the [docs](/docs) folder.
+An online version of the latest docs can be found [here](https://task-scheduler.readthedocs.io/en/latest/).  
+Docs are automatically generated from source code at every commit using *Doxygen*, *Breathe* and *Sphinx* and are hosted on *Read The Docs*.
+It is possible to build the docs from CMake (*Doxygen*, *Breathe* and *Sphinx* are required) using:
+```console
+$ git clone https://github.com/stefanolusardi/task_scheduler.git
+$ cd ssts && mkdir build && cd build
+$ cmake -G<GENERATOR> -DSSTS_BUILD_DOCS=ON ..
+$ cmake --build . 
+```
+
 ## Examples
 *Examples* are located within the [examples](/examples) folder.  
 It is possible to build and install the *examples* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -G<GENERATOR>  -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_EXAMPLES=ON  -DSSTS_INSTALL_LIBRARY=ON -DSSTS_INSTALL_EXAMPLES=ON ..
+$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_EXAMPLES=ON -DSSTS_INSTALL_LIBRARY=ON -DSSTS_INSTALL_EXAMPLES=ON ..
 $ cmake --build . --config <Debug|Release>
 ```
 
@@ -204,6 +227,6 @@ It is possible to build the *tests* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -G<GENERATOR>  -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_TESTS=ON ..
+$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_TESTS=ON ..
 $ cmake --build . --config <Debug|Release>
 ```
