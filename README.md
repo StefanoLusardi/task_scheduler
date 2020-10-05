@@ -5,7 +5,7 @@ Header only, with [no external dependencies](#tests).
 
 [Try **ssTs** out on Wandbox!](https://wandbox.org/permlink/yTJVogjpcsZzzyNq)
 
-![ssTs](/logo/ssTs_logo.png)
+![ssTs](/docs/logo/ssts_logo.png)
 
 ![GitHub](https://img.shields.io/github/license/stefanolusardi/task_scheduler) 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)

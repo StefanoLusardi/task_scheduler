@@ -20,3 +20,4 @@ endfunction()
 
 add_example(example_pool)
 add_example(example_scheduler)
+add_example(example_nested)

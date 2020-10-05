@@ -21,11 +21,9 @@
 #include "task.hpp"
 #include "task_pool.hpp"
 
+
 using namespace std::chrono_literals;
 
-/*! \addtogroup ssts
- *  @{
- */
 namespace ssts
 {
 
@@ -46,7 +44,6 @@ std::string version() { return "Task Scheduler v1.0.0"; }
  */
 class task_scheduler
 {
-//! \private
 private:
     class schedulable_task
     {
@@ -109,7 +106,6 @@ private:
         std::optional<size_t> _hash;
     };
 
-//! \public
 public:
     /*!
 	 * \brief Constructor.
@@ -367,7 +363,6 @@ public:
         add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), _hasher(task_id), interval));
     }
 
-//! \private
 private:
     ssts::task_pool _tp;
     std::atomic_bool _is_running;
@@ -436,4 +431,4 @@ private:
 };
 
 }
-/*! @} */
+

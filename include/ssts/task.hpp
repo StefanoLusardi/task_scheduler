@@ -1,8 +1,4 @@
-/*! 
- * \file task.hpp 
- * \author Stefano Lusardi
- * \date 2020-09-29
- */
+
 
 #pragma once
 
@@ -10,9 +6,7 @@
 #include <algorithm>
 #include <type_traits>
 
-/*! \addtogroup ssts
- *  @{
- */
+
 namespace ssts
 {
 
@@ -24,7 +18,6 @@ namespace ssts
  */
 class task
 {
-//! \private
 private:
 	struct task_base
 	{
@@ -40,13 +33,13 @@ private:
 		FunctionType _func;
 	};
 
-//! \public
 public:
 	/*!
 	 * \brief Default constructor.
-	 * \param f Callable parameterless object.
+	 * \param f Callable parameterless object wrapped within this task instance.
 	 * 
-	 * Creates a \ref ssts::task instance.
+	 * Creates a task instance with the given callable object.
+	 * The callable object can be e.g. a lambda function, a functor, a free function or a class method bound to an object.
 	 */
 	template<typename FunctionType>
 	task(FunctionType&& f) 
@@ -59,9 +52,9 @@ public:
 	
 	/*!
 	 * \brief Move constructor.
-	 * \param other \ref ssts::task object.
+	 * \param other task object.
 	 * 
-	 * Move constructs a \ref ssts::task instance to this.
+	 * Move constructs a task instance to this.
 	 */
     task(task&& other) noexcept 
 	: _impl{ std::move(other._impl) } 
@@ -69,9 +62,9 @@ public:
 	
 	/*!
 	 * \brief Move assignement.
-	 * \param other \ref ssts::task object.
+	 * \param other task object.
 	 * 
-	 * Move assigns a \ref ssts::task instance to this.
+	 * Move assigns a task instance to this.
 	 */
 	task& operator=(task&& other) noexcept
 	{
@@ -82,14 +75,13 @@ public:
 	/*!
 	 * \brief operator().
 	 * 
-	 * Invokes a \ref ssts::task.
+	 * Invokes a task.
 	 */
 	void operator()() { _impl->invoke(); }
 
-//! \private
 private:
 	std::unique_ptr<task_base> _impl;
 };
 
 }
-/*! @} */
+

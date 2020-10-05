@@ -17,9 +17,6 @@
 #include "task.hpp"
 
 
-/*! \addtogroup ssts
- *  @{
- */
 namespace ssts
 {
 
@@ -31,7 +28,7 @@ namespace ssts
  */
 class task_pool
 {
-//! \private
+
 public:
     /*!
 	 * \brief Constructor.
@@ -105,7 +102,6 @@ public:
 		return future;
 	}
 
-//! \private
 private: 
 	std::atomic_bool _is_running;
 	std::vector<std::thread> _threads;
@@ -134,4 +130,3 @@ private:
 };
 
 }
-/*! @} */
