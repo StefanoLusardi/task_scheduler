@@ -96,7 +96,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - configure'
     inputs:
-      workingDirectory: $(Build.SourcesDirectory)
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '-G "Ninja" 
         -DCMAKE_BUILD_TYPE=Debug 
         -DCMAKE_INSTALL_PREFIX=install/Coverage 
@@ -109,13 +109,13 @@ jobs:
   - task: CMake@1
     displayName: 'CMake - build'
     inputs:
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
+      workingDirectory: $(BUILD_DIRECTORY)
       cmakeArgs: '--build . --config Debug'
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
       script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: CmdLine@2
     displayName: 'CMake - Run CTest'
     inputs:
@@ -124,12 +124,12 @@ jobs:
         lcov --remove coverage.info '/usr/*' --output-file coverage.info
         lcov --list coverage.info 
         bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
+      workingDirectory: $(BUILD_DIRECTORY)
   - task: PublishTestResults@2
     displayName: 'Publish test results'
     inputs:
       testResultsFormat: 'cTest'
-      testResultsFiles: '$(Build.SourcesDirectory)/Coverage/Testing/*/Test.xml'
+      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
       testRunTitle: 'Test Results'
 
 
