@@ -32,6 +32,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         target_compile_options(ssts INTERFACE --coverage -O0 -g -fno-inline -fno-inline-small-functions -fno-default-inline -fkeep-inline-functions)
         target_link_options(ssts INTERFACE --coverage -fno-inline -fno-inline-small-functions -fno-default-inline -fkeep-inline-functions)
     endif()
+endif()  
+
+option(SSTS_BUILD_DOCS "Build library documentation" OFF)
+if(${SSTS_BUILD_DOCS})
+    message("::ssTs:: Building docs")
+    add_subdirectory(docs)
 endif()
 
 option(SSTS_BUILD_EXAMPLES "Build library examples" ON)

@@ -1,12 +1,21 @@
+
+
 #pragma once
 
 #include <memory>
 #include <algorithm>
 #include <type_traits>
 
+
 namespace ssts
 {
 
+/*! \class task
+ *  \brief Move-only callable object.
+ *
+ *  This class represents a callable object. Can be initialized with any invocable type that supports operator().  
+ *  Internally the class implements a type-erasure idiom to accept any callable signature without exposing it to the outside.
+ */
 class task
 {
 private:
@@ -25,21 +34,49 @@ private:
 	};
 
 public:
+	/*!
+	 * \brief Default constructor.
+	 * \param f Callable parameterless object wrapped within this task instance.
+	 * 
+	 * Creates a task instance with the given callable object.
+	 * The callable object can be e.g. a lambda function, a functor, a free function or a class method bound to an object.
+	 */
 	template<typename FunctionType>
 	task(FunctionType&& f) 
-	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } { }
+	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } 
+	{ }
 
     task(task&) = delete;
     task(const task&) = delete;
 	task& operator=(const task&) = delete;
 	
-    task(task&& other) noexcept : _impl{ std::move(other._impl) } { }
+	/*!
+	 * \brief Move constructor.
+	 * \param other task object.
+	 * 
+	 * Move constructs a task instance to this.
+	 */
+    task(task&& other) noexcept 
+	: _impl{ std::move(other._impl) } 
+	{ }
+	
+	/*!
+	 * \brief Move assignement.
+	 * \param other task object.
+	 * 
+	 * Move assigns a task instance to this.
+	 */
 	task& operator=(task&& other) noexcept
 	{
 		_impl = std::move(other._impl);
 		return *this;
 	}
 
+	/*!
+	 * \brief operator().
+	 * 
+	 * Invokes a task.
+	 */
 	void operator()() { _impl->invoke(); }
 
 private:
@@ -47,3 +84,4 @@ private:
 };
 
 }
+

@@ -1,3 +1,9 @@
+/*! 
+ * \file task_scheduler.hpp 
+ * \author Stefano Lusardi
+ * \date 2020-09-29
+ */
+
 #pragma once
 
 #include <atomic>
@@ -15,16 +21,28 @@
 #include "task.hpp"
 #include "task_pool.hpp"
 
+
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
 namespace ssts
 {
 
+/*! \typedef ssts::clock Alias for std::chrono::steady_clock.
+ */
 using clock = std::chrono::steady_clock;
 
+/*! ssts library version.  
+ *  \return std::string current ssts version.  
+*/ 
 inline std::string version() { return "Task Scheduler v1.0.0"; }
 
+/*! \class task_scheduler
+ *  \brief Task Scheduler that can launch tasks on based several time-based policies.
+ *
+ *  This class is used to manage a queue of tasks using a fixed number of threads.  
+ *  The actual task execution is delgated to an internal ssts::task_pool object.
+ */
 class task_scheduler
 {
 private:
@@ -90,6 +108,13 @@ private:
     };
 
 public:
+    /*!
+	 * \brief Constructor.
+	 * \param num_threads Number of threads that will be used in the underlying ssts::task_pool.
+	 * 
+	 * Creates a ssts::task_scheduler instance. 
+     * The number of threads to be used by the ssts::task_pool defaults to the number of threads supported by the platform.
+	 */
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _tp{num_threads}, _is_running{true}
     {
@@ -119,12 +144,22 @@ public:
         });
     }
 
+    /*!
+	 * \brief Destructor.
+	 * 
+	 * Destructs this. If the task_scheduler is running its tasks are stopped first.
+	 */
     ~task_scheduler()
     {
         if (_is_running)
             stop();
     }
 
+    /*!
+	 * \brief Stop all running tasks.
+	 * 
+	 * This function stops the task_scheduler execution and stops all the running tasks.
+	 */
     void stop()
     {        
         _is_running = false;
@@ -134,6 +169,16 @@ public:
             _update_task_thread.join();
     }
 
+    /*!
+	 * \brief Check if a task is scheduled.
+     * \param task_id task_id to check.
+     * \return bool indicating if the task is currently scheduled.
+	 * 
+	 * If a task has been started without a task_id it is not possible to query its status.
+     * In case a task_id is not found this function return false.
+     * If a task is no longer scheduled it must be added using one of the following APIs:
+     * ssts::task_scheduler::in, ssts::task_scheduler::at, ssts::task_scheduler::every.
+	 */
     bool is_scheduled(const std::string& task_id)
     { 
         std::scoped_lock lock(_update_tasks_mtx);
@@ -141,6 +186,16 @@ public:
         return get_task_iterator(task_id) != _tasks.end();
     }
 
+    /*!
+	 * \brief Check if a task is enabled.
+     * \param task_id task_id to check.
+     * \return bool indicating if the task is currently enabled.
+	 * 
+	 * If a task has been started without a task_id it is not possible to query its status.
+     * In case a task_id is not found this function return false.
+     * By default new tasks are enabled.
+     * A task can be enabled or disabled by calling ssts::task_scheduler::set_enabled.
+	 */
     bool is_enabled(const std::string& task_id)
     { 
         std::scoped_lock lock(_update_tasks_mtx);
@@ -151,6 +206,16 @@ public:
         return false;
     }
     
+    /*!
+	 * \brief Enable or disable task.
+     * \param task_id task_id to enable or disable.
+     * \param is_enabled true enables, false disables the given task_id.
+     * \return bool indicating if the task is currently enabled.
+	 * 
+	 * If a task has been started without a task_id it is not possible to update its status.
+     * In case a task_id is not found this function return false.
+     * It is possible to check if a task is enabled or disabled by calling ssts::task_scheduler::is_enabled.
+	 */
     bool set_enabled(const std::string& task_id, bool is_enabled) 
     {
         std::scoped_lock lock(_update_tasks_mtx);
@@ -164,6 +229,15 @@ public:
         return false;
     }
 
+    /*!
+	 * \brief Remove a task.
+     * \param task_id task_id to remove.
+     * \return bool indicating if the task has been properly removed.
+	 * 
+	 * If a task has been started without a task_id it is not possible to remove it.
+     * In case a task_id is not found this function return false.
+     * It is possible to check if a task is scheduled by calling ssts::task_scheduler::is_scheduled.
+	 */
     bool remove_task(const std::string& task_id) 
     {
         std::scoped_lock lock(_update_tasks_mtx);

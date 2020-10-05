@@ -3,10 +3,13 @@
 **ssTs** is a time-based *Task Scheduler*, written in modern C++.  
 Header only, with [no external dependencies](#tests).
 
-![ssTs](/logo/ssTs_logo.png)
+[Try **ssTs** out on Wandbox!](https://wandbox.org/permlink/yTJVogjpcsZzzyNq)
+
+![ssTs](/docs/logo/ssts_logo.png)
 
 ![GitHub](https://img.shields.io/github/license/stefanolusardi/task_scheduler) 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+[![Try online](https://img.shields.io/badge/try-online-orange.svg)](https://wandbox.org/permlink/yTJVogjpcsZzzyNq)
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/alerts/)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/context:cpp)
@@ -35,7 +38,7 @@ Header only, with [no external dependencies](#tests).
 ## Integration
 
 ### Header only
-Copy the [include](/include) folder, that contains the 3 header files [task.hpp](/include/ssts/task.hpp), [task_pool.hpp](/include/ssts/task_pool.hpp) and [task_scheduler.hpp](/include/ssts/task_scheduler.hpp) within your project or set your include path to it and just build your code.  
+Copy the [include](/include) folder, that contains the 3 header files [task.hpp](/include/ssts/task.hpp), [task_pool.hpp](/include/ssts/task_pool.hpp) and [task_scheduler.hpp](/include/ssts/task_scheduler.hpp) within your project sources or set your include path to it and just build your code.  
 **ssTs** requires a *C++17* compiler.
 
 ### CMake
