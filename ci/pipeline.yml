@@ -70,7 +70,7 @@ jobs:
 
   steps:
   - task: Bash@3
-    displayName: 'Install Ninja'
+    displayName: 'Install gcovr'
     inputs:
       targetType: 'inline'
       script: |
@@ -78,13 +78,13 @@ jobs:
         echo 'gcovr Version: '
         gcovr --version
   - task: Bash@3
-    displayName: 'Install Ninja'
+    displayName: 'Install lcov'
     inputs:
       targetType: 'inline'
       script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
+        sudo apt install lcov 
+        echo 'lcov Version: '
+        lcov --version
   - task: Bash@3
     displayName: 'Install Ninja'
     inputs:
@@ -99,10 +99,10 @@ jobs:
       workingDirectory: $(Build.SourcesDirectory)/Coverage
       cmakeArgs: '-G "Ninja" 
         -DCMAKE_BUILD_TYPE=Debug 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+        -DCMAKE_INSTALL_PREFIX=install/Coverage 
         -DSSTS_INSTALL_LIBRARY=OFF 
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS) 
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) 
+        -DSSTS_BUILD_TESTS=ON 
+        -DSSTS_BUILD_EXAMPLES=OFF 
         -DSSTS_INSTALL_EXAMPLES=OFF 
         -DSSTS_ENABLE_CODE_COVERAGE=ON 
         ../..'
@@ -117,10 +117,13 @@ jobs:
       script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
       workingDirectory: $(Build.SourcesDirectory)/Coverage
   - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
+    displayName: 'CMake - Run CTest'
     inputs:
-      script: cpack .
+      script: |
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' --output-file coverage.info
+        lcov --list coverage.info 
+        bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
       workingDirectory: $(Build.SourcesDirectory)/Coverage
   - task: PublishTestResults@2
     displayName: 'Publish test results'
