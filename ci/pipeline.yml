@@ -118,7 +118,7 @@ stages:
           script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: CmdLine@2
-        displayName: 'CMake - Run CTest'
+        displayName: 'Upload Coverage results'
         inputs:
           script: |
             lcov --capture --directory . --output-file coverage.info
@@ -126,12 +126,6 @@ stages:
             lcov --list coverage.info 
             bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: PublishTestResults@2
-        displayName: 'Publish test results'
-        inputs:
-          testResultsFormat: 'cTest'
-          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-          testRunTitle: 'Test Results'
 
   - stage: Docs
     displayName: 'Docs'
