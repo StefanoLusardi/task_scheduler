@@ -130,13 +130,13 @@ stages:
         displayName: 'Generate Code Coverage results [Cobertura]'
         inputs:
           script: |
-            gcovr -r . --xml -o coverage.xml
-          workingDirectory: $(BUILD_DIRECTORY)
+            gcovr -r . -e "(.*)gtest(.*)" --xml -o coverage.xml
+          workingDirectory: $(Build.SourcesDirectory)
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish Code Coverage results'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(BUILD_DIRECTORY)/coverage.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/coverage.xml'
       - task: CmdLine@2
         displayName: 'Generate Code Coverage results [Lcov]'
         inputs:
