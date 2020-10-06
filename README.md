@@ -18,7 +18,8 @@ Header only, with [no external dependencies](#tests).
 
 ![Azure DevOps builds](https://img.shields.io/azure-devops/build/stefanolusardi/ssts/14) 
 ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/stefanolusardi/ssts/14) 
-[![codecov](https://codecov.io/gh/StefanoLusardi/task_scheduler/branch/master/graph/badge.svg?token=DQLSB3A0UU)](undefined) 
+[![codecov](https://codecov.io/gh/StefanoLusardi/task_scheduler/branch/master/graph/badge.svg)](https://codecov.io/gh/StefanoLusardi/task_scheduler) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/82f58a941701453eba4f7d610660cf55)](https://www.codacy.com/gh/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Coverage) 
 
 [![Documentation Status](https://readthedocs.org/projects/task-scheduler/badge/?version=latest)](https://task-scheduler.readthedocs.io/en/latest/?badge=latest) 
 [![Documentation](https://codedocs.xyz/StefanoLusardi/task_scheduler.svg)](https://codedocs.xyz/StefanoLusardi/task_scheduler/) 
