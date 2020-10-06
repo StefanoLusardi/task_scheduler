@@ -90,14 +90,14 @@ private:
         , _hash{std::move(other._hash)}
         { }
 
-        schedulable_task& operator=(schedulable_task&& other) noexcept
-        {
-            _task = std::move(other._task);
-            _is_enabled = std::move(other._is_enabled);
-            _interval = std::move(other._interval);
-            _hash = std::move(other._hash);
-            return *this;
-        }
+        // schedulable_task& operator=(schedulable_task&& other) noexcept
+        // {
+        //     _task = std::move(other._task);
+        //     _is_enabled = std::move(other._is_enabled);
+        //     _interval = std::move(other._interval);
+        //     _hash = std::move(other._hash);
+        //     return *this;
+        // }
 
     	void invoke() { _task(); }
 
@@ -116,33 +116,8 @@ public:
      * The number of threads to be used by the ssts::task_pool defaults to the number of threads supported by the platform.
 	 */
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
-    : _tp{num_threads}, _is_running{true}
-    {
-        _update_task_thread = std::thread([this] {
-            while (_is_running)
-            {
-                std::unique_lock lock(_update_tasks_mtx);
-
-                if (_tasks.empty())
-                {
-                    _update_tasks_cv.wait(lock, [this] 
-                    {
-                        return !_tasks.empty() || !_is_running;
-                    });
-                }
-                else
-                {
-                    _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] 
-                    {
-                        return ssts::clock::now() >= _tasks.begin()->first || !_is_running;
-                    });
-                }
-
-                lock.unlock();
-                update_tasks();
-            }
-        });
-    }
+    : _tp{num_threads}, _is_running{true}, _scheduler_thread{std::thread([this]{scheduler_worker();})}
+    { }
 
     /*!
 	 * \brief Destructor.
@@ -165,8 +140,8 @@ public:
         _is_running = false;
         _update_tasks_cv.notify_all();
 
-        if (_update_task_thread.joinable())
-            _update_task_thread.join();
+        if (_scheduler_thread.joinable())
+            _scheduler_thread.join();
     }
 
     /*!
@@ -367,12 +342,38 @@ public:
 private:
     ssts::task_pool _tp;
     std::atomic_bool _is_running;
-    std::thread _update_task_thread;
+    std::thread _scheduler_thread;
     std::multimap<ssts::clock::time_point, schedulable_task> _tasks;
     std::unordered_set<size_t> _tasks_to_delete;
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
     std::hash<std::string> _hasher;
+
+    void scheduler_worker()
+    {
+        while (_is_running)
+        {
+            std::unique_lock lock(_update_tasks_mtx);
+
+            if (_tasks.empty())
+            {
+                _update_tasks_cv.wait(lock, [this] 
+                {
+                    return !_tasks.empty() || !_is_running;
+                });
+            }
+            else
+            {
+                _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] 
+                {
+                    return ssts::clock::now() >= _tasks.begin()->first || !_is_running;
+                });
+            }
+
+            lock.unlock();
+            update_tasks();
+        }
+    }
 
     void add_task(ssts::clock::time_point&& timepoint, schedulable_task&& st)
     {

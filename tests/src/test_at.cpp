@@ -14,10 +14,7 @@ TEST(sstsAt, FunctionOnly)
 TEST(sstsAt, FunctionParameters)
 {
 	ssts::task_scheduler s(2);
-	s.at(ssts::clock::now() + 1s, 
-		[](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, 
-		"Input param:", 
-		42);
+	s.at(ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
 
     std::this_thread::sleep_for(2s);
 	SUCCEED();
@@ -26,9 +23,7 @@ TEST(sstsAt, FunctionParameters)
 TEST(sstsAt, TaskIdFunctionOnly)
 {
 	ssts::task_scheduler s(2);
-	s.at("task_id", 
-		ssts::clock::now() + 1s, 
-		[]{std::cout << "Hello!" << std::endl;});
+	s.at("task_id", ssts::clock::now() + 1s, []{std::cout << "Hello!" << std::endl;});
 
     std::this_thread::sleep_for(2s);
 	s.stop();
@@ -39,11 +34,7 @@ TEST(sstsAt, TaskIdFunctionOnly)
 TEST(sstsAt, TaskIdFunctionParameters)
 {
 	ssts::task_scheduler s(2);
-	s.at("task_id", 
-		ssts::clock::now() + 1s, 
-		[](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, 
-		"Input param:", 
-		42);
+	s.at("task_id", ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
 
     std::this_thread::sleep_for(2s);
 	s.stop();
@@ -54,8 +45,7 @@ TEST(sstsAt, TaskIdFunctionParameters)
 TEST(sstsAt, TaskResultFunctionOnly)
 {
 	ssts::task_scheduler s(2);
-	std::future f = s.at(ssts::clock::now() + 1s, 
-		[]{ return 42; });
+	std::future f = s.at(ssts::clock::now() + 1s, []{ return 42; });
 
 	const auto result = f.get();
 	EXPECT_EQ(result, 42);
@@ -64,9 +54,7 @@ TEST(sstsAt, TaskResultFunctionOnly)
 TEST(sstsAt, TaskResultFunctionParameters)
 {
 	ssts::task_scheduler s(2);
-	std::future f = s.at(ssts::clock::now() + 1s, 
-		[](auto p){ return 2 * p; }, 
-		21);
+	std::future f = s.at(ssts::clock::now() + 1s, [](auto p){ return 2 * p; }, 21);
 
 	const auto result = f.get();
 	EXPECT_EQ(result, 42);

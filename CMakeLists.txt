@@ -25,7 +25,7 @@ target_include_directories(ssts INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
     "$<INSTALL_INTERFACE:CMAKE_INSTALL_INCLUDEDIR>")
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+if(NOT WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     option(SSTS_ENABLE_CODE_COVERAGE "Enable code coverage" ON)
     if(${SSTS_ENABLE_CODE_COVERAGE})
         message(STATUS "::ssTs:: Code coverage enabled")

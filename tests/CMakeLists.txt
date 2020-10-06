@@ -21,5 +21,3 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PRIVATE ssts gtest)
 
 gtest_discover_tests(${PROJECT_NAME})
-
-# gcovr -r . -f '(.*/)?tests(.*/)?task.*\.hpp$' --html-title 'ssTs Code Coverage' --html-details build/Coverage/html/index.html
