@@ -8,14 +8,16 @@ Header only, with [no external dependencies](#tests).
 ![ssTs](/docs/logo/ssts_logo.png) 
 
 
-![GitHub](https://img.shields.io/github/license/stefanolusardi/task_scheduler) 
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues) 
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/StefanoLusardi/task_scheduler/blob/master/LICENSE) 
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/StefanoLusardi/task_scheduler/issues) 
 [![Try online](https://img.shields.io/badge/try-online-orange.svg)](https://wandbox.org/permlink/yTJVogjpcsZzzyNq) 
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/alerts/) 
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/context:cpp) 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/145999f67a5f4d25acec749b0896e47d)](https://www.codacy.com/manual/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Grade) 
 
+![Azure DevOps builds](https://img.shields.io/azure-devops/build/stefanolusardi/ssts/14) 
+![Azure DevOps tests](https://img.shields.io/azure-devops/tests/stefanolusardi/ssts/14) 
 [![Documentation Status](https://readthedocs.org/projects/task-scheduler/badge/?version=latest)](https://task-scheduler.readthedocs.io/en/latest/?badge=latest) 
 [![Documentation](https://codedocs.xyz/StefanoLusardi/task_scheduler.svg)](https://codedocs.xyz/StefanoLusardi/task_scheduler/) 
 
