@@ -66,8 +66,11 @@ stages:
         vmImage: 'ubuntu-20.04'
       
       variables:
-        CC: gcc-9
-        CXX: g++-9
+      - group: ssts
+      - name: CC
+        value: gcc-9
+      - name: CXX
+        value: g++-9
 
       steps:
       - task: Bash@3
@@ -75,6 +78,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            echo CODACY_API_TOKEN:
+            echo $(CODACY_API_TOKEN)
             sudo apt install gcovr 
             echo 'gcovr Version: '
             gcovr --version
@@ -118,13 +123,21 @@ stages:
           script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: CmdLine@2
-        displayName: 'Upload Coverage results'
+        displayName: 'Upload Coverage results [Codecov]'
         inputs:
           script: |
             lcov --capture --directory . --output-file coverage.info
             lcov --remove coverage.info '/usr/*' '*gtest*' --output-file coverage.info
             lcov --list coverage.info 
             bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+          workingDirectory: $(BUILD_DIRECTORY)
+      
+      - task: CmdLine@2
+        displayName: 'Upload Coverage results [Codacy]'
+        inputs:
+          script: |
+            export CODACY_PROJECT_TOKEN=$(CODACY_API_TOKEN)
+            bash <(curl -Ls https://coverage.codacy.com/get.sh) report
           workingDirectory: $(BUILD_DIRECTORY)
 
   - stage: Docs
@@ -151,6 +164,12 @@ stages:
             sudo apt install ninja-build
             echo 'Ninja Version: '
             ninja --version
+      - task: UsePythonVersion@0
+        displayName: 'Set Python 3.x'
+        inputs:
+          versionSpec: '3.x'
+          addToPath: true
+          architecture: 'x64'
       - task: Bash@3
         displayName: 'Install Doc Tools'
         inputs:
