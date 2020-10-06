@@ -226,7 +226,6 @@ stages:
   - stage: Build
     displayName: 'Build and Unit Tests'
     dependsOn: []
-    condition: false
     jobs:
 
     #######################################################################################
