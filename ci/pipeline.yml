@@ -136,8 +136,11 @@ stages:
         displayName: 'Upload Coverage results [Codacy]'
         inputs:
           script: |
+            lcov --capture --directory . --output-file lcov.info
+            lcov --remove lcov.info '/usr/*' '*gtest*' --output-file lcov.info
+            lcov --list lcov.info 
             export CODACY_PROJECT_TOKEN=$(CODACY_API_TOKEN)
-            bash <(curl -Ls https://coverage.codacy.com/get.sh) -r coverage.info report
+            bash <(curl -Ls https://coverage.codacy.com/get.sh)
           workingDirectory: $(BUILD_DIRECTORY)
 
   - stage: Docs
