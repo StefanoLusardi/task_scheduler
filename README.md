@@ -18,6 +18,8 @@ Header only, with [no external dependencies](#tests).
 
 ![Azure DevOps builds](https://img.shields.io/azure-devops/build/stefanolusardi/ssts/14) 
 ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/stefanolusardi/ssts/14) 
+[![codecov](https://codecov.io/gh/StefanoLusardi/task_scheduler/branch/master/graph/badge.svg?token=DQLSB3A0UU)](undefined) 
+
 [![Documentation Status](https://readthedocs.org/projects/task-scheduler/badge/?version=latest)](https://task-scheduler.readthedocs.io/en/latest/?badge=latest) 
 [![Documentation](https://codedocs.xyz/StefanoLusardi/task_scheduler.svg)](https://codedocs.xyz/StefanoLusardi/task_scheduler/) 
 
