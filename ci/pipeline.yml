@@ -61,6 +61,7 @@ stages:
 
     - job: Coverage_Ubuntu2004_GCC9
       dependsOn: []
+      timeoutInMinutes: 10
 
       pool:
         vmImage: 'ubuntu-20.04'
@@ -162,8 +163,6 @@ stages:
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.info
           workingDirectory: $(BUILD_DIRECTORY)
 
-
-
   - stage: Docs
     displayName: 'Docs'
     dependsOn: []
@@ -172,6 +171,7 @@ stages:
 
     - job: Docs_Ubuntu2004_GCC9
       dependsOn: []
+      timeoutInMinutes: 10
 
       pool:
         vmImage: 'ubuntu-20.04'
@@ -235,6 +235,7 @@ stages:
     # Ubuntu 20.04 with GCC 7.5
     - job: Ubuntu2004_GCC7
       dependsOn: []
+      timeoutInMinutes: 10
 
       pool:
         vmImage: 'ubuntu-20.04'
@@ -290,7 +291,8 @@ stages:
     # Ubuntu 20.04 with GCC 8.4
     - job: Ubuntu2004_GCC8
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-20.04'
       
@@ -345,7 +347,8 @@ stages:
     # Ubuntu 20.04 with GCC 9.3
     - job: Ubuntu2004_GCC9
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-20.04'
       
@@ -406,7 +409,8 @@ stages:
     # Ubuntu 20.04 with Clang 8.0
     - job: Ubuntu2004_Clang8
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-20.04'
       
@@ -461,7 +465,8 @@ stages:
     # Ubuntu 20.04 with Clang 9.0
     - job: Ubuntu2004_Clang9
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-20.04'
       
@@ -516,7 +521,8 @@ stages:
     # Ubuntu 20.04 with Clang 10.0
     - job: Ubuntu2004_Clang10
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-20.04'
       
@@ -577,7 +583,8 @@ stages:
     # Ubuntu 18.04 with GCC 7.5
     - job: Ubuntu1804_GCC7
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-18.04'
       
@@ -632,7 +639,8 @@ stages:
     # Ubuntu 18.04 with GCC 8.4
     - job: Ubuntu1804_GCC8
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-18.04'
       
@@ -687,7 +695,8 @@ stages:
     # Ubuntu 18.04 with GCC 9.3
     - job: Ubuntu1804_GCC9
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-18.04'
       
@@ -748,7 +757,8 @@ stages:
     # Ubuntu 18.04 with Clang 8.0
     - job: Ubuntu1804_Clang8
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-18.04'
       
@@ -803,7 +813,8 @@ stages:
     # Ubuntu 18.04 with Clang 9.0
     - job: Ubuntu1804_Clang9
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'ubuntu-18.04'
       
@@ -864,6 +875,7 @@ stages:
     # Windows Server 2019 with Visual Studio 2019
     - job: Windows2019_VisualStudio2019
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'windows-2019'
@@ -899,7 +911,8 @@ stages:
     # Windows Server 2016 with Visual Studio 2017
     - job: Windows2016_VisualStudio2017
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'vs2017-win2016'
 
@@ -940,6 +953,7 @@ stages:
     # Windows Server 2019 with Clang 10.0
     - job: Windows2019_Clang10
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'windows-2019'
@@ -1002,7 +1016,8 @@ stages:
     # Windows Server 2016 with Clang 10.0
     - job: Windows2016_Clang10
       dependsOn: []
-
+      timeoutInMinutes: 10
+      
       pool:
         vmImage: 'vs2017-win2016'
 
@@ -1070,6 +1085,7 @@ stages:
     # MacOS X Catalina 10.15 with Clang 10.0
     - job: MacOSCatalina1015_Clang10
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'macOS-10.15'
@@ -1111,6 +1127,7 @@ stages:
     # MacOS X Mojave 10.14 with Clang 10.0
     - job: MacOSMojave1014_Clang10
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'macOS-10.14'
@@ -1157,6 +1174,7 @@ stages:
     # MacOS X Catalina 10.15 with GCC 8.4
     - job: MacOSCatalina1015_GCC8
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'macOS-10.15'
@@ -1202,6 +1220,7 @@ stages:
     # MacOS X Catalina 10.15 with GCC 9.3
     - job: MacOSCatalina1015_GCC9
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'macOS-10.15'
@@ -1247,6 +1266,7 @@ stages:
     # MacOS X Mojave 10.14 with GCC 8.4
     - job: MacOSMojave1014_GCC8
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'macOS-10.14'
@@ -1292,6 +1312,7 @@ stages:
     # MacOS X Mojave 10.14 with GCC 9.3
     - job: MacOSMojave1014_GCC9
       dependsOn: []
+      timeoutInMinutes: 10
       
       pool:
         vmImage: 'macOS-10.14'
