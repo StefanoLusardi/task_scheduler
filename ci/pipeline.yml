@@ -78,8 +78,6 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            echo CODACY_API_TOKEN:
-            echo $(CODACY_API_TOKEN)
             sudo apt install gcovr 
             echo 'gcovr Version: '
             gcovr --version
@@ -140,12 +138,13 @@ stages:
             lcov --remove lcov.info '/usr/*' '*gtest*' --output-file lcov.info
             lcov --list lcov.info 
             export CODACY_PROJECT_TOKEN=$(CODACY_API_TOKEN)
-            bash <(curl -Ls https://coverage.codacy.com/get.sh)
+            bash <(curl -Ls https://coverage.codacy.com/get.sh) report
           workingDirectory: $(BUILD_DIRECTORY)
 
   - stage: Docs
     displayName: 'Docs'
     dependsOn: []
+    condition: false
     jobs:
 
     - job: Docs_Ubuntu2004_GCC9
@@ -204,6 +203,7 @@ stages:
   - stage: Build
     displayName: 'Build and Unit Tests'
     dependsOn: []
+    condition: false
     jobs:
 
     #######################################################################################
