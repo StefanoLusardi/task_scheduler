@@ -121,24 +121,28 @@ stages:
           script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: CmdLine@2
-        displayName: 'Upload Coverage results [Codecov]'
+        displayName: 'Generate Code Coverage results'
         inputs:
           script: |
             lcov --capture --directory . --output-file coverage.info
             lcov --remove coverage.info '/usr/*' '*gtest*' --output-file coverage.info
             lcov --list coverage.info 
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'Upload Coverage results [Codecov]'
+        inputs:
+          script: |
+            lcov --list coverage.info 
             bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
           workingDirectory: $(BUILD_DIRECTORY)
-      
       - task: CmdLine@2
         displayName: 'Upload Coverage results [Codacy]'
         inputs:
           script: |
-            lcov --capture --directory . --output-file lcov.info
-            lcov --remove lcov.info '/usr/*' '*gtest*' --output-file lcov.info
-            lcov --list lcov.info 
+            ls
+            lcov --list coverage.info 
             export CODACY_PROJECT_TOKEN=$(CODACY_API_TOKEN)
-            bash <(curl -Ls https://coverage.codacy.com/get.sh) report
+            bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.info
           workingDirectory: $(BUILD_DIRECTORY)
 
   - stage: Docs
