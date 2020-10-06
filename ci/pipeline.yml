@@ -120,8 +120,25 @@ stages:
         inputs:
           script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
           workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
       - task: CmdLine@2
-        displayName: 'Generate Code Coverage results'
+        displayName: 'Generate Code Coverage results [Cobertura]'
+        inputs:
+          script: |
+            gcovr -r . --xml -o coverage.xml
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishCodeCoverageResults@1
+        displayName: 'Publish Code Coverage results'
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(BUILD_DIRECTORY)/coverage.xml'
+      - task: CmdLine@2
+        displayName: 'Generate Code Coverage results [Lcov]'
         inputs:
           script: |
             lcov --capture --directory . --output-file coverage.info
@@ -144,6 +161,8 @@ stages:
             export CODACY_PROJECT_TOKEN=$(CODACY_API_TOKEN)
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.info
           workingDirectory: $(BUILD_DIRECTORY)
+
+
 
   - stage: Docs
     displayName: 'Docs'
