@@ -90,14 +90,14 @@ private:
         , _hash{std::move(other._hash)}
         { }
 
-        // schedulable_task& operator=(schedulable_task&& other) noexcept
-        // {
-        //     _task = std::move(other._task);
-        //     _is_enabled = std::move(other._is_enabled);
-        //     _interval = std::move(other._interval);
-        //     _hash = std::move(other._hash);
-        //     return *this;
-        // }
+        schedulable_task& operator=(schedulable_task&& other) noexcept
+        {
+            _task = std::move(other._task);
+            _is_enabled = std::move(other._is_enabled);
+            _interval = std::move(other._interval);
+            _hash = std::move(other._hash);
+            return *this;
+        }
 
     	void invoke() { _task(); }
 

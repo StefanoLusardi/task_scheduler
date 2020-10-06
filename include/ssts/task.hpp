@@ -42,7 +42,7 @@ public:
 	 * The callable object can be e.g. a lambda function, a functor, a free function or a class method bound to an object.
 	 */
 	template<typename FunctionType>
-	explicit task(FunctionType&& f) 
+	task(FunctionType&& f) 
 	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } 
 	{ }
 
@@ -66,11 +66,11 @@ public:
 	 * 
 	 * Move assigns a task instance to this.
 	 */
-	// task& operator=(task&& other) noexcept
-	// {
-	// 	_impl = std::move(other._impl);
-	// 	return *this;
-	// }
+	task& operator=(task&& other) noexcept
+	{
+		_impl = std::move(other._impl);
+		return *this;
+	}
 
 	/*!
 	 * \brief operator().

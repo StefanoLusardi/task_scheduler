@@ -95,7 +95,7 @@ public:
 		std::future<result_type> future = task.get_future();
 
 		std::unique_lock lock(_task_mtx);
-		_task_queue.emplace(std::move(task));
+		_task_queue.push(std::move(task));
 		lock.unlock();
 		_task_cv.notify_one();
 
