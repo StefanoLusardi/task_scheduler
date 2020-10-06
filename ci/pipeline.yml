@@ -52,1187 +52,1241 @@ schedules:
     - feature/*
   always: true
 
-jobs:
-
-#######################################################################################
-## Code Coverage on Ubuntu 20.04 GCC
-#######################################################################################
-
-- job: CodeCoverage_Ubuntu2004_GCC9
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: gcc-9
-    CXX: g++-9
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install gcovr 
-        echo 'gcovr Version: '
-        gcovr --version
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=Debug 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=OFF 
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS) 
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) 
-        -DSSTS_INSTALL_EXAMPLES=OFF 
-        -DSSTS_ENABLE_CODE_COVERAGE=ON 
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
-      cmakeArgs: '--build . --config Debug'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(Build.SourcesDirectory)/Coverage
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(Build.SourcesDirectory)/Coverage/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-#######################################################################################
-## Ubuntu 20.04 GCC
-#######################################################################################
-
-# Ubuntu 20.04 with GCC 7.5
-- job: Ubuntu2004_GCC7
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: gcc-7
-    CXX: g++-7
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 20.04 with GCC 8.4
-- job: Ubuntu2004_GCC8
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: gcc-8
-    CXX: g++-8
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 20.04 with GCC 9.3
-- job: Ubuntu2004_GCC9
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: gcc-9
-    CXX: g++-9
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-
-#######################################################################################
-## Ubuntu 20.04 Clang
-#######################################################################################
-
-# Ubuntu 20.04 with Clang 8.0
-- job: Ubuntu2004_Clang8
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: clang-8
-    CXX: clang++-8
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 20.04 with Clang 9.0
-- job: Ubuntu2004_Clang9
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: clang-9
-    CXX: clang++-9
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 20.04 with Clang 10.0
-- job: Ubuntu2004_Clang10
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-20.04'
-  
-  variables:
-    CC: clang-10
-    CXX: clang++-10
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-
-#######################################################################################
-## Ubuntu 18.04 GCC
-#######################################################################################
-
-# Ubuntu 18.04 with GCC 7.5
-- job: Ubuntu1804_GCC7
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-18.04'
-  
-  variables:
-    CC: gcc-7
-    CXX: g++-7
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 18.04 with GCC 8.4
-- job: Ubuntu1804_GCC8
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-18.04'
-  
-  variables:
-    CC: gcc-8
-    CXX: g++-8
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 18.04 with GCC 9.3
-- job: Ubuntu1804_GCC9
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-18.04'
-  
-  variables:
-    CC: gcc-9
-    CXX: g++-9
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-
-#######################################################################################
-## Ubuntu 18.04 Clang
-#######################################################################################
-
-# Ubuntu 18.04 with Clang 8.0
-- job: Ubuntu1804_Clang8
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-18.04'
-  
-  variables:
-    CC: clang-8
-    CXX: clang++-8
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Ubuntu 18.04 with Clang 9.0
-- job: Ubuntu1804_Clang9
-  dependsOn: []
-
-  pool:
-    vmImage: 'ubuntu-18.04'
-  
-  variables:
-    CC: clang-9
-    CXX: clang++-9
-
-  steps:
-  - task: Bash@3
-    displayName: 'Install Ninja'
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo apt install ninja-build
-        echo 'Ninja Version: '
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '-G "Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
-        ../..'
-  - task: CMake@1
-    displayName: 'CMake - build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: CmdLine@2
-    displayName: 'CMake - Run CPack'
-    enabled: false
-    inputs:
-      script: cpack .
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    displayName: 'Publish test results'
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-
-#######################################################################################
-## Windows MSVC 
-#######################################################################################
-
-# Windows Server 2019 with Visual Studio 2019
-- job: Windows2019_VisualStudio2019
-  dependsOn: []
-  
-  pool:
-    vmImage: 'windows-2019'
-
-  steps:
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Windows Server 2016 with Visual Studio 2017
-- job: Windows2016_VisualStudio2017
-  dependsOn: []
-
-  pool:
-    vmImage: 'vs2017-win2016'
-
-  steps:
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Visual Studio 15 2017" -A x64
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-
-#######################################################################################
-## Windows Clang
-#######################################################################################
-
-# Windows Server 2019 with Clang 10.0
-- job: Windows2019_Clang10
-  dependsOn: []
-  
-  pool:
-    vmImage: 'windows-2019'
-
-  variables:
-    CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/Common7/Tools/VsDevCmd.bat"
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        choco install --accept-license -y Ninja
-        ninja --version
-  - task: CmdLine@2
-    displayName: 'Install Clang'
-    inputs:
-      script: |
-        choco install --accept-license -y llvm
-  - task: CmdLine@2
-    displayName: 'Create build directory'
-    inputs:
-      script: |
-        mkdir build && cd build
-        mkdir $(BUILD_TYPE) && cd $(BUILD_TYPE)
-  - task: CmdLine@2
-    displayName: 'CMake - Configure'
-    inputs:
-      script: |
-        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
-        cmake -G"Ninja" ^
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
-        ../.. 
-      workingDirectory: '$(BUILD_DIRECTORY)'
-  - task: CmdLine@2
-    displayName: 'CMake build'
-    inputs:
-      script: |
-        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
-        cmake --build . --config $(BUILD_TYPE)
-      workingDirectory: '$(BUILD_DIRECTORY)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# Windows Server 2016 with Clang 10.0
-- job: Windows2016_Clang10
-  dependsOn: []
-
-  pool:
-    vmImage: 'vs2017-win2016'
-
-  variables:
-    CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
-    MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/Tools/VsDevCmd.bat"
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        choco install --accept-license -y Ninja
-        ninja --version
-  - task: CmdLine@2
-    displayName: 'Install Clang'
-    inputs:
-      script: |
-        choco install --accept-license -y llvm
-  - task: CmdLine@2
-    displayName: 'Create build directory'
-    inputs:
-      script: |
-        mkdir build && cd build
-        mkdir $(BUILD_TYPE) && cd $(BUILD_TYPE)
-  - task: CmdLine@2
-    displayName: 'CMake - Configure'
-    inputs:
-      script: |
-        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
-        cmake -G"Ninja" ^
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
-        ../.. 
-      workingDirectory: '$(BUILD_DIRECTORY)'
-  - task: CmdLine@2
-    displayName: 'CMake build'
-    inputs:
-      script: |
-        call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
-        cmake --build . --config $(BUILD_TYPE)
-      workingDirectory: '$(BUILD_DIRECTORY)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-
-#######################################################################################
-## MacOS Clang
-#######################################################################################
-
-# MacOS X Catalina 10.15 with Clang 10.0
-- job: MacOSCatalina1015_Clang10
-  dependsOn: []
-  
-  pool:
-    vmImage: 'macOS-10.15'
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        brew install ninja
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# MacOS X Mojave 10.14 with Clang 10.0
-- job: MacOSMojave1014_Clang10
-  dependsOn: []
-  
-  pool:
-    vmImage: 'macOS-10.14'
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        brew install ninja
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-
-#######################################################################################
-## MacOS GCC
-#######################################################################################
-
-# MacOS X Catalina 10.15 with GCC 8.4
-- job: MacOSCatalina1015_GCC8
-  dependsOn: []
-  
-  pool:
-    vmImage: 'macOS-10.15'
-  
-  variables:
-    CC: gcc-8
-    CXX: g++-8
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        brew install ninja
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# MacOS X Catalina 10.15 with GCC 9.3
-- job: MacOSCatalina1015_GCC9
-  dependsOn: []
-  
-  pool:
-    vmImage: 'macOS-10.15'
-  
-  variables:
-    CC: gcc-9
-    CXX: g++-9
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        brew install ninja
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# MacOS X Mojave 10.14 with GCC 8.4
-- job: MacOSMojave1014_GCC8
-  dependsOn: []
-  
-  pool:
-    vmImage: 'macOS-10.14'
-
-  variables:
-    CC: gcc-8
-    CXX: g++-8
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        brew install ninja
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
-
-# MacOS X Mojave 10.14 with GCC 9.3
-- job: MacOSMojave1014_GCC9
-  dependsOn: []
-  
-  pool:
-    vmImage: 'macOS-10.14'
-
-  variables:
-    CC: gcc-9
-    CXX: g++-9
-
-  steps:
-  - task: CmdLine@2
-    displayName: 'Install Ninja'
-    inputs:
-      script: |
-        brew install ninja
-        ninja --version
-  - task: CMake@1
-    displayName: 'CMake - Configure'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '../.. -G"Ninja" 
-        -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
-        -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
-        -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-        -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-        -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
-        -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
-  - task: CMake@1
-    displayName: 'CMake - Build'
-    inputs:
-      workingDirectory: $(BUILD_DIRECTORY)
-      cmakeArgs: '--build . --config $(BUILD_TYPE)'
-  - task: CmdLine@2
-    displayName: 'CMake - Run CTest'
-    inputs:
-      script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
-      workingDirectory: $(BUILD_DIRECTORY)
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'cTest'
-      testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
-      testRunTitle: 'Test Results'
+stages:
+
+  - stage: Coverage
+    displayName: 'Coverage'
+    dependsOn: []
+    jobs:
+
+    - job: Coverage_Ubuntu2004_GCC9
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: gcc-9
+        CXX: g++-9
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install gcovr'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install gcovr 
+            echo 'gcovr Version: '
+            gcovr --version
+      - task: Bash@3
+        displayName: 'Install lcov'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install lcov 
+            echo 'lcov Version: '
+            lcov --version
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=Debug 
+            -DCMAKE_INSTALL_PREFIX=install/Coverage 
+            -DSSTS_INSTALL_LIBRARY=OFF 
+            -DSSTS_BUILD_TESTS=ON 
+            -DSSTS_BUILD_EXAMPLES=OFF 
+            -DSSTS_INSTALL_EXAMPLES=OFF 
+            -DSSTS_ENABLE_CODE_COVERAGE=ON 
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config Debug'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config Debug --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'Upload Coverage results'
+        inputs:
+          script: |
+            lcov --capture --directory . --output-file coverage.info
+            lcov --remove coverage.info '/usr/*' '*gtest*' --output-file coverage.info
+            lcov --list coverage.info 
+            bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+          workingDirectory: $(BUILD_DIRECTORY)
+
+  - stage: Docs
+    displayName: 'Docs'
+    dependsOn: []
+    jobs:
+
+    - job: Docs_Ubuntu2004_GCC9
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: gcc-9
+        CXX: g++-9
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: Bash@3
+        displayName: 'Install Doc Tools'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install doxygen
+            pip install sphinx_rtd_theme
+            pip install breathe
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=Debug 
+            -DCMAKE_INSTALL_PREFIX=install/Docs
+            -DSSTS_BUILD_DOCS=ON  
+            -DSSTS_INSTALL_LIBRARY=OFF 
+            -DSSTS_BUILD_TESTS=OFF 
+            -DSSTS_BUILD_EXAMPLES=OFF 
+            -DSSTS_INSTALL_EXAMPLES=OFF 
+            -DSSTS_ENABLE_CODE_COVERAGE=OFF 
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build Documentation'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config Debug'
+
+  - stage: Build
+    displayName: 'Build and Unit Tests'
+    dependsOn: []
+    jobs:
+
+    #######################################################################################
+    ## Ubuntu 20.04 GCC
+    #######################################################################################
+
+    # Ubuntu 20.04 with GCC 7.5
+    - job: Ubuntu2004_GCC7
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: gcc-7
+        CXX: g++-7
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 20.04 with GCC 8.4
+    - job: Ubuntu2004_GCC8
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: gcc-8
+        CXX: g++-8
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 20.04 with GCC 9.3
+    - job: Ubuntu2004_GCC9
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: gcc-9
+        CXX: g++-9
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+
+    #######################################################################################
+    ## Ubuntu 20.04 Clang
+    #######################################################################################
+
+    # Ubuntu 20.04 with Clang 8.0
+    - job: Ubuntu2004_Clang8
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: clang-8
+        CXX: clang++-8
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 20.04 with Clang 9.0
+    - job: Ubuntu2004_Clang9
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: clang-9
+        CXX: clang++-9
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 20.04 with Clang 10.0
+    - job: Ubuntu2004_Clang10
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-20.04'
+      
+      variables:
+        CC: clang-10
+        CXX: clang++-10
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+
+    #######################################################################################
+    ## Ubuntu 18.04 GCC
+    #######################################################################################
+
+    # Ubuntu 18.04 with GCC 7.5
+    - job: Ubuntu1804_GCC7
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-18.04'
+      
+      variables:
+        CC: gcc-7
+        CXX: g++-7
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 18.04 with GCC 8.4
+    - job: Ubuntu1804_GCC8
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-18.04'
+      
+      variables:
+        CC: gcc-8
+        CXX: g++-8
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 18.04 with GCC 9.3
+    - job: Ubuntu1804_GCC9
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-18.04'
+      
+      variables:
+        CC: gcc-9
+        CXX: g++-9
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+
+    #######################################################################################
+    ## Ubuntu 18.04 Clang
+    #######################################################################################
+
+    # Ubuntu 18.04 with Clang 8.0
+    - job: Ubuntu1804_Clang8
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-18.04'
+      
+      variables:
+        CC: clang-8
+        CXX: clang++-8
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Ubuntu 18.04 with Clang 9.0
+    - job: Ubuntu1804_Clang9
+      dependsOn: []
+
+      pool:
+        vmImage: 'ubuntu-18.04'
+      
+      variables:
+        CC: clang-9
+        CXX: clang++-9
+
+      steps:
+      - task: Bash@3
+        displayName: 'Install Ninja'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt install ninja-build
+            echo 'Ninja Version: '
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '-G "Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
+            ../..'
+      - task: CMake@1
+        displayName: 'CMake - build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: 'ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel -T Test'
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: CmdLine@2
+        displayName: 'CMake - Run CPack'
+        enabled: false
+        inputs:
+          script: cpack .
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+
+    #######################################################################################
+    ## Windows MSVC 
+    #######################################################################################
+
+    # Windows Server 2019 with Visual Studio 2019
+    - job: Windows2019_VisualStudio2019
+      dependsOn: []
+      
+      pool:
+        vmImage: 'windows-2019'
+
+      steps:
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Windows Server 2016 with Visual Studio 2017
+    - job: Windows2016_VisualStudio2017
+      dependsOn: []
+
+      pool:
+        vmImage: 'vs2017-win2016'
+
+      steps:
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Visual Studio 15 2017" -A x64
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+
+    #######################################################################################
+    ## Windows Clang
+    #######################################################################################
+
+    # Windows Server 2019 with Clang 10.0
+    - job: Windows2019_Clang10
+      dependsOn: []
+      
+      pool:
+        vmImage: 'windows-2019'
+
+      variables:
+        CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
+        CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
+        MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/Common7/Tools/VsDevCmd.bat"
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            choco install --accept-license -y Ninja
+            ninja --version
+      - task: CmdLine@2
+        displayName: 'Install Clang'
+        inputs:
+          script: |
+            choco install --accept-license -y llvm
+      - task: CmdLine@2
+        displayName: 'Create build directory'
+        inputs:
+          script: |
+            mkdir build && cd build
+            mkdir $(BUILD_TYPE) && cd $(BUILD_TYPE)
+      - task: CmdLine@2
+        displayName: 'CMake - Configure'
+        inputs:
+          script: |
+            call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
+            cmake -G"Ninja" ^
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
+            ../.. 
+          workingDirectory: '$(BUILD_DIRECTORY)'
+      - task: CmdLine@2
+        displayName: 'CMake build'
+        inputs:
+          script: |
+            call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
+            cmake --build . --config $(BUILD_TYPE)
+          workingDirectory: '$(BUILD_DIRECTORY)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # Windows Server 2016 with Clang 10.0
+    - job: Windows2016_Clang10
+      dependsOn: []
+
+      pool:
+        vmImage: 'vs2017-win2016'
+
+      variables:
+        CC: "C:/Program Files/LLVM/bin/clang-cl.exe"
+        CXX: "C:/Program Files/LLVM/bin/clang-cl.exe"
+        MSVC_DEV_ENV: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/Common7/Tools/VsDevCmd.bat"
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            choco install --accept-license -y Ninja
+            ninja --version
+      - task: CmdLine@2
+        displayName: 'Install Clang'
+        inputs:
+          script: |
+            choco install --accept-license -y llvm
+      - task: CmdLine@2
+        displayName: 'Create build directory'
+        inputs:
+          script: |
+            mkdir build && cd build
+            mkdir $(BUILD_TYPE) && cd $(BUILD_TYPE)
+      - task: CmdLine@2
+        displayName: 'CMake - Configure'
+        inputs:
+          script: |
+            call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
+            cmake -G"Ninja" ^
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
+            ../.. 
+          workingDirectory: '$(BUILD_DIRECTORY)'
+      - task: CmdLine@2
+        displayName: 'CMake build'
+        inputs:
+          script: |
+            call "$(MSVC_DEV_ENV)" -arch=amd64 -host_arch=amd64
+            cmake --build . --config $(BUILD_TYPE)
+          workingDirectory: '$(BUILD_DIRECTORY)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+
+    #######################################################################################
+    ## MacOS Clang
+    #######################################################################################
+
+    # MacOS X Catalina 10.15 with Clang 10.0
+    - job: MacOSCatalina1015_Clang10
+      dependsOn: []
+      
+      pool:
+        vmImage: 'macOS-10.15'
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            brew install ninja
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # MacOS X Mojave 10.14 with Clang 10.0
+    - job: MacOSMojave1014_Clang10
+      dependsOn: []
+      
+      pool:
+        vmImage: 'macOS-10.14'
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            brew install ninja
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+
+    #######################################################################################
+    ## MacOS GCC
+    #######################################################################################
+
+    # MacOS X Catalina 10.15 with GCC 8.4
+    - job: MacOSCatalina1015_GCC8
+      dependsOn: []
+      
+      pool:
+        vmImage: 'macOS-10.15'
+      
+      variables:
+        CC: gcc-8
+        CXX: g++-8
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            brew install ninja
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # MacOS X Catalina 10.15 with GCC 9.3
+    - job: MacOSCatalina1015_GCC9
+      dependsOn: []
+      
+      pool:
+        vmImage: 'macOS-10.15'
+      
+      variables:
+        CC: gcc-9
+        CXX: g++-9
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            brew install ninja
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # MacOS X Mojave 10.14 with GCC 8.4
+    - job: MacOSMojave1014_GCC8
+      dependsOn: []
+      
+      pool:
+        vmImage: 'macOS-10.14'
+
+      variables:
+        CC: gcc-8
+        CXX: g++-8
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            brew install ninja
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
+
+    # MacOS X Mojave 10.14 with GCC 9.3
+    - job: MacOSMojave1014_GCC9
+      dependsOn: []
+      
+      pool:
+        vmImage: 'macOS-10.14'
+
+      variables:
+        CC: gcc-9
+        CXX: g++-9
+
+      steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            brew install ninja
+            ninja --version
+      - task: CMake@1
+        displayName: 'CMake - Configure'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '../.. -G"Ninja" 
+            -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
+            -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
+            -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
+            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)'
+      - task: CMake@1
+        displayName: 'CMake - Build'
+        inputs:
+          workingDirectory: $(BUILD_DIRECTORY)
+          cmakeArgs: '--build . --config $(BUILD_TYPE)'
+      - task: CmdLine@2
+        displayName: 'CMake - Run CTest'
+        inputs:
+          script: ctest . --build-config $(BUILD_TYPE) --progress --verbose --output-on-failure --parallel 8 -T Test
+          workingDirectory: $(BUILD_DIRECTORY)
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'cTest'
+          testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
+          testRunTitle: 'Test Results'
 
