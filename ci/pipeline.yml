@@ -137,7 +137,7 @@ stages:
         inputs:
           script: |
             export CODACY_PROJECT_TOKEN=$(CODACY_API_TOKEN)
-            bash <(curl -Ls https://coverage.codacy.com/get.sh) report
+            bash <(curl -Ls https://coverage.codacy.com/get.sh) -r coverage.info report
           workingDirectory: $(BUILD_DIRECTORY)
 
   - stage: Docs
