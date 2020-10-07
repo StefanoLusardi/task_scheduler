@@ -116,8 +116,35 @@ public:
      * The number of threads to be used by the ssts::task_pool defaults to the number of threads supported by the platform.
 	 */
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
-    : _tp{num_threads}, _is_running{true}, _scheduler_thread{std::thread([this]{scheduler_worker();})}
-    { }
+    : _tp{num_threads}
+    , _is_running{true}
+    { 
+        _scheduler_thread = std::thread([this]
+        {
+            while (_is_running)
+            {
+                std::unique_lock lock(_update_tasks_mtx);
+
+                if (_tasks.empty())
+                {
+                    _update_tasks_cv.wait(lock, [this] 
+                    {
+                        return !_tasks.empty() || !_is_running;
+                    });
+                }
+                else
+                {
+                    _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] 
+                    {
+                        return ssts::clock::now() >= _tasks.begin()->first || !_is_running;
+                    });
+                }
+
+                lock.unlock();
+                update_tasks();
+            }
+        });
+    }
 
     /*!
 	 * \brief Destructor.
@@ -348,32 +375,6 @@ private:
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
     std::hash<std::string> _hasher;
-
-    void scheduler_worker()
-    {
-        while (_is_running)
-        {
-            std::unique_lock lock(_update_tasks_mtx);
-
-            if (_tasks.empty())
-            {
-                _update_tasks_cv.wait(lock, [this] 
-                {
-                    return !_tasks.empty() || !_is_running;
-                });
-            }
-            else
-            {
-                _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] 
-                {
-                    return ssts::clock::now() >= _tasks.begin()->first || !_is_running;
-                });
-            }
-
-            lock.unlock();
-            update_tasks();
-        }
-    }
 
     void add_task(ssts::clock::time_point&& timepoint, schedulable_task&& st)
     {
