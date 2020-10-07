@@ -1,53 +1,47 @@
-#include "gtest/gtest.h"
-#include <ssts/task_scheduler.hpp>
+#include "test_scheduler.hpp"
 
-TEST(sstsRemove, Scheduled)
+namespace ssts
 {
-    ssts::task_scheduler s(4);
 
-    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
-    s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
-    s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
+class Remove : public SchedulerTest { };
 
-    EXPECT_TRUE(s.is_scheduled("task_id_1"s));
-    EXPECT_TRUE(s.is_scheduled("task_id_2"s));
-    EXPECT_TRUE(s.is_scheduled("task_id_3"s));
+TEST_F(Remove, ScheduledBeforeRun)
+{
+    InitScheduler(4u);
+    StartTasksIn(3u, 1s);
+
+    EXPECT_TRUE(s->is_scheduled("task_id_0"s));
+    EXPECT_TRUE(s->is_scheduled("task_id_1"s));
+    EXPECT_TRUE(s->is_scheduled("task_id_2"s));
 }
 
-TEST(sstsRemove, RemovedAfterRun)
+TEST_F(Remove, RemovedAfterRun)
 {
-    ssts::task_scheduler s(4);
-
-    s.in("task_id_1"s, 1s, []{std::cout << "Hello A!" << std::endl;});
-    s.in("task_id_2"s, 1s, []{std::cout << "Hello B!" << std::endl;});
-    s.in("task_id_3"s, 1s, []{std::cout << "Hello C!" << std::endl;});
+    InitScheduler(4u);
+    StartTasksIn(3u, 1s);
 
     std::this_thread::sleep_for(2s);
 
-    EXPECT_FALSE(s.is_scheduled("task_id_1"s));
-    EXPECT_FALSE(s.is_scheduled("task_id_2"s));
-    EXPECT_FALSE(s.is_scheduled("task_id_3"s));
+    EXPECT_FALSE(s->is_scheduled("task_id_0"s));
+    EXPECT_FALSE(s->is_scheduled("task_id_1"s));
+    EXPECT_FALSE(s->is_scheduled("task_id_2"s));
 }
 
-TEST(sstsRemove, RemoveAdd)
+TEST_F(Remove, RemoveAdd)
 {
-    ssts::task_scheduler s(4);
+    InitScheduler(4u);
+    StartTasksIn(3u, 1s);
+    RemoveTasks(3u);
 
-    s.in("task_id_1"s, 1s, []{std::cout << "Hello A!" << std::endl;});
-    s.in("task_id_2"s, 1s, []{std::cout << "Hello B!" << std::endl;});
-    s.in("task_id_3"s, 1s, []{std::cout << "Hello C!" << std::endl;});
-
-    s.remove_task("task_id_1"s);
-    s.remove_task("task_id_2"s);
-    s.remove_task("task_id_3"s);
-
-    EXPECT_TRUE(s.is_scheduled("task_id_1"s));
-    EXPECT_TRUE(s.is_scheduled("task_id_2"s));
-    EXPECT_TRUE(s.is_scheduled("task_id_3"s));
+    EXPECT_TRUE(s->is_scheduled("task_id_0"s));
+    EXPECT_TRUE(s->is_scheduled("task_id_1"s));
+    EXPECT_TRUE(s->is_scheduled("task_id_2"s));
 
     std::this_thread::sleep_for(2s);
 
-    EXPECT_FALSE(s.is_scheduled("task_id_1"s));
-    EXPECT_FALSE(s.is_scheduled("task_id_2"s));
-    EXPECT_FALSE(s.is_scheduled("task_id_3"s));
+    EXPECT_FALSE(s->is_scheduled("task_id_0"s));
+    EXPECT_FALSE(s->is_scheduled("task_id_1"s));
+    EXPECT_FALSE(s->is_scheduled("task_id_2"s));
+}
+
 }

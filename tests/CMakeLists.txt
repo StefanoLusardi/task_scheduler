@@ -11,10 +11,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(${PROJECT_NAME}
 	ssts_tests.cpp
-	src/test_in.cpp
 	src/test_at.cpp
-	src/test_every.cpp
 	src/test_disable.cpp
+	src/test_every.cpp
+	src/test_in.cpp
+	src/test_missing.cpp
 	src/test_remove.cpp
 )
 

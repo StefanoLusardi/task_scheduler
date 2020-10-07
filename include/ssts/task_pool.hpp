@@ -38,7 +38,7 @@ public:
     explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency()) 
     : _is_running{ true }
     {
-        const auto thread_count = std::min(num_threads, std::thread::hardware_concurrency());
+        const auto thread_count = std::clamp(num_threads, 1u, std::thread::hardware_concurrency());
         try
         {
             for (unsigned i = 0; i < thread_count; ++i)

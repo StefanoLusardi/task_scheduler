@@ -1,61 +1,48 @@
-#include "gtest/gtest.h"
-#include <ssts/task_scheduler.hpp>
+#include "test_scheduler.hpp"
 
-TEST(sstsDisable, Enabled)
+namespace ssts
 {
-    ssts::task_scheduler s(4);
 
-    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
-    s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
-    s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
+class Disable : public SchedulerTest { };
 
-    EXPECT_TRUE(s.is_enabled("task_id_1"s));
-    EXPECT_TRUE(s.is_enabled("task_id_2"s));
-    EXPECT_TRUE(s.is_enabled("task_id_3"s));
+TEST_F(Disable, Enabled)
+{
+    InitScheduler(4u);
+    StartTasksIn(3u, 2s);
+
+    EXPECT_TRUE(s->is_enabled("task_id_0"s));
+    EXPECT_TRUE(s->is_enabled("task_id_1"s));
+    EXPECT_TRUE(s->is_enabled("task_id_2"s));
 }
 
-TEST(sstsDisable, Disabled)
+TEST_F(Disable, Disabled)
 {
-    ssts::task_scheduler s(4);
-
-    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
-    s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
-    s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
+    InitScheduler(4u);
+    StartTasksIn(3u, 2s);
 
     // Disable tasks before they can run
-    s.set_enabled("task_id_1"s, false);
-    s.set_enabled("task_id_2"s, false);
-    s.set_enabled("task_id_3"s, false);
-
-    EXPECT_FALSE(s.is_enabled("task_id_1"s));
-    EXPECT_FALSE(s.is_enabled("task_id_2"s));
-    EXPECT_FALSE(s.is_enabled("task_id_3"s));
+    SetEnabledTasks(3u, false);
+    EXPECT_FALSE(s->is_enabled("task_id_0"s));
+    EXPECT_FALSE(s->is_enabled("task_id_1"s));
+    EXPECT_FALSE(s->is_enabled("task_id_2"s));
 }
 
-TEST(sstsDisable, ReEnabled)
+TEST_F(Disable, ReEnabled)
 {
-    ssts::task_scheduler s(4);
-
-    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
-    s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
-    s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
+    InitScheduler(4u);
+    StartTasksIn(3u, 2s);
 
     // Disable tasks before they can run
-    s.set_enabled("task_id_1"s, false);
-    s.set_enabled("task_id_2"s, false);
-    s.set_enabled("task_id_3"s, false);
-
-    EXPECT_FALSE(s.is_enabled("task_id_1"s));
-    EXPECT_FALSE(s.is_enabled("task_id_2"s));
-    EXPECT_FALSE(s.is_enabled("task_id_3"s));
+    SetEnabledTasks(3u, false);
+    EXPECT_FALSE(s->is_enabled("task_id_0"s));
+    EXPECT_FALSE(s->is_enabled("task_id_1"s));
+    EXPECT_FALSE(s->is_enabled("task_id_2"s));
 
     // ReEnable tasks before they can run
-    s.set_enabled("task_id_1"s, true);
-    s.set_enabled("task_id_2"s, true);
-    s.set_enabled("task_id_3"s, true);
-
-    EXPECT_TRUE(s.is_enabled("task_id_1"s));
-    EXPECT_TRUE(s.is_enabled("task_id_2"s));
-    EXPECT_TRUE(s.is_enabled("task_id_3"s));
+    SetEnabledTasks(3u, true);
+    EXPECT_TRUE(s->is_enabled("task_id_0"s));
+    EXPECT_TRUE(s->is_enabled("task_id_1"s));
+    EXPECT_TRUE(s->is_enabled("task_id_2"s));
 }
 
+}

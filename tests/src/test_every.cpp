@@ -1,38 +1,60 @@
-#include "gtest/gtest.h"
-#include <ssts/task_scheduler.hpp>
+#include "test_scheduler.hpp"
 
-TEST(sstsEvery, FunctionOnly)
+namespace ssts
 {
-    ssts::task_scheduler s(2);
-    s.every(1s, []{std::cout << "Hello!" << std::endl;});
 
+class Every : public SchedulerTest { };
+
+TEST_F(Every, FunctionOnly)
+{
+    InitScheduler(2u);
+    s->every(1s, []{std::cout << "Hello!" << std::endl;});
+
+    EXPECT_NE(s->size(), 0);
     std::this_thread::sleep_for(2s);
-    SUCCEED();
+    EXPECT_NE(s->size(), 0);
+
+    // s->stop();
+    // EXPECT_EQ(s->size(), 0);
 }
 
-TEST(sstsEvery, FunctionParameters)
+TEST_F(Every, FunctionParameters)
 {
-    ssts::task_scheduler s(2);
-    s.every(1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
+    InitScheduler(2u);
+    s->every(1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "Input param:", 42);
 
+    EXPECT_NE(s->size(), 0);
     std::this_thread::sleep_for(2s);
-    SUCCEED();
+    EXPECT_NE(s->size(), 0);
+
+    // s->stop();
+    // EXPECT_EQ(s->size(), 0);
 }
 
-TEST(sstsEvery, TaskIdFunctionOnly)
+TEST_F(Every, TaskIdFunctionOnly)
 {
-    ssts::task_scheduler s(2);
-    s.every("task_id", 1s, []{std::cout << "Hello!" << std::endl;});
+    InitScheduler(2u);
+    s->every("task_id", 1s, []{std::cout << "Hello!" << std::endl;});
 
+    EXPECT_NE(s->size(), 0);
     std::this_thread::sleep_for(2s);
-    SUCCEED();
+    EXPECT_NE(s->size(), 0);
+
+    // s->stop();
+    // EXPECT_EQ(s->size(), 0);
 }
 
-TEST(sstsEvery, TaskIdFunctionParameters)
+TEST_F(Every, TaskIdFunctionParameters)
 {
-    ssts::task_scheduler s(2);
-    s.every("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
+    InitScheduler(2u);
+    s->every("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "Input param:", 42);
 
+    EXPECT_NE(s->size(), 0);
     std::this_thread::sleep_for(2s);
-    SUCCEED();
+    EXPECT_NE(s->size(), 0);
+
+    // s->stop();
+    // EXPECT_EQ(s->size(), 0);
+}
+
 }

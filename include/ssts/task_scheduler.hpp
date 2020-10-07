@@ -143,12 +143,23 @@ public:
     }
 
     /*!
+     * \brief Get the number of scheduled tasks.
+     * \return Number of tasks to be run.
+     * 
+     * This function return the number of tasks that are currently scheduled for execution (both enabled and disabled).
+     */
+    size_t size() const noexcept
+    {        
+        return _tasks.size();
+    }
+
+    /*!
      * \brief Stop all running tasks.
      * 
      * This function stops the task_scheduler execution and stops all the running tasks.
      */
     void stop()
-    {        
+    {
         _is_running = false;
         _update_tasks_cv.notify_all();
 
