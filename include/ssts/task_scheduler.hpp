@@ -1,21 +1,15 @@
 /*! 
  * \file task_scheduler.hpp 
  * \author Stefano Lusardi
- * \date 2020-09-29
  */
 
 #pragma once
 
-#include <atomic>
 #include <chrono>
 #include <map>
 #include <unordered_set>
 #include <optional>
 #include <string>
-#include <mutex>
-#include <thread>
-#include <future>
-#include <condition_variable>
 #include <functional>
 
 #include "task.hpp"
@@ -90,16 +84,7 @@ private:
         , _hash{std::move(other._hash)}
         { }
 
-        schedulable_task& operator=(schedulable_task&& other) noexcept
-        {
-            _task = std::move(other._task);
-            _is_enabled = std::move(other._is_enabled);
-            _interval = std::move(other._interval);
-            _hash = std::move(other._hash);
-            return *this;
-        }
-
-    	void invoke() { _task(); }
+        void invoke() { _task(); }
 
         ssts::task _task;
         bool _is_enabled;
@@ -109,12 +94,12 @@ private:
 
 public:
     /*!
-	 * \brief Constructor.
-	 * \param num_threads Number of threads that will be used in the underlying ssts::task_pool.
-	 * 
-	 * Creates a ssts::task_scheduler instance. 
+     * \brief Constructor.
+     * \param num_threads Number of threads that will be used in the underlying ssts::task_pool.
+     * 
+     * Creates a ssts::task_scheduler instance. 
      * The number of threads to be used by the ssts::task_pool defaults to the number of threads supported by the platform.
-	 */
+     */
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _tp{num_threads}
     , _is_running{true}
@@ -147,10 +132,10 @@ public:
     }
 
     /*!
-	 * \brief Destructor.
-	 * 
-	 * Destructs this. If the task_scheduler is running its tasks are stopped first.
-	 */
+     * \brief Destructor.
+     * 
+     * Destructs this. If the task_scheduler is running its tasks are stopped first.
+     */
     ~task_scheduler()
     {
         if (_is_running)
@@ -158,10 +143,10 @@ public:
     }
 
     /*!
-	 * \brief Stop all running tasks.
-	 * 
-	 * This function stops the task_scheduler execution and stops all the running tasks.
-	 */
+     * \brief Stop all running tasks.
+     * 
+     * This function stops the task_scheduler execution and stops all the running tasks.
+     */
     void stop()
     {        
         _is_running = false;
@@ -172,15 +157,15 @@ public:
     }
 
     /*!
-	 * \brief Check if a task is scheduled.
+     * \brief Check if a task is scheduled.
      * \param task_id task_id to check.
      * \return bool indicating if the task is currently scheduled.
-	 * 
-	 * If a task has been started without a task_id it is not possible to query its status.
+     * 
+     * If a task has been started without a task_id it is not possible to query its status.
      * In case a task_id is not found this function return false.
      * If a task is no longer scheduled it must be added using one of the following APIs:
      * ssts::task_scheduler::in, ssts::task_scheduler::at, ssts::task_scheduler::every.
-	 */
+     */
     bool is_scheduled(const std::string& task_id)
     { 
         std::scoped_lock lock(_update_tasks_mtx);
@@ -189,15 +174,15 @@ public:
     }
 
     /*!
-	 * \brief Check if a task is enabled.
+     * \brief Check if a task is enabled.
      * \param task_id task_id to check.
      * \return bool indicating if the task is currently enabled.
-	 * 
-	 * If a task has been started without a task_id it is not possible to query its status.
+     * 
+     * If a task has been started without a task_id it is not possible to query its status.
      * In case a task_id is not found this function return false.
      * By default new tasks are enabled.
      * A task can be enabled or disabled by calling ssts::task_scheduler::set_enabled.
-	 */
+     */
     bool is_enabled(const std::string& task_id)
     { 
         std::scoped_lock lock(_update_tasks_mtx);
@@ -209,15 +194,15 @@ public:
     }
     
     /*!
-	 * \brief Enable or disable task.
+     * \brief Enable or disable task.
      * \param task_id task_id to enable or disable.
      * \param is_enabled true enables, false disables the given task_id.
      * \return bool indicating if the task is currently enabled.
-	 * 
-	 * If a task has been started without a task_id it is not possible to update its status.
+     * 
+     * If a task has been started without a task_id it is not possible to update its status.
      * In case a task_id is not found this function return false.
      * It is possible to check if a task is enabled or disabled by calling ssts::task_scheduler::is_enabled.
-	 */
+     */
     bool set_enabled(const std::string& task_id, bool is_enabled) 
     {
         std::scoped_lock lock(_update_tasks_mtx);
@@ -232,14 +217,14 @@ public:
     }
 
     /*!
-	 * \brief Remove a task.
+     * \brief Remove a task.
      * \param task_id task_id to remove.
      * \return bool indicating if the task has been properly removed.
-	 * 
-	 * If a task has been started without a task_id it is not possible to remove it.
+     * 
+     * If a task has been started without a task_id it is not possible to remove it.
      * In case a task_id is not found this function return false.
      * It is possible to check if a task is scheduled by calling ssts::task_scheduler::is_scheduled.
-	 */
+     */
     bool remove_task(const std::string& task_id) 
     {
         std::scoped_lock lock(_update_tasks_mtx);
@@ -434,4 +419,3 @@ private:
 };
 
 }
-

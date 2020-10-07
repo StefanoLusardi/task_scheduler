@@ -3,9 +3,9 @@
 
 TEST(sstsDisable, Enabled)
 {
-	ssts::task_scheduler s(4);
+    ssts::task_scheduler s(4);
 
-	s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
+    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
     s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
     s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
 
@@ -16,9 +16,9 @@ TEST(sstsDisable, Enabled)
 
 TEST(sstsDisable, Disabled)
 {
-	ssts::task_scheduler s(4);
+    ssts::task_scheduler s(4);
 
-	s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
+    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
     s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
     s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
 
@@ -34,9 +34,9 @@ TEST(sstsDisable, Disabled)
 
 TEST(sstsDisable, ReEnabled)
 {
-	ssts::task_scheduler s(4);
+    ssts::task_scheduler s(4);
 
-	s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
+    s.in("task_id_1"s, 2s, []{std::cout << "Hello A!" << std::endl;});
     s.in("task_id_2"s, 2s, []{std::cout << "Hello B!" << std::endl;});
     s.in("task_id_3"s, 2s, []{std::cout << "Hello C!" << std::endl;});
 

@@ -1,4 +1,7 @@
-
+/*! 
+ * \file task.hpp 
+ * \author Stefano Lusardi
+ */
 
 #pragma once
 
@@ -19,68 +22,60 @@ namespace ssts
 class task
 {
 private:
-	struct task_base
-	{
-		virtual ~task_base() { }
-		virtual void invoke() = 0;
-	};
+    struct task_base
+    {
+        virtual ~task_base() { }
+        virtual void invoke() = 0;
+    };
 
-	template<typename FunctionType>
-	struct task_impl : task_base
-	{
-		explicit task_impl(FunctionType&& f) : _func{ std::move(f) } { static_assert(std::is_invocable_v<decltype(f)>); }
-		void invoke() override { _func(); }
-		FunctionType _func;
-	};
+    template<typename FunctionType>
+    struct task_impl : task_base
+    {
+        explicit task_impl(FunctionType&& f) 
+        : _func{ std::move(f) } 
+        { 
+            static_assert(std::is_invocable_v<decltype(f)>); 
+        }
+        void invoke() override { _func(); }
+        FunctionType _func;
+    };
 
 public:
-	/*!
-	 * \brief Default constructor.
-	 * \param f Callable parameterless object wrapped within this task instance.
-	 * 
-	 * Creates a task instance with the given callable object.
-	 * The callable object can be e.g. a lambda function, a functor, a free function or a class method bound to an object.
-	 */
-	template<typename FunctionType>
-	explicit task(FunctionType&& f) 
-	: _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } 
-	{ }
+    /*!
+     * \brief Default constructor.
+     * \param f Callable parameterless object wrapped within this task instance.
+     * 
+     * Creates a task instance with the given callable object.
+     * The callable object can be e.g. a lambda function, a functor, a free function or a class method bound to an object.
+     */
+    template<typename FunctionType>
+    explicit task(FunctionType&& f) 
+    : _impl{ std::make_unique<task_impl<FunctionType>>(std::move(f)) } 
+    { }
 
     task(task&) = delete;
     task(const task&) = delete;
-	task& operator=(const task&) = delete;
-	
-	/*!
-	 * \brief Move constructor.
-	 * \param other task object.
-	 * 
-	 * Move constructs a task instance to this.
-	 */
+    task& operator=(const task&) = delete;
+    
+    /*!
+     * \brief Move constructor.
+     * \param other task object.
+     * 
+     * Move constructs a task instance to this.
+     */
     task(task&& other) noexcept 
-	: _impl{ std::move(other._impl) } 
-	{ }
-	
-	/*!
-	 * \brief Move assignement.
-	 * \param other task object.
-	 * 
-	 * Move assigns a task instance to this.
-	 */
-	task& operator=(task&& other) noexcept
-	{
-		_impl = std::move(other._impl);
-		return *this;
-	}
-
-	/*!
-	 * \brief operator().
-	 * 
-	 * Invokes a task.
-	 */
-	void operator()() { _impl->invoke(); }
+    : _impl{ std::move(other._impl) } 
+    { }
+    
+    /*!
+     * \brief operator().
+     * 
+     * Invokes a task.
+     */
+    void operator()() { _impl->invoke(); }
 
 private:
-	std::unique_ptr<task_base> _impl;
+    std::unique_ptr<task_base> _impl;
 };
 
 }

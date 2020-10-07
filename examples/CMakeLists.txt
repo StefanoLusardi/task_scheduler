@@ -14,8 +14,8 @@ function(add_example EXAMPLE_TARGET)
 	endif()
 	
 	if(${SSTS_INSTALL_EXAMPLES})
-        install(TARGETS ${EXAMPLE_TARGET} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-    endif()
+		install(TARGETS ${EXAMPLE_TARGET} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+	endif()
 endfunction()
 
 add_example(example_pool)
