@@ -26,7 +26,7 @@ target_include_directories(ssts INTERFACE
     "$<INSTALL_INTERFACE:CMAKE_INSTALL_INCLUDEDIR>")
 
 if(NOT WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    option(SSTS_ENABLE_CODE_COVERAGE "Enable code coverage" ON)
+    option(SSTS_ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
     if(${SSTS_ENABLE_CODE_COVERAGE})
         message(STATUS "::ssTs:: Code coverage enabled")
         target_compile_options(ssts INTERFACE --coverage -O0 -g -fno-inline -fno-inline-small-functions -fno-default-inline -fkeep-inline-functions)
@@ -59,7 +59,6 @@ if(${SSTS_INSTALL_LIBRARY})
     include(GNUInstallDirs)
     install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
     install(TARGETS ssts EXPORT ssts DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-    option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library)" ON)
 endif()
 
 option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library)" ON)

@@ -50,5 +50,4 @@ TEST(sstsRemove, RemoveAdd)
     EXPECT_FALSE(s.is_scheduled("task_id_1"s));
     EXPECT_FALSE(s.is_scheduled("task_id_2"s));
     EXPECT_FALSE(s.is_scheduled("task_id_3"s));
-    
 }

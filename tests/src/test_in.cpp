@@ -25,7 +25,6 @@ TEST(sstsIn, TaskIdFunctionOnly)
 	s.in("task_id", 1s, []{std::cout << "Hello!" << std::endl;});
 
     std::this_thread::sleep_for(2s);
-	s.stop();
 	
 	EXPECT_FALSE(s.is_scheduled("task_id"s));
 }
@@ -36,7 +35,6 @@ TEST(sstsIn, TaskIdFunctionParameters)
 	s.in("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
 
     std::this_thread::sleep_for(2s);
-	s.stop();
 
 	EXPECT_FALSE(s.is_scheduled("task_id"s));
 }
