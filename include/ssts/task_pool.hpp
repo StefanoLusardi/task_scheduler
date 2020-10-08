@@ -39,18 +39,8 @@ public:
     : _is_running{ true }
     {
         const auto thread_count = std::clamp(num_threads, 1u, std::thread::hardware_concurrency());
-        try
-        {
-            for (unsigned i = 0; i < thread_count; ++i)
-            {
-                _threads.emplace_back([this] { worker_thread(); });
-            }
-        }
-        catch (...)
-        {
-            _is_running = false;
-            throw;
-        }
+        for (unsigned int i = 0; i < thread_count; ++i)
+            _threads.emplace_back([this] { worker_thread(); });
     }
 
     task_pool(task_pool&) = delete;

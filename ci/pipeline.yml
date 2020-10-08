@@ -42,14 +42,20 @@ variables:
   BUILD_DIRECTORY: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
 
 schedules:
-# Every day @ 18:00(UTC) / 20:00(local)
-- cron: "0 18 * * *"
-  displayName: 'Daily Build'
+# Master branch: every day, once per hour.
+- cron: "0 * * * *"
+  displayName: 'CI master'
   branches:
     include:
     - master
-    - develop
-    - feature/*
+  always: true
+
+# Non-Master branches: every day, once per hour.
+- cron: "0 * * * *"
+  displayName: 'CI features'
+  branches:
+    exclude:
+    - master
   always: true
 
 stages:

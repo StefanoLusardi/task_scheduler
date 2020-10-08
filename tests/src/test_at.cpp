@@ -8,7 +8,7 @@ class At : public SchedulerTest { };
 TEST_F(At, FunctionOnly)
 {
     InitScheduler(2u);
-    s->at(ssts::clock::now() + 1s, []{std::cout << "Hello!" << std::endl;});
+    s->at(ssts::clock::now() + 1s, []{std::cout << "(At) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s);
@@ -18,7 +18,7 @@ TEST_F(At, FunctionOnly)
 TEST_F(At, FunctionParameters)
 {
     InitScheduler(2u);
-    s->at(ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
+    s->at(ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "(At) Input param:", 42);
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s);
@@ -28,7 +28,7 @@ TEST_F(At, FunctionParameters)
 TEST_F(At, TaskIdFunctionOnly)
 {
     InitScheduler(2u);
-    s->at("task_id", ssts::clock::now() + 1s, []{std::cout << "Hello!" << std::endl;});
+    s->at("task_id", ssts::clock::now() + 1s, []{std::cout << "(At) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s); 
@@ -38,7 +38,7 @@ TEST_F(At, TaskIdFunctionOnly)
 TEST_F(At, TaskIdFunctionParameters)
 {
     InitScheduler(2u);
-    s->at("task_id", ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
+    s->at("task_id", ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "(At) Input param:", 42);
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s); 
@@ -48,7 +48,7 @@ TEST_F(At, TaskIdFunctionParameters)
 TEST_F(At, TaskResultFunctionOnly)
 {
     InitScheduler(2u);
-    std::future f = s->at(ssts::clock::now() + 1s, []{ return 42; });
+    std::future f = s->at(ssts::clock::now() + 1s, []{ std::cout << "(At)" << std::endl; return 42; });
 
     EXPECT_TRUE(s->size());
     EXPECT_EQ(f.get(), 42);
@@ -58,10 +58,10 @@ TEST_F(At, TaskResultFunctionOnly)
 TEST_F(At, TaskResultFunctionParameters)
 {
     InitScheduler(2u);
-    std::future f = s->at(ssts::clock::now() + 1s, [](auto p){ return 2 * p; }, 21);
+    std::future f_at = s->at(ssts::clock::now() + 1s, [](auto p){ std::cout << "(At)" << std::endl; return 2 * p; }, 21);
 
     EXPECT_TRUE(s->size());
-    EXPECT_EQ(f.get(), 42);
+    EXPECT_EQ(f_at.get(), 42);
     EXPECT_FALSE(s->size());
 }
 

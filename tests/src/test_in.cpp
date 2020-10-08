@@ -8,7 +8,7 @@ class In : public SchedulerTest { };
 TEST_F(In, FunctionOnly)
 {
     InitScheduler(2u);
-    s->in(1s, []{std::cout << "Hello!" << std::endl;});
+    s->in(1s, []{std::cout << "(In) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s);
@@ -18,7 +18,7 @@ TEST_F(In, FunctionOnly)
 TEST_F(In, FunctionParameters)
 {
     InitScheduler(2u);
-    s->in(1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "Input param:", 42);
+    s->in(1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "(In) Input param:", 42);
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s);
@@ -28,7 +28,7 @@ TEST_F(In, FunctionParameters)
 TEST_F(In, TaskIdFunctionOnly)
 {
     InitScheduler(2u);
-    s->in("task_id", 1s, []{std::cout << "Hello!" << std::endl;});
+    s->in("task_id", 1s, []{std::cout << "(In) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s);    
@@ -38,7 +38,7 @@ TEST_F(In, TaskIdFunctionOnly)
 TEST_F(In, TaskIdFunctionParameters)
 {
     InitScheduler(2u);
-    s->in("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "Input param:", 42);
+    s->in("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "(In) Input param:", 42);
 
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s);
@@ -48,7 +48,7 @@ TEST_F(In, TaskIdFunctionParameters)
 TEST_F(In, TaskResultFunctionOnly)
 {
     InitScheduler(2u);
-    std::future f = s->in(1s, []{ return 42; });
+    std::future f = s->in(1s, []{ std::cout << "(In)" << std::endl; return 42; });
 
     EXPECT_TRUE(s->size());
     EXPECT_EQ(f.get(), 42);
@@ -58,10 +58,10 @@ TEST_F(In, TaskResultFunctionOnly)
 TEST_F(In, TaskResultFunctionParameters)
 {
     InitScheduler(2u);
-    std::future f = s->in(1s, [](auto p){ return 2 * p; }, 21);
+    std::future f_in = s->in(1s, [](auto p){ std::cout << "(In)" << std::endl; return 2 * p; }, 21);
 
     EXPECT_TRUE(s->size());
-    EXPECT_EQ(f.get(), 42);
+    EXPECT_EQ(f_in.get(), 42);
     EXPECT_FALSE(s->size());
 }
 

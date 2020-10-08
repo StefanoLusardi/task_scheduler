@@ -27,7 +27,7 @@ TEST_F(Remove, RemovedAfterRun)
     EXPECT_FALSE(s->is_scheduled("task_id_2"s));
 }
 
-TEST_F(Remove, RemoveAdd)
+TEST_F(Remove, RemovedBeforeAfterSleep)
 {
     InitScheduler(4u);
     StartTasksIn(3u, 1s);

@@ -25,33 +25,19 @@ void log_test(const std::string& msg, unsigned line_width = 40)
         << std::endl;
 }
 
-auto check_scheduled = [](ssts::task_scheduler& s, unsigned num_tasks)
+void check_tasks(const std::string& msg, ssts::task_scheduler& s, unsigned num_tasks, std::chrono::seconds wait_time = 5s)
 {
-    for(unsigned i = 1; i <= num_tasks; ++i)
-    {
-        const auto task_id = "task_id_"s + std::to_string(i);
-        std::cout << std::boolalpha << task_id << " scheduled: " << s.is_scheduled(task_id) << std::endl;
-    }
-    std::cout << "\n" << std::endl;
-};
-
-auto check_enabled = [](ssts::task_scheduler& s, unsigned num_tasks)
-{
+    std::this_thread::sleep_for(wait_time);
+    log(msg);
+    
     for(unsigned i = 1; i <= num_tasks; ++i)
     {
         const auto task_id = "task_id_"s + std::to_string(i);
         std::cout << std::boolalpha << task_id << " enabled: " << s.is_enabled(task_id) << std::endl;
+        std::cout << std::boolalpha << task_id << " scheduled: " << s.is_scheduled(task_id) << std::endl;
     }
     std::cout << "\n" << std::endl;
-};
-
-auto check_tasks = [](const std::string& msg, ssts::task_scheduler& s, unsigned num_tasks, std::chrono::seconds wait_time = 5s)
-{
-    std::this_thread::sleep_for(wait_time);
-    log(msg);
-    check_scheduled(s, num_tasks);
-    check_enabled(s, num_tasks);
-};
+}
 
 class timer
 {
