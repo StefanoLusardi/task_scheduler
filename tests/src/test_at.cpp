@@ -33,6 +33,7 @@ TEST_F(At, TaskIdFunctionOnly)
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s); 
     EXPECT_FALSE(s->is_scheduled("task_id"s));
+    EXPECT_FALSE(s->size());
 }
 
 TEST_F(At, TaskIdFunctionParameters)
@@ -43,6 +44,7 @@ TEST_F(At, TaskIdFunctionParameters)
     EXPECT_TRUE(s->size());
     std::this_thread::sleep_for(2s); 
     EXPECT_FALSE(s->is_scheduled("task_id"s));
+    EXPECT_FALSE(s->size());
 }
 
 TEST_F(At, TaskResultFunctionOnly)

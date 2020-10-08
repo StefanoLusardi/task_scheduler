@@ -10,9 +10,9 @@ TEST_F(Every, FunctionOnly)
     InitScheduler(2u);
     s->every(1s, []{std::cout << "(Every) Hello!" << std::endl;});
 
-    EXPECT_NE(s->size(), 0);
+    EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
-    EXPECT_NE(s->size(), 0);
+    // EXPECT_EQ(s->size(), 1u);
 
     // s->stop();
     // EXPECT_EQ(s->size(), 0);
@@ -23,9 +23,9 @@ TEST_F(Every, FunctionParameters)
     InitScheduler(2u);
     s->every(1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "(Every) Input param:", 42);
 
-    EXPECT_NE(s->size(), 0);
+    EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
-    EXPECT_NE(s->size(), 0);
+    // EXPECT_EQ(s->size(), 1u);
 
     // s->stop();
     // EXPECT_EQ(s->size(), 0);
@@ -36,9 +36,9 @@ TEST_F(Every, TaskIdFunctionOnly)
     InitScheduler(2u);
     s->every("task_id", 1s, []{std::cout << "(Every) Hello!" << std::endl;});
 
-    EXPECT_NE(s->size(), 0);
+    EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
-    EXPECT_NE(s->size(), 0);
+    // EXPECT_EQ(s->size(), 1u);
 
     // s->stop();
     // EXPECT_EQ(s->size(), 0);
@@ -49,9 +49,9 @@ TEST_F(Every, TaskIdFunctionParameters)
     InitScheduler(2u);
     s->every("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "(Every) Input param:", 42);
 
-    EXPECT_NE(s->size(), 0);
+    EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
-    EXPECT_NE(s->size(), 0);
+    // EXPECT_EQ(s->size(), 1u);
 
     // s->stop();
     // EXPECT_EQ(s->size(), 0);

@@ -148,8 +148,9 @@ public:
      * 
      * This function return the number of tasks that are currently scheduled for execution (both enabled and disabled).
      */
-    size_t size() const noexcept
-    {        
+    size_t size()
+    {
+        std::scoped_lock lock(_update_tasks_mtx);
         return _tasks.size();
     }
 

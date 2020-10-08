@@ -28,7 +28,7 @@ protected:
         for (auto n = 0; n < n_tasks; ++n)
         {
             auto id = std::string(task_id + std::to_string(n));
-            s->in(std::move(id), std::move(delay), [&id]{ std::cout << id << std::endl; });
+            s->in(std::string(id), std::move(delay), [str_id = std::string(id)]{ std::cout << str_id << std::endl; });
         }
     }
 
