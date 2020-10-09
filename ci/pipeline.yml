@@ -889,11 +889,17 @@ stages:
         vmImage: 'windows-2019'
 
       steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            choco install --accept-license -y Ninja
+            ninja --version
       - task: CMake@1
         displayName: 'CMake - Configure'
         inputs:
           workingDirectory: $(BUILD_DIRECTORY)
-          cmakeArgs: '../.. -G"Visual Studio 16 2019" -A x64 
+          cmakeArgs: '../.. -G"Ninja" 
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
@@ -931,11 +937,17 @@ stages:
         vmImage: 'vs2017-win2016'
 
       steps:
+      - task: CmdLine@2
+        displayName: 'Install Ninja'
+        inputs:
+          script: |
+            choco install --accept-license -y Ninja
+            ninja --version
       - task: CMake@1
         displayName: 'CMake - Configure'
         inputs:
           workingDirectory: $(BUILD_DIRECTORY)
-          cmakeArgs: '../.. -G"Visual Studio 15 2017" -A x64
+          cmakeArgs: '../.. -G"Ninja" 
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
