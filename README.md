@@ -16,7 +16,7 @@ Header only, with [no external dependencies](#tests).
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/StefanoLusardi/task_scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/StefanoLusardi/task_scheduler/context:cpp) 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/145999f67a5f4d25acec749b0896e47d)](https://www.codacy.com/manual/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Grade) 
 
-![Azure DevOps builds](https://img.shields.io/azure-devops/build/stefanolusardi/ssts/14) 
+[![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts_pipeline?branchName=master)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=14&branchName=master) 
 ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/stefanolusardi/ssts/14) 
 [![codecov](https://codecov.io/gh/StefanoLusardi/task_scheduler/branch/master/graph/badge.svg)](https://codecov.io/gh/StefanoLusardi/task_scheduler) 
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/82f58a941701453eba4f7d610660cf55)](https://www.codacy.com/gh/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Coverage) 
@@ -25,7 +25,6 @@ Header only, with [no external dependencies](#tests).
 [![Documentation](https://codedocs.xyz/StefanoLusardi/task_scheduler.svg)](https://codedocs.xyz/StefanoLusardi/task_scheduler/) 
 
 ![GitHub top language](https://img.shields.io/github/languages/top/stefanolusardi/task_scheduler) 
-![GitHub language count](https://img.shields.io/github/languages/count/stefanolusardi/task_scheduler) 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/stefanolusardi/task_scheduler) 
 ![GitHub repo size](https://img.shields.io/github/repo-size/stefanolusardi/task_scheduler) 
 ![GitHub Issues](https://img.shields.io/github/issues/stefanolusardi/task_scheduler) 
