@@ -40,7 +40,8 @@ variables:
   BUILD_EXAMPLES: ${{ parameters.SSTS_BUILD_EXAMPLES }}
   INSTALL_EXAMPLES: ${{ parameters.SSTS_INSTALL_EXAMPLES }}
   BUILD_DIRECTORY: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
-  SSTS_EXAMPLES: "example_pool && example_nested && example_scheduler"
+  SSTS_EXAMPLES_WIN: "example_pool && example_nested && example_scheduler"
+  SSTS_EXAMPLES_UNIX: "./example_pool && ./example_nested && ./example_scheduler"
 
 schedules:
 # Master branch: every day, once per hour.
@@ -293,7 +294,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with GCC 8.4
@@ -349,7 +350,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with GCC 9.3
@@ -405,7 +406,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -466,7 +467,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with Clang 9.0
@@ -522,7 +523,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with Clang 10.0
@@ -578,7 +579,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -640,7 +641,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 18.04 with GCC 8.4
@@ -696,7 +697,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 18.04 with GCC 9.3
@@ -752,7 +753,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -814,7 +815,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 18.04 with Clang 9.0
@@ -870,7 +871,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -915,6 +916,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES_WIN)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Windows Server 2016 with Visual Studio 2017
     - job: Windows2016_VisualStudio2017
@@ -955,7 +961,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -1029,7 +1035,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Windows Server 2016 with Clang 10.0
@@ -1098,7 +1104,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -1152,7 +1158,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Mojave 10.14 with Clang 10.0
@@ -1200,7 +1206,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
@@ -1257,7 +1263,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Catalina 10.15 with GCC 9.3
@@ -1309,7 +1315,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Mojave 10.14 with GCC 8.4
@@ -1361,7 +1367,7 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Mojave 10.14 with GCC 9.3
@@ -1413,6 +1419,6 @@ stages:
       - task: CmdLine@2
         displayName: 'Run Examples'
         inputs:
-          script:  $(SSTS_EXAMPLES)
+          script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
-          
+
