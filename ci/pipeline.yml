@@ -40,6 +40,7 @@ variables:
   BUILD_EXAMPLES: ${{ parameters.SSTS_BUILD_EXAMPLES }}
   INSTALL_EXAMPLES: ${{ parameters.SSTS_INSTALL_EXAMPLES }}
   BUILD_DIRECTORY: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
+  SSTS_EXAMPLES: "example_pool && example_nested && example_scheduler"
 
 schedules:
 # Master branch: every day, once per hour.
@@ -65,7 +66,7 @@ stages:
     dependsOn: []
     jobs:
 
-    - job: Coverage_Ubuntu2004_GCC9
+    - job: Ubuntu2004_GCC9
       dependsOn: []
       timeoutInMinutes: 10
 
@@ -174,10 +175,9 @@ stages:
   - stage: Docs
     displayName: 'Docs'
     dependsOn: []
-    condition: false
     jobs:
 
-    - job: Docs_Ubuntu2004_GCC9
+    - job: Ubuntu2004_GCC9
       dependsOn: []
       timeoutInMinutes: 10
 
@@ -232,7 +232,7 @@ stages:
           cmakeArgs: '--build . --config Debug'
 
   - stage: Build
-    displayName: 'Build and Unit Tests'
+    displayName: 'Build'
     dependsOn: []
     jobs:
 
@@ -269,8 +269,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -284,18 +284,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with GCC 8.4
     - job: Ubuntu2004_GCC8
@@ -326,8 +325,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -341,18 +340,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with GCC 9.3
     - job: Ubuntu2004_GCC9
@@ -383,8 +381,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -398,19 +396,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
-
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
     #######################################################################################
@@ -446,8 +442,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -461,18 +457,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with Clang 9.0
     - job: Ubuntu2004_Clang9
@@ -503,8 +498,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -518,18 +513,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 20.04 with Clang 10.0
     - job: Ubuntu2004_Clang10
@@ -560,8 +554,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -575,18 +569,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
 
@@ -623,8 +616,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -638,18 +631,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 18.04 with GCC 8.4
     - job: Ubuntu1804_GCC8
@@ -680,8 +672,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -695,18 +687,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 18.04 with GCC 9.3
     - job: Ubuntu1804_GCC9
@@ -737,8 +728,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -752,18 +743,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
 
@@ -800,8 +790,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -815,18 +805,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Ubuntu 18.04 with Clang 9.0
     - job: Ubuntu1804_Clang9
@@ -857,8 +846,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -872,18 +861,17 @@ stages:
         inputs:
           script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
-      - task: CmdLine@2
-        displayName: 'CMake - Run CPack'
-        enabled: false
-        inputs:
-          script: cpack .
-          workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
 
@@ -908,8 +896,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -945,8 +933,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -964,7 +952,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
-
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
     #######################################################################################
@@ -1011,8 +1003,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
+            -DSSTS_BUILD_TESTS=ON ^
+            -DSSTS_BUILD_EXAMPLES=ON ^
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
             -DSSTS_ENABLE_CODE_COVERAGE=OFF ^
             ../.. 
@@ -1034,6 +1026,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # Windows Server 2016 with Clang 10.0
     - job: Windows2016_Clang10
@@ -1075,8 +1072,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ^
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS) ^
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
+            -DSSTS_BUILD_TESTS=ON ^
+            -DSSTS_BUILD_EXAMPLES=ON ^
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
             -DSSTS_ENABLE_CODE_COVERAGE=OFF ^
             ../.. 
@@ -1098,6 +1095,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
 
@@ -1128,8 +1130,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1147,6 +1149,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Mojave 10.14 with Clang 10.0
     - job: MacOSMojave1014_Clang10
@@ -1171,8 +1178,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1190,6 +1197,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
 
     #######################################################################################
@@ -1223,8 +1235,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1242,6 +1254,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Catalina 10.15 with GCC 9.3
     - job: MacOSCatalina1015_GCC9
@@ -1270,8 +1287,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1289,6 +1306,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Mojave 10.14 with GCC 8.4
     - job: MacOSMojave1014_GCC8
@@ -1317,8 +1339,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1336,6 +1358,11 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
 
     # MacOS X Mojave 10.14 with GCC 9.3
     - job: MacOSMojave1014_GCC9
@@ -1364,8 +1391,8 @@ stages:
             -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) 
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
-            -DSSTS_BUILD_TESTS=$(BUILD_TESTS)
-            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
+            -DSSTS_BUILD_TESTS=ON
+            -DSSTS_BUILD_EXAMPLES=ON
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1383,4 +1410,9 @@ stages:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
           testRunTitle: 'Test Results'
-
+      - task: CmdLine@2
+        displayName: 'Run Examples'
+        inputs:
+          script:  $(SSTS_EXAMPLES)
+          workingDirectory: $(BUILD_DIRECTORY)/bin
+          
