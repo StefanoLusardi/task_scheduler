@@ -44,8 +44,8 @@ variables:
   SSTS_EXAMPLES_UNIX: "./example_pool && ./example_nested && ./example_scheduler"
 
 schedules:
-# Master branch: every day, once per hour.
-- cron: "0 * * * *"
+# Master branch: every day, four times per hour.
+- cron: "0,15,30,45 * * * *"
   displayName: 'CI master'
   branches:
     include:
