@@ -166,6 +166,9 @@ public:
 
         if (_scheduler_thread.joinable())
             _scheduler_thread.join();
+
+        _tasks.clear();
+        _tasks_to_remove.clear();
     }
 
     /*!
@@ -243,7 +246,7 @@ public:
 
         if (auto task = get_task_iterator(task_id); task != _tasks.end() && task->second._hash.has_value())
         {
-            _tasks_to_delete.insert(task->second._hash.value());
+            _tasks_to_remove.insert(task->second._hash.value());
             return true;
         }
         
@@ -368,7 +371,7 @@ private:
     std::atomic_bool _is_running;
     std::thread _scheduler_thread;
     std::multimap<ssts::clock::time_point, schedulable_task> _tasks;
-    std::unordered_set<size_t> _tasks_to_delete;
+    std::unordered_set<size_t> _tasks_to_remove;
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
     std::hash<std::string> _hasher;
@@ -392,25 +395,31 @@ private:
         auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
         for (auto it = _tasks.begin(); it != last_task_to_process; it++)
         {
-            // If a task has been marked to be deleted, just clean it up from the _tasks_to_delete set.
+            // If a task has been marked to be removed, just clean it up from the _tasks_to_remove set.
             // Do not schedule it within the task pool.
             // It will be erased after the for loop with all the other processed tasks.
             if(it->second._hash.has_value())
             {
-                if(const auto task_id = it->second._hash.value(); _tasks_to_delete.find(task_id) != _tasks_to_delete.end())
+                if(const auto task_id = it->second._hash.value(); _tasks_to_remove.find(task_id) != _tasks_to_remove.end())
                 {
-                    _tasks_to_delete.erase(task_id);
+                    _tasks_to_remove.erase(task_id);
                     continue;
                 }
             }
 
             _tp.run([t=std::make_shared<schedulable_task>(std::move(it->second)), this]
             {
+                const bool is_every = t->_interval.has_value();
+                ssts::clock::time_point next_time;
+                
+                if (is_every)
+                    next_time = ssts::clock::now() + t->_interval.value();
+
                 if (t->_is_enabled)
                     t->invoke(); 
 
-                if (t->_interval.has_value())
-                    add_task(ssts::clock::now() + t->_interval.value(), std::move(*t)); 
+                if (is_every)
+                    add_task(std::move(next_time), std::move(*t)); 
             });
         }
 

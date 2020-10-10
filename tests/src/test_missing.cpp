@@ -38,17 +38,18 @@ TEST_F(Missing, NoRunningTaskAfterStop)
     InitScheduler(4u);
     s->stop();
     StartTasksIn(4u, 2s);
-    EXPECT_FALSE(s->size());
+    EXPECT_EQ(s->size(), 0u);
 }
 
-// TEST_F(Missing, NoRunningTaskAfterForceStop)
-// {
-//     InitScheduler(4u);
-//     StartTasksIn(4u, 2s);
-//     EXPECT_TRUE(s->size());
-//     s->stop(force=true); //TODO!
-//     StartTasksIn(4u, 2s);
-//     EXPECT_FALSE(s->size());
-// }
+TEST_F(Missing, NoRunningTaskAfterSecondStop)
+{
+    InitScheduler(4u);
+    StartTasksIn(4u, 1s);
+    EXPECT_EQ(s->size(), 4u);
+
+    s->stop(); 
+    StartTasksIn(4u, 1s);
+    EXPECT_EQ(s->size(), 0u);
+}
 
 }
