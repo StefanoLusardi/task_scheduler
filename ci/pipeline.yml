@@ -129,7 +129,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config Debug --output-on-failure -T Test --timeout 10'
+          script: 'ctest . --build-config Debug --output-on-failure -T Test --timeout 60'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -283,7 +283,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -339,7 +339,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -395,7 +395,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -456,7 +456,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -512,7 +512,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -568,7 +568,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -630,7 +630,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -686,7 +686,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -742,7 +742,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -804,7 +804,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -860,7 +860,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V'
+          script: 'ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V'
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
@@ -963,7 +963,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1037,7 +1037,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1106,7 +1106,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1160,7 +1160,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1208,7 +1208,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1265,7 +1265,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1317,7 +1317,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1369,7 +1369,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
@@ -1421,7 +1421,7 @@ stages:
       - task: CmdLine@2
         displayName: 'CMake - Run CTest'
         inputs:
-          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --schedule-random --parallel 8 --timeout 10 -T Test -V
+          script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 8 --timeout 60 -T Test -V
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         inputs:
