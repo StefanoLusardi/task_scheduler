@@ -40,8 +40,8 @@ variables:
   BUILD_EXAMPLES: ${{ parameters.SSTS_BUILD_EXAMPLES }}
   INSTALL_EXAMPLES: ${{ parameters.SSTS_INSTALL_EXAMPLES }}
   BUILD_DIRECTORY: $(Build.SourcesDirectory)/build/$(BUILD_TYPE)
-  SSTS_EXAMPLES_WIN: "example_pool && example_nested && example_scheduler"
-  SSTS_EXAMPLES_UNIX: "./example_pool && ./example_nested && ./example_scheduler"
+  SSTS_EXAMPLES_WIN: "example_nested && example_scheduler"
+  SSTS_EXAMPLES_UNIX: "./example_nested && ./example_scheduler"
 
 schedules:
 # Master branch: every day, four times per hour.
