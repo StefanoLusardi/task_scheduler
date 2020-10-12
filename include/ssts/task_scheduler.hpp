@@ -45,27 +45,27 @@ private:
     public:
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f) 
-        : _task{ssts::task(std::forward<FunctionType>(f))}
+        : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         { }
 
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f, size_t hash) 
-        : _task{ssts::task(std::forward<FunctionType>(f))}
+        : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
         { }
 
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f, ssts::clock::duration interval) 
-        : _task{ssts::task(std::forward<FunctionType>(f))}
+        : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _interval{interval}
         { }
 
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f, size_t hash, ssts::clock::duration interval) 
-        : _task{ssts::task(std::forward<FunctionType>(f))}
+        : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
         , _interval{interval}
@@ -84,12 +84,33 @@ private:
         , _hash{std::move(other._hash)}
         { }
 
-        void invoke() { _task(); }
+        void invoke() { _task->invoke(); }
 
-        ssts::task _task;
+        std::shared_ptr<schedulable_task> clone() 
+        { 
+            return std::shared_ptr<schedulable_task>(new schedulable_task(this));
+        }
+
+        void set_enabled(bool is_enabled) { _is_enabled = is_enabled; }
+        bool is_enabled() const { return _is_enabled; }
+        
+        void set_interval(ssts::clock::duration interval) { _interval = interval; }
+        std::optional<ssts::clock::duration> interval() const { return _interval; }
+        
+        std::optional<size_t> hash() const { return _hash; }
+
+    private:
+        std::shared_ptr<ssts::task> _task;
         bool _is_enabled;
         std::optional<ssts::clock::duration> _interval;
         std::optional<size_t> _hash;
+
+        schedulable_task(schedulable_task* st) 
+        : _task{st->_task}
+        , _is_enabled{st->_is_enabled}
+        , _interval{st->_interval}
+        , _hash{st->_hash}
+        { }
     };
 
 public:
@@ -203,7 +224,7 @@ public:
         std::scoped_lock lock(_update_tasks_mtx);
 
         if (auto task = get_task_iterator(task_id); task != _tasks.end())
-            return task->second._is_enabled;
+            return task->second.is_enabled();
         
         return false;
     }
@@ -224,7 +245,7 @@ public:
 
         if (auto task = get_task_iterator(task_id); task != _tasks.end())
         {
-            task->second._is_enabled = is_enabled;
+            task->second.set_enabled(is_enabled);
             return true;
         }
         
@@ -244,12 +265,37 @@ public:
     {
         std::scoped_lock lock(_update_tasks_mtx);
 
-        if (auto task = get_task_iterator(task_id); task != _tasks.end() && task->second._hash.has_value())
+        if (auto task = get_task_iterator(task_id); task != _tasks.end() && task->second.hash().has_value())
         {
-            _tasks_to_remove.insert(task->second._hash.value());
+            _tasks_to_remove.insert(task->second.hash().value());
             return true;
         }
         
+        return false;
+    }
+
+    /*!
+     * \brief Update a task interval.
+     * \param task_id task_id to update.
+     * \param interval new task interval to set.
+     * \return bool indicating if the task has been properly updated.
+     *
+     * If a task is not recursive (i.e. has not been started with every() APIs)
+     * or the task has not been assigned a task_id, it is not possible to update it. 
+     * In case of any failure (task_id not found or task non recursive) this function return false. 
+     */
+    bool update_interval(const std::string& task_id, ssts::clock::duration interval) 
+    {
+        std::scoped_lock lock(_update_tasks_mtx);
+
+        if (auto task = get_task_iterator(task_id); task != _tasks.end() 
+            && task->second.hash().has_value()
+            && task->second.interval().has_value())
+        {
+            task->second.set_interval(interval);
+            return true;
+        }
+
         return false;
     }
 
@@ -391,48 +437,50 @@ private:
     void update_tasks()
     {
         std::scoped_lock lock(_update_tasks_mtx);
+        
+        decltype(_tasks) recursive_tasks;
 
+        // All the tasks whose start time is before ssts::clock::now(),
+        // (which are the ones from _tasks.begin(), up to last_task_to_process)
+        // can be enqueued in the TaskPool.
         auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
         for (auto it = _tasks.begin(); it != last_task_to_process; it++)
         {
             // If a task has been marked to be removed, just clean it up from the _tasks_to_remove set.
             // Do not schedule it within the task pool.
             // It will be erased after the for loop with all the other processed tasks.
-            if(it->second._hash.has_value())
+            if(it->second.hash().has_value())
             {
-                if(const auto task_id = it->second._hash.value(); _tasks_to_remove.find(task_id) != _tasks_to_remove.end())
+                if(const auto task_id = it->second.hash().value(); _tasks_to_remove.find(task_id) != _tasks_to_remove.end())
                 {
                     _tasks_to_remove.erase(task_id);
                     continue;
                 }
             }
-
-            _tp.run([t=std::make_shared<schedulable_task>(std::move(it->second)), this]
-            {
-                const bool is_every = t->_interval.has_value();
-                ssts::clock::time_point next_time;
-                
-                if (is_every)
-                    next_time = ssts::clock::now() + t->_interval.value();
-
-                if (t->_is_enabled)
-                    t->invoke(); 
-
-                if (is_every)
-                    add_task(std::move(next_time), std::move(*t)); 
-            });
+            
+            // Add task to the TaskPool if enabled to run.
+            if (it->second.is_enabled())
+                _tp.run([t = it->second.clone(), this] { t->invoke(); });
+            
+            // Keep track of recursive tasks if task has a valid interval value.
+            if (it->second.interval().has_value())
+                recursive_tasks.emplace(ssts::clock::now() + it->second.interval().value(), std::move(it->second));
         }
 
+        // Erase tasks already processed.
         _tasks.erase(_tasks.begin(), last_task_to_process);
+        
+        // Re-schedule recursive tasks.
+        _tasks.merge(recursive_tasks);
     }
 
     auto get_task_iterator(const std::string& task_id) -> decltype(_tasks)::iterator
     {
         return std::find_if(_tasks.begin(), _tasks.end(), [hash = _hasher(task_id)](auto&& it)
         {
-            if (it.second._hash.has_value())
+            if (it.second.hash().has_value())
             {
-                return hash == it.second._hash.value();
+                return hash == it.second.hash().value();
             }
             return false;
         });

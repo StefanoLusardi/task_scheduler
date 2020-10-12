@@ -9,7 +9,7 @@ int main()
     ssts::task_pool tp(8);
     int sum = 0;
 
-    const int num_task = 1'000'000;
+    const int num_task = 1'000;
 
     std::mutex cout_mtx;
     for (int i = 0; i < num_task; ++i)

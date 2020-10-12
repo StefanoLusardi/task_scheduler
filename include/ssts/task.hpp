@@ -73,6 +73,14 @@ public:
      * Invokes a task.
      */
     void operator()() { _impl->invoke(); }
+    
+    /*!
+     * \brief invoke().
+     * 
+     * Invokes a task.
+     * Explicit overload of operator().
+     */
+    void invoke() { _impl->invoke(); }
 
 private:
     std::unique_ptr<task_base> _impl;
