@@ -7,41 +7,44 @@ class Remove : public SchedulerTest { };
 
 TEST_F(Remove, ScheduledBeforeRun)
 {
+    n_tasks = 3u;
     InitScheduler(4u);
-    StartTasksIn(3u, 1s);
-
-    EXPECT_TRUE(s->is_scheduled("task_id_0"s));
-    EXPECT_TRUE(s->is_scheduled("task_id_1"s));
-    EXPECT_TRUE(s->is_scheduled("task_id_2"s));
+    StartAllTasksIn(1s);
+    EXPECT_EQ(CountScheduledTasks(), n_tasks);
 }
 
 TEST_F(Remove, RemovedAfterRun)
 {
+    n_tasks = 3;
     InitScheduler(4u);
-    StartTasksIn(3u, 1s);
+    StartAllTasksIn(1s);
 
     std::this_thread::sleep_for(2s);
-
-    EXPECT_FALSE(s->is_scheduled("task_id_0"s));
-    EXPECT_FALSE(s->is_scheduled("task_id_1"s));
-    EXPECT_FALSE(s->is_scheduled("task_id_2"s));
+    EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 
 TEST_F(Remove, RemovedBeforeAfterSleep)
 {
+    n_tasks = 3;
     InitScheduler(4u);
-    StartTasksIn(3u, 1s);
-    RemoveTasks(3u);
-
-    EXPECT_TRUE(s->is_scheduled("task_id_0"s));
-    EXPECT_TRUE(s->is_scheduled("task_id_1"s));
-    EXPECT_TRUE(s->is_scheduled("task_id_2"s));
+    StartAllTasksIn(1s);
+    RemoveAllTasks();
+    EXPECT_EQ(CountScheduledTasks(), n_tasks);
 
     std::this_thread::sleep_for(2s);
+    EXPECT_EQ(CountScheduledTasks(), 0u);
+}
 
-    EXPECT_FALSE(s->is_scheduled("task_id_0"s));
-    EXPECT_FALSE(s->is_scheduled("task_id_1"s));
-    EXPECT_FALSE(s->is_scheduled("task_id_2"s));
+TEST_F(Remove, RemovedLongTiming)
+{
+    n_tasks = 8;
+    InitScheduler(4u);
+    StartAllTasksIn(2min);
+
+    EXPECT_EQ(CountScheduledTasks(), n_tasks);
+
+    s->stop();
+    EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 
 }

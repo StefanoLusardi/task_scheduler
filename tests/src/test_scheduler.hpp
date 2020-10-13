@@ -22,37 +22,68 @@ protected:
         s = std::make_unique<ssts::task_scheduler>(n_threads);
     }
 
-    void StartTasksIn(const unsigned int n_tasks, ssts::clock::duration&& delay)
+    void StartAllTasksIn(ssts::clock::duration&& delay)
     {
-        const auto task_id = "task_id_"s;
-        for (auto n = 0; n < n_tasks; ++n)
-        {
-            auto id = std::string(task_id + std::to_string(n));
-            s->in(std::string(id), std::move(delay), [str_id = std::string(id)]{ std::cout << str_id << std::endl; });
-        }
+        foreach_tasks([&](auto id){ s->in(std::string(id), std::move(delay), [id]{ std::cout << id << std::endl; }); });
     }
 
-    void SetEnabledTasks(const unsigned int n_tasks, bool is_enabled)
+    void StartAllTasksEvery(ssts::clock::duration&& interval)
     {
-        const auto task_id = "task_id_"s;
-        for (auto n = 0; n < n_tasks; ++n)
-        {
-            auto id = std::string(task_id + std::to_string(n));
-            s->set_enabled(id, is_enabled);
-        }
+        foreach_tasks([&](auto id) { s->every(std::string(id), std::move(interval), [id]{ std::cout << id << std::endl; }); });
     }
 
-    void RemoveTasks(const unsigned int n_tasks)
+    void SetEnabledAllTasks(bool is_enabled)
     {
-        const auto task_id = "task_id_"s;
-        for (auto n = 0; n < n_tasks; ++n)
+        foreach_tasks([&](auto id){ s->set_enabled(id, is_enabled); });
+    }
+
+    void RemoveAllTasks()
+    {
+        foreach_tasks([&](auto id){ s->remove_task(id); });
+    }
+
+    void UpdateAllTasksInterval(ssts::clock::duration&& interval)
+    {
+        foreach_tasks([&](auto id){ s->update_interval(id, interval); });
+    }
+
+    unsigned int CountScheduledTasks()
+    {
+        unsigned int count = 0;
+        foreach_tasks([&](auto id)
         {
-            auto id = std::string(task_id + std::to_string(n));
-            s->remove_task(id);
-        }
+            if(s->is_scheduled(id))
+                ++count;
+        });
+
+        return count;
+    }
+
+    unsigned int CountEnabledTasks()
+    {
+        unsigned int count = 0;
+        foreach_tasks([&](auto id)
+        {
+            if(s->is_enabled(id))
+                ++count;
+        });
+
+        return count;
     }
 
     std::unique_ptr<ssts::task_scheduler> s;
+    unsigned int n_tasks = 4u;
+    const std::string task_id_prefix = "task_id_"s;
+
+private:
+    template<typename Func, typename... Args>
+    void foreach_tasks(Func&& func, Args&&... args)
+    {
+        for (auto n = 0; n < n_tasks; ++n)
+        {
+            std::invoke(std::forward<Func>(func), task_id_prefix + std::to_string(n), std::forward<Args>(args)...);
+        }
+    }
 };
 
 }

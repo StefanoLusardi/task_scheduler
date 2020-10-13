@@ -53,4 +53,17 @@ TEST_F(Every, TaskIdFunctionParameters)
     EXPECT_EQ(s->size(), 0u);
 }
 
+
+TEST_F(Every, UpdateInterval) 
+{
+    InitScheduler(4u);
+    StartAllTasksEvery(1s);
+    EXPECT_EQ(s->size(), n_tasks);
+
+    std::this_thread::sleep_for(2s);
+
+    s->stop();
+    EXPECT_EQ(s->size(), 0u);
+}
+
 }

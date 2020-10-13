@@ -50,10 +50,10 @@ TEST_F(At, TaskIdFunctionParameters)
 TEST_F(At, TaskResultFunctionOnly)
 {
     InitScheduler(2u);
-    std::future f = s->at(ssts::clock::now() + 1s, []{ std::cout << "(At)" << std::endl; return 42; });
+    std::future f_at = s->at(ssts::clock::now() + 1s, []{ std::cout << "(At)" << std::endl; return 42; });
 
     EXPECT_TRUE(s->size());
-    EXPECT_EQ(f.get(), 42);
+    EXPECT_EQ(f_at.get(), 42);
     EXPECT_FALSE(s->size());
 }
 

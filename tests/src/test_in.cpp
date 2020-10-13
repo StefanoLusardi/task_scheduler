@@ -48,10 +48,10 @@ TEST_F(In, TaskIdFunctionParameters)
 TEST_F(In, TaskResultFunctionOnly)
 {
     InitScheduler(2u);
-    std::future f = s->in(1s, []{ std::cout << "(In)" << std::endl; return 42; });
+    std::future f_in = s->in(1s, []{ std::cout << "(In)" << std::endl; return 42; });
 
     EXPECT_TRUE(s->size());
-    EXPECT_EQ(f.get(), 42);
+    EXPECT_EQ(f_in.get(), 42);
     EXPECT_FALSE(s->size());
 }
 

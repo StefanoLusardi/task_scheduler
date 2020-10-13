@@ -7,42 +7,37 @@ class Disable : public SchedulerTest { };
 
 TEST_F(Disable, Enabled)
 {
+    n_tasks = 3;
     InitScheduler(4u);
-    StartTasksIn(3u, 2s);
-
-    EXPECT_TRUE(s->is_enabled("task_id_0"s));
-    EXPECT_TRUE(s->is_enabled("task_id_1"s));
-    EXPECT_TRUE(s->is_enabled("task_id_2"s));
+    StartAllTasksIn(2s);
+    EXPECT_EQ(CountEnabledTasks(), n_tasks);
 }
 
 TEST_F(Disable, Disabled)
 {
+    n_tasks = 3;
     InitScheduler(4u);
-    StartTasksIn(3u, 2s);
+    StartAllTasksIn(2s);
 
     // Disable tasks before they can run
-    SetEnabledTasks(3u, false);
-    EXPECT_FALSE(s->is_enabled("task_id_0"s));
-    EXPECT_FALSE(s->is_enabled("task_id_1"s));
-    EXPECT_FALSE(s->is_enabled("task_id_2"s));
+    SetEnabledAllTasks(false);
+    EXPECT_EQ(CountEnabledTasks(), 0u);
 }
 
 TEST_F(Disable, ReEnabled)
 {
+    n_tasks = 3;
     InitScheduler(4u);
-    StartTasksIn(3u, 2s);
+    StartAllTasksIn(3s);
 
     // Disable tasks before they can run
-    SetEnabledTasks(3u, false);
-    EXPECT_FALSE(s->is_enabled("task_id_0"s));
-    EXPECT_FALSE(s->is_enabled("task_id_1"s));
-    EXPECT_FALSE(s->is_enabled("task_id_2"s));
+    SetEnabledAllTasks(false);
+    EXPECT_EQ(CountEnabledTasks(), 0u);
 
     // ReEnable tasks before they can run
-    SetEnabledTasks(3u, true);
-    EXPECT_TRUE(s->is_enabled("task_id_0"s));
-    EXPECT_TRUE(s->is_enabled("task_id_1"s));
-    EXPECT_TRUE(s->is_enabled("task_id_2"s));
+    std::this_thread::sleep_for(1s);
+    SetEnabledAllTasks(true);
+    EXPECT_EQ(CountEnabledTasks(), n_tasks);
 }
 
 }
