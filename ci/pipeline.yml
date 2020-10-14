@@ -134,6 +134,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -146,6 +147,7 @@ stages:
           workingDirectory: $(Build.SourcesDirectory)
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish Code Coverage results'
+        continueOnError: true
         inputs:
           codeCoverageTool: 'Cobertura'
           summaryFileLocation: '$(Build.SourcesDirectory)/coverage.xml'
@@ -159,6 +161,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: CmdLine@2
         displayName: 'Upload Coverage results [Codecov]'
+        continueOnError: true
         inputs:
           script: |
             lcov --list coverage.info 
@@ -166,6 +169,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: CmdLine@2
         displayName: 'Upload Coverage results [Codacy]'
+        continueOnError: true
         inputs:
           script: |
             ls
@@ -289,6 +293,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -346,6 +351,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -403,6 +409,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -465,6 +472,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -522,6 +530,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -579,6 +588,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -642,6 +652,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -699,6 +710,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -756,6 +768,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -819,6 +832,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -876,6 +890,7 @@ stages:
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
         displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -931,6 +946,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --parallel 1 -T Test
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -980,6 +997,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1055,6 +1074,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1125,6 +1146,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1180,6 +1203,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1229,6 +1254,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1287,6 +1314,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1340,6 +1369,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1393,6 +1424,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
@@ -1446,6 +1479,8 @@ stages:
           script: ctest . --build-config $(BUILD_TYPE) --output-on-failure --timeout 60 -T Test -VV
           workingDirectory: $(BUILD_DIRECTORY)
       - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        continueOnError: true
         inputs:
           testResultsFormat: 'cTest'
           testResultsFiles: '$(BUILD_DIRECTORY)/Testing/*/Test.xml'
