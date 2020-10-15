@@ -43,7 +43,7 @@ TEST_F(Remove, RemovedLongTiming)
 
     EXPECT_EQ(CountScheduledTasks(), n_tasks);
 
-    s->stop();
+    StopScheduler();
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 

@@ -13,7 +13,7 @@ TEST_F(Every, FunctionOnly)
     EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
 
-    s->stop();
+    StopScheduler();
     EXPECT_EQ(s->size(), 0u);
 }
 
@@ -25,7 +25,7 @@ TEST_F(Every, FunctionParameters)
     EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
 
-    s->stop();
+    StopScheduler();
     EXPECT_EQ(s->size(), 0u);
 }
 
@@ -37,7 +37,7 @@ TEST_F(Every, TaskIdFunctionOnly)
     EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
 
-    s->stop();
+    StopScheduler();
     EXPECT_EQ(s->size(), 0u);
 }
 
@@ -49,7 +49,7 @@ TEST_F(Every, TaskIdFunctionParameters)
     EXPECT_EQ(s->size(), 1u);
     std::this_thread::sleep_for(2s);
 
-    s->stop();
+    StopScheduler();
     EXPECT_EQ(s->size(), 0u);
 }
 
@@ -63,7 +63,7 @@ TEST_F(Every, UpdateInterval)
     UpdateAllTasksInterval(200ms);
     std::this_thread::sleep_for(2s);
 
-    s->stop();
+    StopScheduler();
     EXPECT_EQ(s->size(), 0u);
 }
 

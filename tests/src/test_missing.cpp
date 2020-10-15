@@ -36,7 +36,7 @@ TEST_F(Missing, NoRemoveTaskId)
 TEST_F(Missing, NoRunningTaskAfterStop)
 {
     InitScheduler(4u);
-    s->stop();
+    StopScheduler();
     StartAllTasksIn(2s);
     EXPECT_EQ(s->size(), 0u);
 }
@@ -47,7 +47,7 @@ TEST_F(Missing, NoRunningTaskAfterSecondStop)
     StartAllTasksIn(1s);
     EXPECT_EQ(s->size(), 4u);
 
-    s->stop(); 
+    StopScheduler();
     StartAllTasksIn(1s);
     EXPECT_EQ(s->size(), 0u);
 }

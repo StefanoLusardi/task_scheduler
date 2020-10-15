@@ -20,7 +20,7 @@ void log_test(const std::string& msg, unsigned line_width = 40)
 {
     std::cout << "\n"
         << "[ " << std::setfill(':') << ':' << std::setw(line_width) << " ]"
-        << "\n[ :: " << std::setfill(' ') << std::setw(line_width-7) << msg << " :: ]\n"
+        << "\n[ :: " << std::setfill(' ') << std::setw(line_width-7) << msg.s << " :: ]\n"
         << "[ " << std::setfill(':') << ':' << std::setw(line_width) << " ]"
         << std::endl;
 }
