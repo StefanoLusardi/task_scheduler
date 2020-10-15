@@ -5,7 +5,7 @@
 class Foo 
 {
 public:
-    Foo(int i) : x{i} { }
+    explicit Foo(int i) : x{i} { }
     void update() { ++x; }
     int get() { return x; }
 private:

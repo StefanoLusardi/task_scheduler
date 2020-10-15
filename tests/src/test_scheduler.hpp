@@ -13,9 +13,9 @@ protected:
 
     virtual ~SchedulerTest() { }
 
-    virtual void SetUp() { }
+    virtual void SetUp() override { }
 
-    virtual void TearDown() { }
+    virtual void TearDown() override { }
 
     void InitScheduler(const unsigned int n_threads)
     {

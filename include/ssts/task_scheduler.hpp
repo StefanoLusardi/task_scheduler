@@ -265,7 +265,7 @@ public:
     {
         std::scoped_lock lock(_update_tasks_mtx);
 
-        if (auto task = get_task_iterator(task_id); task != _tasks.end() && task->second.hash().has_value())
+        if (auto task = get_task_iterator(task_id); task != _tasks.end())
         {
             _tasks_to_remove.insert(task->second.hash().value());
             return true;
@@ -289,7 +289,6 @@ public:
         std::scoped_lock lock(_update_tasks_mtx);
 
         if (auto task = get_task_iterator(task_id); task != _tasks.end() 
-            && task->second.hash().has_value()
             && task->second.interval().has_value())
         {
             task->second.set_interval(interval);
