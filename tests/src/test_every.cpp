@@ -11,7 +11,7 @@ TEST_F(Every, FunctionOnly)
     s->every(1s, []{std::cout << "(Every) Hello!" << std::endl;});
 
     EXPECT_EQ(s->size(), 1u);
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
 
     StopScheduler();
     EXPECT_EQ(s->size(), 0u);
@@ -23,7 +23,7 @@ TEST_F(Every, FunctionParameters)
     s->every(1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "(Every) Input param:", 42);
 
     EXPECT_EQ(s->size(), 1u);
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
 
     StopScheduler();
     EXPECT_EQ(s->size(), 0u);
@@ -35,7 +35,7 @@ TEST_F(Every, TaskIdFunctionOnly)
     s->every("task_id", 1s, []{std::cout << "(Every) Hello!" << std::endl;});
 
     EXPECT_EQ(s->size(), 1u);
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
 
     StopScheduler();
     EXPECT_EQ(s->size(), 0u);
@@ -47,7 +47,7 @@ TEST_F(Every, TaskIdFunctionParameters)
     s->every("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "(Every) Input param:", 42);
 
     EXPECT_EQ(s->size(), 1u);
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
 
     StopScheduler();
     EXPECT_EQ(s->size(), 0u);
@@ -58,10 +58,10 @@ TEST_F(Every, UpdateInterval)
 {
     InitScheduler(4u);
     StartAllTasksEvery(1s);
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
 
     UpdateAllTasksInterval(200ms);
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
 
     StopScheduler();
     EXPECT_EQ(s->size(), 0u);

@@ -28,14 +28,14 @@ TEST_F(Disable, ReEnabled)
 {
     n_tasks = 3;
     InitScheduler(4u);
-    StartAllTasksIn(3s);
+    StartAllTasksIn(4s);
 
     // Disable tasks before they can run
     SetEnabledAllTasks(false);
     EXPECT_EQ(CountEnabledTasks(), 0u);
 
     // ReEnable tasks before they can run
-    std::this_thread::sleep_for(1s);
+    Sleep(1s);
     SetEnabledAllTasks(true);
     EXPECT_EQ(CountEnabledTasks(), n_tasks);
 }

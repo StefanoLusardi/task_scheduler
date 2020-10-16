@@ -19,7 +19,7 @@ TEST_F(Remove, RemovedAfterRun)
     InitScheduler(4u);
     StartAllTasksIn(1s);
 
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 
@@ -31,7 +31,7 @@ TEST_F(Remove, RemovedBeforeAfterSleep)
     RemoveAllTasks();
     EXPECT_EQ(CountScheduledTasks(), n_tasks);
 
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 

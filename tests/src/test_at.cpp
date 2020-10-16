@@ -11,7 +11,7 @@ TEST_F(At, FunctionOnly)
     s->at(ssts::clock::now() + 1s, []{std::cout << "(At) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_FALSE(s->size());
 }
 
@@ -21,7 +21,7 @@ TEST_F(At, FunctionParameters)
     s->at(ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "(At) Input param:", 42);
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_FALSE(s->size());
 }
 
@@ -31,7 +31,7 @@ TEST_F(At, TaskIdFunctionOnly)
     s->at("task_id", ssts::clock::now() + 1s, []{std::cout << "(At) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s); 
+    Sleep(2s); 
     EXPECT_FALSE(s->is_scheduled("task_id"s));
     EXPECT_FALSE(s->size());
 }
@@ -42,7 +42,7 @@ TEST_F(At, TaskIdFunctionParameters)
     s->at("task_id", ssts::clock::now() + 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "(At) Input param:", 42);
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s); 
+    Sleep(2s); 
     EXPECT_FALSE(s->is_scheduled("task_id"s));
     EXPECT_FALSE(s->size());
 }

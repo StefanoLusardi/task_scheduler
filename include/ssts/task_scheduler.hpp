@@ -22,7 +22,7 @@ using namespace std::string_literals;
 namespace ssts
 {
 
-/*! \typedef ssts::clock Alias for std::chrono::steady_clock.
+/*! \typedef clock Alias for std::chrono::steady_clock.
  */
 using clock = std::chrono::steady_clock;
 

@@ -19,9 +19,9 @@ protected:
 
     void InitScheduler(const unsigned int n_threads)
     {
-        log("Initialing Scheduler");
+        log("Initializing Scheduler");
         s = std::make_unique<ssts::task_scheduler>(n_threads);
-        log("Scheduler Initialized with", n_threads, " threads");
+        log("Scheduler initialized with", n_threads, " threads");
     }
 
     void StopScheduler() 
@@ -127,7 +127,7 @@ private:
     template<typename... Args>
     void log(Args&&... args)
     {
-        ((std::cout << std::forward<Args>(args) << ' ') , ...) << "\n" << std::endl;
+        ((std::cout << std::forward<Args>(args) << ' ') , ...) << std::endl; // << '\n'
     }
 
     template<typename T>

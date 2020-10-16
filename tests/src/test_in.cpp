@@ -11,7 +11,7 @@ TEST_F(In, FunctionOnly)
     s->in(1s, []{std::cout << "(In) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_FALSE(s->size());
 }
 
@@ -21,7 +21,7 @@ TEST_F(In, FunctionParameters)
     s->in(1s, [](auto p1, auto p2){std::cout << p1 << p2 << std::endl;}, "(In) Input param:", 42);
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_FALSE(s->size());
 }
 
@@ -31,7 +31,7 @@ TEST_F(In, TaskIdFunctionOnly)
     s->in("task_id", 1s, []{std::cout << "(In) Hello!" << std::endl;});
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s);    
+    Sleep(2s);    
     EXPECT_FALSE(s->is_scheduled("task_id"s));
 }
 
@@ -41,7 +41,7 @@ TEST_F(In, TaskIdFunctionParameters)
     s->in("task_id", 1s, [](auto p1, auto p2){std::cout << p1 << p2 <<std::endl;}, "(In) Input param:", 42);
 
     EXPECT_TRUE(s->size());
-    std::this_thread::sleep_for(2s);
+    Sleep(2s);
     EXPECT_FALSE(s->is_scheduled("task_id"s));
 }
 
