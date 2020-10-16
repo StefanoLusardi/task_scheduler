@@ -131,7 +131,7 @@ private:
     }
 
     template<typename T>
-    auto scale_duration(T&& time_duration)
+    ssts::clock::duration scale_duration(T&& time_duration)
     { 
         return time_duration * sleep_duration_scale_factor;
     }
