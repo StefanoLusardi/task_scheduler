@@ -53,10 +53,10 @@ protected:
         log("Scheduled", n_tasks, "tasks - in", get_seconds(delay), "seconds");
     }
 
-    void StartAllTasksEvery(ssts::clock::duration&& interval)
+    void StartAllTasksEvery(ssts::clock::duration&& interval, ssts::clock::duration&& task_sleep = ssts::clock::duration(0))
     {
-        log("Scheduling", n_tasks, "tasks", "using every()) API");
-        foreach_tasks([&](auto id) { s->every(std::string(id), std::move(interval), [id]{ std::cout << id << std::endl; }); });
+        log("Scheduling", n_tasks, "tasks", "using every() API");
+        foreach_tasks([&](auto id) { s->every(std::string(id), std::move(interval), [id, task_sleep]{ std::cout << id << std::endl; std::this_thread::sleep_for(task_sleep); }); });
         log("Scheduled", n_tasks, "tasks - every", get_seconds(interval), "seconds");
     }
 
@@ -109,10 +109,17 @@ protected:
         return count;
     }
 
+    void force_duplicate_allowed(bool is_duplicate_allowed)
+    {
+        s->set_duplicate_allowed(is_duplicate_allowed);
+        _force_duplicated_task_id = true;
+    }
+
     std::unique_ptr<ssts::task_scheduler> s;
     unsigned int n_tasks = 4u;
     const std::string task_id_prefix = "task_id_"s;
     unsigned int sleep_duration_scale_factor = 3u;
+    bool _force_duplicated_task_id = false;
 
 private:
     template<typename Func, typename... Args>
@@ -120,7 +127,8 @@ private:
     {
         for (auto n = 0; n < n_tasks; ++n)
         {
-            std::invoke(std::forward<Func>(func), task_id_prefix + std::to_string(n), std::forward<Args>(args)...);
+            const auto task_id = _force_duplicated_task_id ? "duplicated_id"s : task_id_prefix + std::to_string(n);
+            std::invoke(std::forward<Func>(func), task_id, std::forward<Args>(args)...);
         }
     }
 
@@ -136,9 +144,9 @@ private:
         return time_duration * sleep_duration_scale_factor;
     }
     
-    unsigned int get_seconds(const ssts::clock::duration& delay)
+    float get_seconds(const ssts::clock::duration& delay)
     {
-        return std::chrono::duration_cast<std::chrono::seconds>(delay).count();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(delay).count() / 1000.f;
     }
 };
 

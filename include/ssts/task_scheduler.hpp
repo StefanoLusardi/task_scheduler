@@ -15,13 +15,11 @@
 #include "task.hpp"
 #include "task_pool.hpp"
 
-
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
 namespace ssts
 {
-
 /*! \typedef clock Alias for std::chrono::steady_clock.
  */
 using clock = std::chrono::steady_clock;
@@ -47,21 +45,24 @@ private:
         explicit schedulable_task(FunctionType&& f) 
         : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
-        { }
+        { 
+        }
 
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f, size_t hash) 
         : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _hash{hash}
-        { }
+        {
+        }
 
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f, ssts::clock::duration interval) 
         : _task{std::make_shared<ssts::task>(std::forward<FunctionType>(f))}
         , _is_enabled{true}
         , _interval{interval}
-        { }
+        {
+        }
 
         template<typename FunctionType>
         explicit schedulable_task(FunctionType&& f, size_t hash, ssts::clock::duration interval) 
@@ -69,7 +70,8 @@ private:
         , _is_enabled{true}
         , _hash{hash}
         , _interval{interval}
-        { }
+        {
+        }
 
         ~schedulable_task() { }
 
@@ -82,14 +84,12 @@ private:
         , _is_enabled{std::move(other._is_enabled)}
         , _interval{std::move(other._interval)}
         , _hash{std::move(other._hash)}
-        { }
+        {
+        }
 
         void invoke() { _task->invoke(); }
 
-        std::shared_ptr<schedulable_task> clone() 
-        { 
-            return std::shared_ptr<schedulable_task>(new schedulable_task(this));
-        }
+        std::shared_ptr<schedulable_task> clone() { return std::shared_ptr<schedulable_task>(new schedulable_task(this)); }
 
         void set_enabled(bool is_enabled) { _is_enabled = is_enabled; }
         bool is_enabled() const { return _is_enabled; }
@@ -110,7 +110,8 @@ private:
         , _is_enabled{st->_is_enabled}
         , _interval{st->_interval}
         , _hash{st->_hash}
-        { }
+        {
+        }
     };
 
 public:
@@ -124,26 +125,20 @@ public:
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _tp{num_threads}
     , _is_running{true}
+    , _is_duplicate_allowed{ false }
     { 
-        _scheduler_thread = std::thread([this]
-        {
+        _scheduler_thread = std::thread([this] {
             while (_is_running)
             {
                 std::unique_lock lock(_update_tasks_mtx);
 
                 if (_tasks.empty())
                 {
-                    _update_tasks_cv.wait(lock, [this] 
-                    {
-                        return !_tasks.empty() || !_is_running;
-                    });
+                    _update_tasks_cv.wait(lock, [this] { return !_tasks.empty() || !_is_running; });
                 }
                 else
                 {
-                    _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] 
-                    {
-                        return ssts::clock::now() >= _tasks.begin()->first || !_is_running;
-                    });
+                    _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] { return !_is_running || ssts::clock::now() >= _tasks.begin()->first; });
                 }
 
                 lock.unlock();
@@ -177,23 +172,49 @@ public:
 
     /*!
      * \brief Stop all running tasks.
-     * 
+     *
      * This function stops the task_scheduler execution and stops all the running tasks.
      */
     void stop()
     {
+        _is_running = false;
+        _tp.stop();
+
         {
             std::scoped_lock lock(_update_tasks_mtx);
             _tasks.clear();
             _tasks_to_remove.clear();
         }
 
-        _is_running = false;
         _update_tasks_cv.notify_all();
 
         if (_scheduler_thread.joinable())
             _scheduler_thread.join();
+    }
 
+    /*!
+     * \brief Check if duplicated tasks are allowed.
+     * \return bool indicating if duplicated tasks are allowed.
+     * 
+     * Duplicated tasks are created with the same task_id.
+     * If a task has been started without a task_id it is not possible to check if it has duplicates.
+     * In case duplicates are not allowed task insertion will be silently rejected for same task_id.
+     */
+    bool is_duplicate_allowed() const 
+    {   
+        return _is_duplicate_allowed; 
+    }
+
+    /*!
+     * \brief Enable or disable duplicated tasks.
+     * 
+     * Duplicated tasks are created with the same task_id.
+     * If a task has been started without a task_id it is not possible to check if it has duplicates.
+     * In case duplicates are not allowed task insertion will be silently rejected for same task_id.
+     */
+    void set_duplicate_allowed(bool is_allowed) 
+    {
+        _is_duplicate_allowed = is_allowed; 
     }
 
     /*!
@@ -353,7 +374,6 @@ public:
         return future;
     }
 
-
     template <typename TaskFunction>
     auto in(ssts::clock::duration&& duration, TaskFunction &&func)
         -> std::future<std::invoke_result_t<TaskFunction>>
@@ -384,7 +404,6 @@ public:
             std::forward<Args>(args)...);
     }
 
-
     template <typename TaskFunction>
     auto every(ssts::clock::duration&& interval, TaskFunction &&func)
     {
@@ -392,7 +411,7 @@ public:
         {
             return t(); 
         };
-        add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), interval));
+        add_task(std::move(ssts::clock::now()), schedulable_task(std::move(task), interval));
     }
 
     template <typename TaskFunction, typename... Args>
@@ -402,7 +421,7 @@ public:
         {
             return std::apply(t, params);
         };
-        add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), interval));
+        add_task(std::move(ssts::clock::now()), schedulable_task(std::move(task), interval));
     }
 
     template <typename TaskFunction, typename... Args>
@@ -412,12 +431,13 @@ public:
         {
             return std::apply(t, params);
         };
-        add_task(std::move(ssts::clock::now() + interval), schedulable_task(std::move(task), _hasher(task_id), interval));
+        add_task(std::move(ssts::clock::now()), schedulable_task(std::move(task), _hasher(task_id), interval));
     }
 
 private:
     ssts::task_pool _tp;
     std::atomic_bool _is_running;
+    std::atomic_bool _is_duplicate_allowed;
     std::thread _scheduler_thread;
     std::multimap<ssts::clock::time_point, schedulable_task> _tasks;
     std::unordered_set<size_t> _tasks_to_remove;
@@ -432,6 +452,9 @@ private:
 
         {
             std::scoped_lock lock(_update_tasks_mtx);
+            if (!_is_duplicate_allowed && is_duplicated(st.hash()))
+                return;
+
             _tasks.emplace(std::move(timepoint), std::move(st));
         }
         _update_tasks_cv.notify_one();
@@ -479,8 +502,21 @@ private:
 
     auto get_task_iterator(const std::string& task_id) -> decltype(_tasks)::iterator
     {
-        return std::find_if(_tasks.begin(), _tasks.end(), [hash = _hasher(task_id)](auto&& it)
-        {
+        return std::find_if(_tasks.begin(), _tasks.end(), [hash = _hasher(task_id)](auto&& it) {
+            if (it.second.hash().has_value())
+            {
+                return hash == it.second.hash().value();
+            }
+            return false;
+        });
+    }
+
+    bool is_duplicated(const std::optional<size_t>& opt_hash)
+    {
+        if (!opt_hash.has_value())
+            return false;
+
+        return std::any_of(_tasks.begin(), _tasks.end(), [hash = opt_hash.value()](auto&& it) {
             if (it.second.hash().has_value())
             {
                 return hash == it.second.hash().value();

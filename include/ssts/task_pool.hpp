@@ -8,17 +8,15 @@
 #include <atomic>
 #include <vector>
 #include <queue>
-#include <mutex> 
+#include <mutex>
 #include <thread>
 #include <future>
 #include <condition_variable>
 
 #include "task.hpp"
 
-
 namespace ssts
 {
-
 /*! \class task_pool
  *  \brief Task Pool that can run any callable object.
  *
@@ -27,7 +25,6 @@ namespace ssts
  */
 class task_pool
 {
-
 public:
     /*!
      * \brief Constructor.
@@ -35,7 +32,7 @@ public:
      * 
      * Creates a ssts::task_pool instance with the given number of threads.
      */
-    explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency()) 
+    explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _is_running{ true }
     {
         const auto thread_count = std::clamp(num_threads, 1u, std::thread::hardware_concurrency());
@@ -46,7 +43,7 @@ public:
     task_pool(task_pool&) = delete;
     task_pool(const task_pool&) = delete;
     task_pool& operator=(const task_pool&) = delete;
-    
+
     task_pool(task_pool&&) = delete;
     task_pool& operator=(task_pool&&) = delete;
 
@@ -56,6 +53,17 @@ public:
      * Destructs this after all joinable threads are terminated.
      */
     ~task_pool()
+    {
+        if (_is_running)
+            stop();
+    }
+
+    /*!
+     * \brief Stop all threads.
+     * 
+     * Stop thread pool and join all joinable threads.
+     */
+    void stop()
     {
         _is_running = false;
         _task_cv.notify_all();
@@ -92,7 +100,7 @@ public:
         return future;
     }
 
-private: 
+private:
     std::atomic_bool _is_running;
     std::vector<std::thread> _threads;
     std::queue<ssts::task> _task_queue;
@@ -106,7 +114,7 @@ private:
             std::unique_lock lock(_task_mtx);
             _task_cv.wait(lock, [this] { return !_task_queue.empty() || !_is_running; });
 
-            if (!_is_running) 
+            if (!_is_running)
                 break;
 
             // static_assert(!_task_queue.empty());
