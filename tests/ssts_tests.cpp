@@ -11,7 +11,9 @@ int main(int argc, char** argv)
     // ::testing::GTEST_FLAG(filter) = "Every.*";
     // ::testing::GTEST_FLAG(filter) = "In.*";
     // ::testing::GTEST_FLAG(filter) = "Missing.*";
-    // ::testing::GTEST_FLAG(filter) = "Remove.*";
+    //::testing::GTEST_FLAG(filter) = "Remove.*";
+    // ::testing::GTEST_FLAG(filter) = "Stop.*";
+    // ::testing::GTEST_FLAG(filter) = "Duplicated.*";
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
