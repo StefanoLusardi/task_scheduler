@@ -13,7 +13,7 @@ TEST_F(Duplicated, DuplicatesNotAllowed)
 
     StartAllTasksEvery(10ms, 2s);
     Sleep(1s);
-    EXPECT_EQ(s->size(), 1u);
+    EXPECT_EQ(get_size(), 1u);
 }
 
 TEST_F(Duplicated, DuplicatesAllowed)
@@ -24,7 +24,7 @@ TEST_F(Duplicated, DuplicatesAllowed)
 
     StartAllTasksEvery(10ms, 2s);
     Sleep(1s);
-    EXPECT_EQ(s->size(), 8u);
+    EXPECT_EQ(get_size(), 8u);
 }
 
 }

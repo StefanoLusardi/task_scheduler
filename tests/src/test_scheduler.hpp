@@ -24,20 +24,22 @@ protected:
         log("Scheduler initialized with", n_threads, " threads");
     }
 
+    unsigned get_size() const
+    {
+        log("Querying size");
+        const unsigned size = s->size();
+        log("Queried size");
+        return size;
+    }
+
     void StopScheduler() 
     {
         log("Stopping Scheduler");
-        if(!s)
-        {
-            log("Scheduler already stopped.");
-            return;
-        }
-
         s->stop();
         log("Scheduler Stopped");
     }
 
-    void Sleep(ssts::clock::duration&& delay) 
+    void Sleep(ssts::clock::duration&& delay) const
     {
         const auto scaled_delay = scale_duration(delay);
 
@@ -123,7 +125,7 @@ protected:
 
 private:
     template<typename Func, typename... Args>
-    void foreach_tasks(Func&& func, Args&&... args)
+    void foreach_tasks(Func&& func, Args&&... args) const
     {
         for (auto n = 0; n < n_tasks; ++n)
         {
@@ -133,18 +135,18 @@ private:
     }
 
     template<typename... Args>
-    void log(Args&&... args)
+    void log(Args&&... args) const
     {
         ((std::cout << std::forward<Args>(args) << ' ') , ...) << std::endl; // << '\n'
     }
 
     template<typename T>
-    ssts::clock::duration scale_duration(T&& time_duration)
+    ssts::clock::duration scale_duration(T&& time_duration) const
     { 
         return time_duration * sleep_duration_scale_factor;
     }
     
-    float get_seconds(const ssts::clock::duration& delay)
+    float get_seconds(const ssts::clock::duration& delay) const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(delay).count() / 1000.f;
     }
