@@ -46,7 +46,7 @@ TEST_F(Remove, RemovedLongTiming)
     StopScheduler();
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
-/*
+
 TEST_F(Remove, FastAddRemoveLongerDuration)
 {
     n_tasks = 16;
@@ -63,6 +63,7 @@ TEST_F(Remove, FastAddRemoveLongerDuration)
         std::this_thread::sleep_for(task_sleep); 
     });
     Sleep(task_sleep);
+    EXPECT_TRUE(s->is_scheduled(task_id));
     EXPECT_EQ(CountScheduledTasks(), n_tasks);
 }
 
@@ -80,7 +81,8 @@ TEST_F(Remove, FastAddRemoveShorterDuration)
         std::cout << task_id << std::endl; 
     });
     Sleep(1s);
+    EXPECT_TRUE(s->is_scheduled(task_id));
     EXPECT_EQ(CountScheduledTasks(), n_tasks);
 }
-*/
+
 }

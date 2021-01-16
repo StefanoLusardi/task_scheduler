@@ -452,6 +452,10 @@ private:
 
         {
             std::scoped_lock lock(_update_tasks_mtx);
+
+            if (st.hash().has_value())
+                _tasks_to_remove.erase(st.hash().value());
+
             if (!_is_duplicate_allowed && is_duplicated(st.hash()))
                 return;
 
@@ -462,6 +466,9 @@ private:
 
     void update_tasks()
     {
+        if (!_is_running)
+            return;
+
         std::scoped_lock lock(_update_tasks_mtx);
         
         decltype(_tasks) recursive_tasks;
