@@ -466,9 +466,6 @@ private:
 
     void update_tasks()
     {
-        if (!_is_running)
-            return;
-
         std::scoped_lock lock(_update_tasks_mtx);
         
         decltype(_tasks) recursive_tasks;

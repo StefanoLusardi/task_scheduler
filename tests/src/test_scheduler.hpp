@@ -15,20 +15,20 @@ protected:
 
     virtual void SetUp() override { }
 
-    virtual void TearDown() override { }
+    virtual void TearDown() override { Sleep(1s); }
 
     void InitScheduler(const unsigned int n_threads)
     {
         log("Initializing Scheduler");
         s = std::make_unique<ssts::task_scheduler>(n_threads);
-        log("Scheduler initialized with", n_threads, " threads");
+        log("Scheduler initialized with", n_threads, "threads");
     }
 
     unsigned get_size() const
     {
-        log("Querying size");
+        log("Getting Scheduler size");
         const unsigned size = s->size();
-        log("Queried size");
+        log("Scheduler size is:", size);
         return size;
     }
 

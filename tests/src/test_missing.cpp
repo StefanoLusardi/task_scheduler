@@ -33,7 +33,7 @@ TEST_F(Missing, NoRemoveTaskId)
     EXPECT_FALSE(s->remove_task("missing_id"s));
 }
 
-TEST_F(Missing, NoRunningTaskAfterStop)
+TEST_F(Missing, NoRunningTaskAfterImmediateStop)
 {
     InitScheduler(4u);
     StopScheduler();
@@ -41,11 +41,13 @@ TEST_F(Missing, NoRunningTaskAfterStop)
     EXPECT_EQ(get_size(), 0u);
 }
 
-TEST_F(Missing, NoRunningTaskAfterSecondStop)
+TEST_F(Missing, NoRunningTaskAfterLaterStop)
 {
     InitScheduler(4u);
     StartAllTasksIn(1s);
     EXPECT_EQ(get_size(), 4u);
+
+    Sleep(1s);
 
     StopScheduler();
     StartAllTasksIn(1s);
@@ -56,8 +58,9 @@ TEST_F(Missing, NoUpdateIntervalMissingId)
 {
     InitScheduler(4u);
     StartAllTasksEvery(1s);
-    EXPECT_EQ(get_size(), 4u);
+
     EXPECT_FALSE(s->update_interval("missing_id"s, 2s));
+    EXPECT_EQ(get_size(), 4u);
 }
 
 TEST_F(Missing, NoUpdateIntervalIn)
@@ -65,8 +68,8 @@ TEST_F(Missing, NoUpdateIntervalIn)
     InitScheduler(4u);
     s->in("task_id", 1s, []{std::cout << "Missing (In)" << std::endl;});
 
-    EXPECT_EQ(get_size(), 1u);
     EXPECT_FALSE(s->update_interval("task_id"s, 2s));
+    EXPECT_EQ(get_size(), 1u);
 }
 
 TEST_F(Missing, NoUpdateIntervalAt)
@@ -74,8 +77,8 @@ TEST_F(Missing, NoUpdateIntervalAt)
     InitScheduler(4u);
     s->at("task_id", ssts::clock::now() + 1s, []{std::cout << "Missing (At)" << std::endl;});
 
-    EXPECT_EQ(get_size(), 1u);
     EXPECT_FALSE(s->update_interval("task_id"s, 2s));
+    EXPECT_EQ(get_size(), 1u);
 }
 
 }
