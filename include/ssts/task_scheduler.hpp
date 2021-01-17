@@ -141,6 +141,9 @@ public:
                     _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] { return !_is_running || ssts::clock::now() >= _tasks.begin()->first; });
                 }
 
+                if (!_is_running)
+                    break;
+
                 lock.unlock();
                 update_tasks();
             }

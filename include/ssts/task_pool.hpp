@@ -117,7 +117,6 @@ private:
             if (!_is_running)
                 break;
 
-            // static_assert(!_task_queue.empty());
             auto task = std::move(_task_queue.front());
             _task_queue.pop();
 
