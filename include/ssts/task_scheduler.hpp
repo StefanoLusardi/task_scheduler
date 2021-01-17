@@ -12,6 +12,8 @@
 #include <string>
 #include <functional>
 
+#include <iostream>
+
 #include "task.hpp"
 #include "task_pool.hpp"
 
