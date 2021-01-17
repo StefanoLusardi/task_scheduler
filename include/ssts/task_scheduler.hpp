@@ -149,7 +149,7 @@ public:
                     break;
                 }
 
-                lock.unlock();
+                // lock.unlock();
                 update_tasks();
             }
             std::cout << "-- scheduler_thread -- stopped" << std::endl;
@@ -482,7 +482,7 @@ private:
 
     void update_tasks()
     {
-        std::scoped_lock lock(_update_tasks_mtx);
+        // std::scoped_lock lock(_update_tasks_mtx);
         
         decltype(_tasks) recursive_tasks;
 
