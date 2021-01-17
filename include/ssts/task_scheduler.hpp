@@ -180,13 +180,13 @@ public:
      */
     void stop()
     {
+        _is_running = false;
+        _tp.stop();
+        
         {
             std::scoped_lock lock(_update_tasks_mtx);
             _tasks.clear();
             _tasks_to_remove.clear();
-        
-            _is_running = false;
-            _tp.stop();
         }
 
         _update_tasks_cv.notify_all();
