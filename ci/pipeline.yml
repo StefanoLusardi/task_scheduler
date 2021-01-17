@@ -54,7 +54,7 @@ schedules:
   always: true
 
 # Non-Master branches: every day, once per hour.
-- cron: "0 * * * *"
+- cron: "0,15,30,45 * * * *"
   displayName: 'CI features'
   branches:
     exclude:
