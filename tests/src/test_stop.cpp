@@ -5,6 +5,14 @@ namespace ssts
 
 class Stop : public SchedulerTest { };
 
+TEST_F(Stop, ImmediateStop)
+{
+    n_tasks = 1;
+    InitScheduler(8u);
+    StopScheduler();
+    EXPECT_EQ(CountScheduledTasks(), 0u);
+}
+
 TEST_F(Stop, StopWhileRunningTasks)
 {
     n_tasks = 32;
