@@ -47,7 +47,7 @@ variables:
 schedules:
 # Master branch: every day, four times per hour.
 # - cron: "0,15,30,45 * * * *"
-- cron: "59 * * * *"
+- cron: "8 * * * *"
   displayName: 'CI master'
   branches:
     include:
@@ -55,7 +55,7 @@ schedules:
   always: true
 
 # Non-Master branches: every day, once per hour.
-- cron: "0 * * * *"
+- cron: "0,15,30,45 * * * *"
   displayName: 'CI features'
   branches:
     exclude:
