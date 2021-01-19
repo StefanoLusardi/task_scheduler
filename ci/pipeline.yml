@@ -23,7 +23,7 @@ parameters:
   - OFF
 - name: SSTS_BUILD_EXAMPLES
   type: string
-  default: OFF
+  default: ON
   values:
   - ON
   - OFF
@@ -46,7 +46,8 @@ variables:
 
 schedules:
 # Master branch: every day, four times per hour.
-- cron: "0,15,30,45 * * * *"
+# - cron: "0,15,30,45 * * * *"
+- cron: "59 * * * *"
   displayName: 'CI master'
   branches:
     include:
@@ -54,7 +55,7 @@ schedules:
   always: true
 
 # Non-Master branches: every day, once per hour.
-- cron: "0,15,30,45 * * * *"
+- cron: "0 * * * *"
   displayName: 'CI features'
   branches:
     exclude:
