@@ -11,7 +11,7 @@ parameters:
   - Debug
 - name: SSTS_INSTALL_LIBRARY
   type: string
-  default: ON
+  default: OFF
   values:
   - ON
   - OFF
@@ -29,7 +29,7 @@ parameters:
   - OFF
 - name: SSTS_INSTALL_EXAMPLES
   type: string
-  default: ON
+  default: OFF
   values:
   - ON
   - OFF
