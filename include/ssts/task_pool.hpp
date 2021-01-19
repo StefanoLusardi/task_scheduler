@@ -125,18 +125,18 @@ private:
 
     void worker_thread()
     {
-        std::cout << "-- pool worker -- starting"<< t.get_id() << std::endl;
+        std::cout << "-- pool worker -- starting"<< std::this_thread::get_id() << std::endl;
 
         while (_is_running)
         {
-            std::cout << "-- pool worker -- new run" << t.get_id() << std::endl;
+            std::cout << "-- pool worker -- new run" << std::this_thread::get_id() << std::endl;
             
             std::unique_lock lock(_task_mtx);
             _task_cv.wait(lock, [this] { return !_task_queue.empty() || !_is_running; });
 
             if (!_is_running)
             {
-                std::cout << "-- pool worker -- finished: " << t.get_id() << std::endl;
+                std::cout << "-- pool worker -- finished: " << std::this_thread::get_id() << std::endl;
                 return;
             }
 
@@ -147,7 +147,7 @@ private:
             task();
         }
 
-        std::cout << "-- pool worker -- never run: " << t.get_id() << std::endl;
+        std::cout << "-- pool worker -- never run: " << std::this_thread::get_id() << std::endl;
     }
 };
 
