@@ -2,6 +2,12 @@
 #include <ssts/task_scheduler.hpp>
 #include <iostream>
 
+#if GTEST_IS_THREADSAFE != 1
+#error "===================================================="
+#error "===   THIS VERSION OF GTEST IS NOT THREAD SAFE   ==="
+#error "===================================================="
+#endif
+
 int main(int argc, char** argv)
 {
     std::cout << ssts::version() << std::endl;

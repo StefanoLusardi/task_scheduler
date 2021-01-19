@@ -77,14 +77,14 @@ public:
         std::cout << "-- pool stop -- N workers: " << _threads.size() << std::endl;
         for (auto&& t : _threads)
         {
-            std::cout << "-- pool stop -- stopping worker: " << t.get_id() << "(N)" << stoppped_count << std::endl;
+            std::cout << "-- pool stop -- stopping worker: " << t.get_id() << " (N) " << stoppped_count << std::endl;
             if (t.joinable())
                 t.join();
             else
                 std::cout << "-- pool stop -- thread not joinable" << t.get_id() << std::endl;
 
             stoppped_count++;
-            std::cout << "-- pool stop -- worker stopped: " << t.get_id() << "(N)" << stoppped_count << std::endl;
+            std::cout << "-- pool stop -- worker stopped: " << t.get_id() << " (N) " << stoppped_count << std::endl;
         }
 
         std::cout << "-- pool stop -- finished" << std::endl;
@@ -125,11 +125,11 @@ private:
 
     void worker_thread()
     {
-        std::cout << "-- pool worker -- starting"<< std::this_thread::get_id() << std::endl;
+        std::cout << "-- pool worker -- starting " << std::this_thread::get_id() << std::endl;
 
         while (_is_running)
         {
-            std::cout << "-- pool worker -- new run" << std::this_thread::get_id() << std::endl;
+            std::cout << "-- pool worker -- new run: " << std::this_thread::get_id() << std::endl;
             
             std::unique_lock lock(_task_mtx);
             _task_cv.wait(lock, [this] { return !_task_queue.empty() || !_is_running; });
