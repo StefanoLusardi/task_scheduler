@@ -77,6 +77,7 @@ public:
         std::cout << "-- pool stop -- N workers: " << _threads.size() << std::endl;
         for (auto&& t : _threads)
         {
+            std::cout << "-- pool stop -- stopping worker: " << t.get_id() << "(N)" << stoppped_count << std::endl;
             if (t.joinable())
                 t.join();
             else
