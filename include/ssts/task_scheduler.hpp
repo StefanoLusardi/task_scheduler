@@ -189,9 +189,6 @@ public:
         
         {
             std::scoped_lock lock(_update_tasks_mtx);
-            _tp.stop();
-            std::cout << "-- scheduler stop -- task pool stopped" << std::endl;
-            
             _tasks.clear();
             _tasks_to_remove.clear();
             std::cout << "-- scheduler stop -- tasks cleanup" << std::endl;
@@ -203,6 +200,10 @@ public:
         if (_scheduler_thread.joinable())
             _scheduler_thread.join();
 
+     
+        std::cout << "-- scheduler stop -- stopping task pool" << std::endl;
+
+        _tp.stop();
         std::cout << "-- scheduler stop -- finished" << std::endl;
     }
 
