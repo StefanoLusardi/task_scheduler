@@ -80,10 +80,10 @@ public:
             if (t.joinable())
                 t.join();
             else
-                std::cout << "-- pool stop -- thread not joinable" << std::endl;
+                std::cout << "-- pool stop -- thread not joinable" << t.get_id() << std::endl;
 
             stoppped_count++;
-            std::cout << "-- pool stop -- workers stopped: " << stoppped_count << std::endl;
+            std::cout << "-- pool stop -- worker stopped: " << t.get_id() << "(N)" << stoppped_count << std::endl;
         }
 
         std::cout << "-- pool stop -- finished" << std::endl;
@@ -124,19 +124,19 @@ private:
 
     void worker_thread()
     {
-        std::cout << "-- pool worker -- starting" << std::endl;
+        std::cout << "-- pool worker -- starting"<< t.get_id() << std::endl;
 
         while (_is_running)
         {
-            std::cout << "-- pool worker -- new run" << std::endl;
+            std::cout << "-- pool worker -- new run" << t.get_id() << std::endl;
             
             std::unique_lock lock(_task_mtx);
             _task_cv.wait(lock, [this] { return !_task_queue.empty() || !_is_running; });
 
             if (!_is_running)
             {
-                std::cout << "-- pool worker -- finished" << std::endl;
-                break;
+                std::cout << "-- pool worker -- finished: " << t.get_id() << std::endl;
+                return;
             }
 
             auto task = std::move(_task_queue.front());
@@ -146,7 +146,7 @@ private:
             task();
         }
 
-        std::cout << "-- pool worker -- never run" << std::endl;
+        std::cout << "-- pool worker -- never run: " << t.get_id() << std::endl;
     }
 };
 
