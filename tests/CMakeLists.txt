@@ -19,6 +19,7 @@ add_executable(${PROJECT_NAME}
 	src/test_remove.cpp
 	src/test_stop.cpp
 	src/test_duplicated.cpp
+	src/test_pool.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ssts gtest)
