@@ -83,8 +83,8 @@ public:
             else
                 std::cout << "-- pool stop -- thread not joinable" << t.get_id() << std::endl;
 
-            stoppped_count++;
             std::cout << "-- pool stop -- worker stopped: " << t.get_id() << " (N) " << stoppped_count << std::endl;
+            stoppped_count++;
         }
 
         std::cout << "-- pool stop -- finished" << std::endl;
