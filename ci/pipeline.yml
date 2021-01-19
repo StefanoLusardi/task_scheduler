@@ -23,7 +23,7 @@ parameters:
   - OFF
 - name: SSTS_BUILD_EXAMPLES
   type: string
-  default: ON
+  default: OFF
   values:
   - ON
   - OFF
@@ -278,7 +278,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -302,6 +302,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -336,7 +337,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -360,6 +361,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -394,7 +396,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -418,6 +420,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -457,7 +460,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -481,6 +484,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -515,7 +519,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -539,6 +543,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -573,7 +578,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -597,6 +602,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -637,7 +643,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -661,6 +667,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -695,7 +702,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -719,6 +726,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -753,7 +761,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -777,6 +785,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -817,7 +826,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -841,6 +850,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -875,7 +885,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF
             ../..'
@@ -899,6 +909,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -933,7 +944,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -956,6 +967,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -984,7 +996,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1007,6 +1019,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1057,7 +1070,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
             -DSSTS_BUILD_TESTS=ON ^
-            -DSSTS_BUILD_EXAMPLES=ON ^
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
             -DSSTS_ENABLE_CODE_COVERAGE=OFF ^
             ../.. 
@@ -1084,6 +1097,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1129,7 +1143,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) ^
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY) ^
             -DSSTS_BUILD_TESTS=ON ^
-            -DSSTS_BUILD_EXAMPLES=ON ^
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES) ^
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES) ^
             -DSSTS_ENABLE_CODE_COVERAGE=OFF ^
             ../.. 
@@ -1156,6 +1170,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_WIN)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1190,7 +1205,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1213,6 +1228,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1241,7 +1257,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1264,6 +1280,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1301,7 +1318,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1324,6 +1341,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1356,7 +1374,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1379,6 +1397,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1411,7 +1430,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1434,6 +1453,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
@@ -1466,7 +1486,7 @@ stages:
             -DCMAKE_INSTALL_PREFIX=install/$(BUILD_TYPE) 
             -DSSTS_INSTALL_LIBRARY=$(INSTALL_LIBRARY)
             -DSSTS_BUILD_TESTS=ON
-            -DSSTS_BUILD_EXAMPLES=ON
+            -DSSTS_BUILD_EXAMPLES=$(BUILD_EXAMPLES)
             -DSSTS_INSTALL_EXAMPLES=$(INSTALL_EXAMPLES)
             -DSSTS_ENABLE_CODE_COVERAGE=OFF'
       - task: CMake@1
@@ -1489,6 +1509,7 @@ stages:
           testRunTitle: 'Test Results'
       - task: CmdLine@2
         displayName: 'Run Examples'
+        condition: eq(variables['BUILD_EXAMPLES'], 'ON')
         inputs:
           script:  $(SSTS_EXAMPLES_UNIX)
           workingDirectory: $(BUILD_DIRECTORY)/bin
