@@ -533,7 +533,7 @@ private:
             return false;
 
         // Count the number of tasks with the given hash (task_id)
-        auto get_task_id_count = [this](const size_t& hash) -> bool { 
+        auto get_task_id_count = [this](const size_t& hash) { 
             return std::count_if(_tasks.begin(), _tasks.end(), [hash](auto&& it){
                 if (it.second.hash().has_value())
                 {
