@@ -36,8 +36,19 @@ public:
     : _is_running{ true }
     {
         const auto thread_count = std::clamp(num_threads, 1u, std::thread::hardware_concurrency());
-        for (unsigned int i = 0; i < thread_count; ++i)
-            _threads.emplace_back([this] { worker_thread(); });
+        _threads.reserve(thread_count);
+        try 
+        {
+            for (unsigned int i = 0; i < thread_count; ++i)
+                _threads.emplace_back(&task_pool::worker_thread, this);
+                // _threads.emplace_back([this] { worker_thread(); });
+        } 
+        catch (...) 
+        {
+            _is_running = false;
+            _task_cv.notify_all();
+            throw;
+        }
     }
 
     task_pool(task_pool&) = delete;
@@ -54,8 +65,8 @@ public:
      */
     ~task_pool()
     {
-        if (_is_running)
-            stop();
+        // if (_is_running)
+        stop();
     }
 
     /*!
@@ -67,6 +78,7 @@ public:
     {
         _is_running = false;
         _task_cv.notify_all();
+
         for (auto&& t : _threads)
         {
             if (t.joinable())
@@ -109,13 +121,13 @@ private:
 
     void worker_thread()
     {
-        while (true)
+        while (_is_running)
         {
             std::unique_lock lock(_task_mtx);
             _task_cv.wait(lock, [this] { return !_task_queue.empty() || !_is_running; });
 
             if (!_is_running)
-                break;
+                return;
 
             auto task = std::move(_task_queue.front());
             _task_queue.pop();

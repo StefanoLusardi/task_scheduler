@@ -15,7 +15,7 @@ protected:
 
     virtual void SetUp() override { }
 
-    virtual void TearDown() override { Sleep(1s); }
+    virtual void TearDown() override { }
 
     void InitScheduler(const unsigned int n_threads)
     {

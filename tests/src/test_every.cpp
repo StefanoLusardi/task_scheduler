@@ -53,7 +53,6 @@ TEST_F(Every, TaskIdFunctionParameters)
     EXPECT_EQ(get_size(), 0u);
 }
 
-
 TEST_F(Every, UpdateInterval) 
 {
     InitScheduler(4u);

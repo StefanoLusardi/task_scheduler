@@ -142,9 +142,8 @@ public:
                 }
 
                 if (!_is_running)
-                    break;
+                    return;
 
-                lock.unlock();
                 update_tasks();
             }
         });
@@ -157,8 +156,8 @@ public:
      */
     ~task_scheduler()
     {
-        if (_is_running)
-            stop();
+        // if (_is_running)
+        stop();
     }
 
     /*!
@@ -181,7 +180,7 @@ public:
     void stop()
     {
         _is_running = false;
-        _tp.stop();
+        _update_tasks_cv.notify_all();
         
         {
             std::scoped_lock lock(_update_tasks_mtx);
@@ -189,10 +188,10 @@ public:
             _tasks_to_remove.clear();
         }
 
-        _update_tasks_cv.notify_all();
-
         if (_scheduler_thread.joinable())
             _scheduler_thread.join();
+
+        _tp.stop();
     }
 
     /*!
@@ -456,10 +455,7 @@ private:
         {
             std::scoped_lock lock(_update_tasks_mtx);
 
-            if (st.hash().has_value())
-                _tasks_to_remove.erase(st.hash().value());
-
-            if (!_is_duplicate_allowed && is_duplicated(st.hash()))
+            if (!_is_duplicate_allowed && already_exists(st.hash()))
                 return;
 
             _tasks.emplace(std::move(timepoint), std::move(st));
@@ -469,7 +465,7 @@ private:
 
     void update_tasks()
     {
-        std::scoped_lock lock(_update_tasks_mtx);
+        // std::scoped_lock lock(_update_tasks_mtx);
         
         decltype(_tasks) recursive_tasks;
 
@@ -518,18 +514,30 @@ private:
         });
     }
 
-    bool is_duplicated(const std::optional<size_t>& opt_hash)
+    bool already_exists(const std::optional<size_t>& opt_hash)
     {
         if (!opt_hash.has_value())
             return false;
 
-        return std::any_of(_tasks.begin(), _tasks.end(), [hash = opt_hash.value()](auto&& it) {
-            if (it.second.hash().has_value())
-            {
-                return hash == it.second.hash().value();
-            }
+        // Count the number of tasks with the given hash (task_id)
+        auto get_task_id_count = [this](const size_t& hash) { 
+            return std::count_if(_tasks.begin(), _tasks.end(), [hash](auto&& it){
+                if (it.second.hash().has_value())
+                {
+                    return hash == it.second.hash().value();
+                }
+                return false;
+            });
+        };
+
+        const auto hash = opt_hash.value();
+        const auto task_id_count = get_task_id_count(hash);
+
+        // If there is only 1 task with the given task_id AND the same task_id is to be removed, then the task_is is NOT duplicated.
+        if (task_id_count == 1 && _tasks_to_remove.count(hash))
             return false;
-        });
+
+        return task_id_count > 0;
     }
 };
 
