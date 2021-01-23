@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-project(ssts_tests LANGUAGES CXX)
+set(PROJECT_NAME ssts_tests)
 
 include(DownloadGoogleTest)
 include(GoogleTest)
@@ -8,6 +8,8 @@ include(GoogleTest)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
 
 add_executable(${PROJECT_NAME}
 	ssts_tests.cpp
@@ -20,6 +22,7 @@ add_executable(${PROJECT_NAME}
 	src/test_stop.cpp
 	src/test_duplicated.cpp
 	src/test_pool.cpp
+	src/test_sanitizer.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ssts gtest)

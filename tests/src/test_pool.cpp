@@ -6,8 +6,8 @@ namespace ssts
 
 TEST(Pool, ImmediateStop)
 {
-    auto tp = std::make_unique<ssts::task_pool>(8);
-    tp->stop();
+    auto tp = ssts::task_pool(8);
+    tp.stop();
 }
 
 TEST(Pool, LessTasksThenThreadSize)

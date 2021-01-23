@@ -15,8 +15,6 @@
 
 #include "task.hpp"
 
-// #include <iostream> // DEBUG ONLY
-
 namespace ssts
 {
 /*! \class task_pool
@@ -38,8 +36,19 @@ public:
     : _is_running{ true }
     {
         const auto thread_count = std::clamp(num_threads, 1u, std::thread::hardware_concurrency());
-        for (unsigned int i = 0; i < thread_count; ++i)
-            _threads.emplace_back([this] { worker_thread(); });
+        _threads.reserve(thread_count);
+        try 
+        {
+            for (unsigned int i = 0; i < thread_count; ++i)
+                _threads.emplace_back(&task_pool::worker_thread, this);
+                // _threads.emplace_back([this] { worker_thread(); });
+        } 
+        catch (...) 
+        {
+            _is_running = false;
+            _task_cv.notify_all();
+            throw;
+        }
     }
 
     task_pool(task_pool&) = delete;
@@ -56,8 +65,8 @@ public:
      */
     ~task_pool()
     {
-        if (_is_running)
-            stop();
+        // if (_is_running)
+        stop();
     }
 
     /*!
@@ -68,26 +77,13 @@ public:
     void stop()
     {
         _is_running = false;
-        //std::cout << "-- pool stop -- running=false" << std::endl;
-
         _task_cv.notify_all();
-        //std::cout << "-- pool stop -- notify workers" << std::endl;
 
-        //int stoppped_count = 0;
-        //std::cout << "-- pool stop -- N workers: " << _threads.size() << std::endl;
         for (auto&& t : _threads)
         {
-            //std::cout << "-- pool stop -- stopping worker: " << t.get_id() << " (N) " << stoppped_count << std::endl;
             if (t.joinable())
                 t.join();
-            //else
-                //std::cout << "-- pool stop -- thread not joinable" << t.get_id() << std::endl;
-
-            //std::cout << "-- pool stop -- worker stopped: " << t.get_id() << " (N) " << stoppped_count << std::endl;
-            //stoppped_count++;
         }
-
-        //std::cout << "-- pool stop -- finished" << std::endl;
     }
 
     /*!
@@ -125,20 +121,13 @@ private:
 
     void worker_thread()
     {
-        //std::cout << "-- pool worker -- starting " << std::this_thread::get_id() << std::endl;
-
         while (_is_running)
         {
-            //std::cout << "-- pool worker -- new run: " << std::this_thread::get_id() << std::endl;
-            
             std::unique_lock lock(_task_mtx);
             _task_cv.wait(lock, [this] { return !_task_queue.empty() || !_is_running; });
 
             if (!_is_running)
-            //{
-                //std::cout << "-- pool worker -- finished: " << std::this_thread::get_id() << std::endl;
                 return;
-            //}
 
             auto task = std::move(_task_queue.front());
             _task_queue.pop();
@@ -146,8 +135,6 @@ private:
             lock.unlock();
             task();
         }
-
-        //std::cout << "-- pool worker -- never run: " << std::this_thread::get_id() << std::endl;
     }
 };
 

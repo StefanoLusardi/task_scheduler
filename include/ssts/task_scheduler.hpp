@@ -142,15 +142,10 @@ public:
                 }
 
                 if (!_is_running)
-                {
-                    //std::cout << "-- scheduler_thread -- stopping" << std::endl;
-                    break;
-                }
+                    return;
 
-                // lock.unlock();
                 update_tasks();
             }
-            //std::cout << "-- scheduler_thread -- stopped" << std::endl;
         });
     }
 
@@ -161,8 +156,8 @@ public:
      */
     ~task_scheduler()
     {
-        if (_is_running)
-            stop();
+        // if (_is_running)
+        stop();
     }
 
     /*!
@@ -185,26 +180,18 @@ public:
     void stop()
     {
         _is_running = false;
-        //std::cout << "-- scheduler stop -- running=false" << std::endl;
+        _update_tasks_cv.notify_all();
         
         {
             std::scoped_lock lock(_update_tasks_mtx);
             _tasks.clear();
             _tasks_to_remove.clear();
-            //std::cout << "-- scheduler stop -- tasks cleanup" << std::endl;
         }
-
-        _update_tasks_cv.notify_all();
-        //std::cout << "-- scheduler stop -- notify scheduler thread" << std::endl;
 
         if (_scheduler_thread.joinable())
             _scheduler_thread.join();
 
-     
-        //std::cout << "-- scheduler stop -- stopping task pool" << std::endl;
-
         _tp.stop();
-        //std::cout << "-- scheduler stop -- finished" << std::endl;
     }
 
     /*!

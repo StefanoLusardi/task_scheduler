@@ -34,7 +34,13 @@ option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library and 
 option(SSTS_ENABLE_SANITIZERS "" OFF)
 
 if(${SSTS_ENABLE_SANITIZERS})
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -fsanitize=thread")
+	if(NOT WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+		message(STATUS "::ssTs:: Thread Sanitizer enabled")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fno-omit-frame-pointer -fsanitize=thread")
+		set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=thread")
+	else()
+		message("Thread Sanitizer is not supported on the current platform")
+	endif()
 endif()
 
 if(${SSTS_ENABLE_CODE_COVERAGE})
