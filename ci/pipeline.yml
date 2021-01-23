@@ -3,6 +3,15 @@ trigger:
 - feature/*
 
 parameters:
+- name: SSTS_COVERAGE_STAGE
+  type: boolean
+  default: False
+- name: SSTS_DOCS_STAGE
+  type: boolean
+  default: False
+- name: SSTS_TESTS_STAGE
+  type: boolean
+  default: True
 - name: SSTS_BUILD_TYPE
   type: string
   default: Release
@@ -35,6 +44,9 @@ parameters:
   - OFF
 
 variables:
+  COVERAGE_STAGE: ${{ parameters.SSTS_COVERAGE_STAGE }}
+  DOCS_STAGE: ${{ parameters.SSTS_DOCS_STAGE }}
+  TESTS_STAGE: ${{ parameters.SSTS_TESTS_STAGE }}
   BUILD_TYPE: ${{ parameters.SSTS_BUILD_TYPE }}
   INSTALL_LIBRARY: ${{ parameters.SSTS_INSTALL_LIBRARY }}
   BUILD_TESTS: ${{ parameters.SSTS_BUILD_TESTS }}
@@ -46,8 +58,7 @@ variables:
 
 schedules:
 # Master branch: every day, four times per hour.
-# - cron: "0,15,30,45 * * * *"
-- cron: "8 * * * *"
+- cron: "0,15,30,45 * * * *"
   displayName: 'CI master'
   branches:
     include:
@@ -66,6 +77,7 @@ stages:
 
   - stage: Coverage
     displayName: 'Coverage'
+    condition: eq(variables['COVERAGE_STAGE'], 'True')
     dependsOn: []
     jobs:
 
@@ -182,6 +194,7 @@ stages:
 
   - stage: Docs
     displayName: 'Docs'
+    condition: eq(variables['DOCS_STAGE'], 'True')
     dependsOn: []
     jobs:
 
@@ -241,6 +254,7 @@ stages:
 
   - stage: Build
     displayName: 'Build'
+    condition: eq(variables['TESTS_STAGE'], 'True')
     dependsOn: []
     jobs:
 
