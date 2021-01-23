@@ -91,7 +91,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            sudo apt install gcovr 
+            sudo apt-get update --fix-missing && sudo apt install gcovr 
             echo 'gcovr Version: '
             gcovr --version
       - task: Bash@3
