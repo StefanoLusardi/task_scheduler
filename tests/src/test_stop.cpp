@@ -13,6 +13,16 @@ TEST_F(Stop, ImmediateStop)
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 
+TEST_F(Stop, ImmediateStopLoop)
+{
+    for(auto i= 0; i < 1'000; ++i)
+    {
+        InitScheduler(8u);
+        StopScheduler();
+        EXPECT_EQ(CountScheduledTasks(), 0u);
+    }
+}
+
 TEST_F(Stop, StopWhileRunningTasks)
 {
     n_tasks = 32;
@@ -26,7 +36,6 @@ TEST_F(Stop, StopWhileRunningTasks)
     StopScheduler();
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
-
 
 TEST_F(Stop, NoRunAllowedAfterSchedulerStop)
 {

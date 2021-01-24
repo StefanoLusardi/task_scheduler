@@ -19,7 +19,8 @@ int main(int argc, char** argv)
     // ::testing::GTEST_FLAG(filter) = "Stop.*";
     // ::testing::GTEST_FLAG(filter) = "Duplicated.*";
     // ::testing::GTEST_FLAG(filter) = "Sanitizer.*";
-
+    // ::testing::GTEST_FLAG(filter) = "Stop.ImmediateStopLoop*";
+    
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
