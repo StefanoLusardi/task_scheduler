@@ -41,7 +41,6 @@ public:
         {
             for (unsigned int i = 0; i < thread_count; ++i)
                 _threads.emplace_back(&task_pool::worker_thread, this);
-                // _threads.emplace_back([this] { worker_thread(); });
         } 
         catch (...) 
         {
@@ -65,8 +64,8 @@ public:
      */
     ~task_pool()
     {
-        // if (_is_running)
-        stop();
+        if (_is_running)
+            stop();
     }
 
     /*!
@@ -76,10 +75,14 @@ public:
      */
     void stop()
     {
-        _is_running = false;
+        {
+            std::unique_lock<std::mutex> lock(_task_mtx);
+            _is_running = false;
+        }
+        
         _task_cv.notify_all();
 
-        for (auto&& t : _threads)
+        for (auto& t : _threads)
         {
             if (t.joinable())
                 t.join();

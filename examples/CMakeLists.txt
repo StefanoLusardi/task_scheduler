@@ -19,6 +19,8 @@ function(add_example EXAMPLE_TARGET)
 endfunction()
 
 # add_example(example_pool)
+# add_example(example_test)
+
 add_example(example_scheduler)
 add_example(example_nested)
 add_example(example_bind)

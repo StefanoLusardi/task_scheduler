@@ -156,8 +156,8 @@ public:
      */
     ~task_scheduler()
     {
-        // if (_is_running)
-        stop();
+        if (_is_running)
+            stop();
     }
 
     /*!
@@ -179,7 +179,11 @@ public:
      */
     void stop()
     {
-        _is_running = false;
+        {
+            std::unique_lock<std::mutex> lock(_update_tasks_mtx);
+            _is_running = false;
+        }
+
         _update_tasks_cv.notify_all();
         
         {

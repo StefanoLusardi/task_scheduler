@@ -22,7 +22,7 @@ add_executable(${PROJECT_NAME}
 	src/test_stop.cpp
 	src/test_duplicated.cpp
 	src/test_pool.cpp
-	#src/test_sanitizer.cpp
+	# src/test_sanitizer.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ssts gtest)
