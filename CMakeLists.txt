@@ -31,7 +31,7 @@ option(SSTS_BUILD_TESTS "Build library tests" ON)
 option(SSTS_BUILD_EXAMPLES "Build library examples" OFF)
 option(SSTS_INSTALL_LIBRARY "Install library" OFF)
 option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library and building examples)" OFF)
-option(SSTS_ENABLE_SANITIZERS "Run unit tests with Thread Sanitizer support" ON)
+option(SSTS_ENABLE_SANITIZERS "Run unit tests with Thread Sanitizer support" OFF)
 
 if(${SSTS_ENABLE_SANITIZERS})
 	if(NOT WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
