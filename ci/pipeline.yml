@@ -62,14 +62,14 @@ schedules:
   branches:
     include:
     - master
-  always: true
+  always: false
 
 - cron: "0,15,30,45 * * * *"
   displayName: 'CI features'
   branches:
     exclude:
     - master
-  always: true
+  always: false
 
 stages:
 
