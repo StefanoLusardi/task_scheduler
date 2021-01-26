@@ -5,10 +5,10 @@ trigger:
 parameters:
 - name: SSTS_COVERAGE_STAGE
   type: boolean
-  default: False
+  default: True
 - name: SSTS_DOCS_STAGE
   type: boolean
-  default: False
+  default: True
 - name: SSTS_TESTS_STAGE
   type: boolean
   default: True
@@ -56,20 +56,20 @@ variables:
   SSTS_EXAMPLES_WIN: "example_nested && example_scheduler"
   SSTS_EXAMPLES_UNIX: "./example_nested && ./example_scheduler"
 
-# schedules:
-# - cron: "0,15,30,45 * * * *"
-#   displayName: 'CI master'
-#   branches:
-#     include:
-#     - master
-#   always: false
+schedules:
+- cron: "30 * * * *"
+  displayName: 'CI master'
+  branches:
+    include:
+    - master
+  always: true
 
-# - cron: "0,15,30,45 * * * *"
-#   displayName: 'CI features'
-#   branches:
-#     exclude:
-#     - master
-#   always: false
+- cron: "0,20,40 * * * *"
+  displayName: 'CI features'
+  branches:
+    exclude:
+    - master
+  always: false
 
 stages:
 
