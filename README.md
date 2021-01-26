@@ -17,7 +17,7 @@ Header only, with [no external dependencies](#tests).
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/145999f67a5f4d25acec749b0896e47d)](https://www.codacy.com/manual/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Grade) 
 
 [![Build Status](https://stefanolusardi.visualstudio.com/ssts/_apis/build/status/ssts?branchName=master)](https://stefanolusardi.visualstudio.com/ssts/_build/latest?definitionId=16&branchName=master) 
-![Azure DevOps tests](https://img.shields.io/azure-devops/tests/stefanolusardi/ssts/14) 
+![Azure DevOps tests](https://img.shields.io/azure-devops/tests/stefanolusardi/ssts/16) 
 [![codecov](https://codecov.io/gh/StefanoLusardi/task_scheduler/branch/master/graph/badge.svg)](https://codecov.io/gh/StefanoLusardi/task_scheduler) 
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/82f58a941701453eba4f7d610660cf55)](https://www.codacy.com/gh/StefanoLusardi/task_scheduler/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StefanoLusardi/task_scheduler&amp;utm_campaign=Badge_Coverage) 
 
