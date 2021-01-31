@@ -64,12 +64,12 @@ schedules:
     - master
   always: true
 
-- cron: "0,20,40 * * * *"
+- cron: "0,15,30,45 * * * *"
   displayName: 'CI features'
   branches:
     exclude:
     - master
-  always: false
+  always: true
 
 stages:
 
