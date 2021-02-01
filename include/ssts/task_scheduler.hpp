@@ -138,8 +138,7 @@ public:
                 }
                 else
                 {
-                    const auto next_task_start = _tasks.begin()->first;
-                    _update_tasks_cv.wait_until(lock, next_task_start, [this, next_task_start] { return !_is_running || ssts::clock::now() >= next_task_start; });
+                    _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] { return !_is_running || ssts::clock::now() >= _tasks.begin()->first; });
                 }
 
                 if (!_is_running)
@@ -190,7 +189,6 @@ public:
         {
             std::scoped_lock lock(_update_tasks_mtx);
             _tasks.clear();
-            // _tasks_to_remove.clear();
         }
 
         if (_scheduler_thread.joinable())
@@ -300,7 +298,6 @@ public:
         if (auto task = get_task_iterator(task_id); task != _tasks.end())
         {
             _tasks.erase(task);
-            // _tasks_to_remove.insert(task->second.hash().value());
             return true;
         }
         
@@ -448,7 +445,6 @@ private:
     std::atomic_bool _is_duplicate_allowed;
     std::thread _scheduler_thread;
     std::multimap<ssts::clock::time_point, schedulable_task> _tasks;
-    // std::unordered_set<size_t> _tasks_to_remove;
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
     std::hash<std::string> _hasher;
@@ -471,8 +467,6 @@ private:
 
     void update_tasks()
     {
-        // std::scoped_lock lock(_update_tasks_mtx);
-        
         decltype(_tasks) recursive_tasks;
 
         // All the tasks whose start time is before ssts::clock::now(),
@@ -480,19 +474,7 @@ private:
         // can be enqueued in the TaskPool.
         auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
         for (auto it = _tasks.begin(); it != last_task_to_process; it++)
-        {
-            // If a task has been marked to be removed, just clean it up from the _tasks_to_remove set.
-            // Do not schedule it within the task pool.
-            // It will be erased after the for loop with all the other processed tasks.
-            // if(it->second.hash().has_value())
-            // {
-            //     if(const auto task_id = it->second.hash().value(); _tasks_to_remove.find(task_id) != _tasks_to_remove.end())
-            //     {
-            //         _tasks_to_remove.erase(task_id);
-            //         continue;
-            //     }
-            // }
-            
+        {            
             // Add task to the TaskPool if enabled to run.
             if (it->second.is_enabled())
                 _tp.run([t = it->second.clone(), this] { t->invoke(); });
@@ -532,26 +514,6 @@ private:
             }
             return false;
         });
-
-        // // Count the number of tasks with the given hash (task_id)
-        // auto get_task_id_count = [this](const size_t& hash) { 
-        //     return std::count_if(_tasks.begin(), _tasks.end(), [hash](auto&& it){
-        //         if (it.second.hash().has_value())
-        //         {
-        //             return hash == it.second.hash().value();
-        //         }
-        //         return false;
-        //     });
-        // };
-
-        // const auto hash = opt_hash.value();
-        // const auto task_id_count = get_task_id_count(hash);
-
-        // // If there is only 1 task with the given task_id AND the same task_id is to be removed, then the task_is is NOT duplicated.
-        // if (task_id_count == 1 && _tasks_to_remove.count(hash))
-        //     return false;
-
-        // return task_id_count > 0;
     }
 };
 

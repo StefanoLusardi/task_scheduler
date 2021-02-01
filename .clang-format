@@ -1,0 +1,24 @@
+---
+BasedOnStyle: Mozilla
+AccessModifierOffset: '-4'
+AlignAfterOpenBracket: DontAlign
+AlignConsecutiveMacros: 'true'
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+BreakBeforeBraces: Allman
+ColumnLimit: '180'
+ConstructorInitializerIndentWidth: '4'
+ContinuationIndentWidth: '4'
+FixNamespaceComments: 'false'
+IndentWidth: '4'
+KeepEmptyLinesAtTheStartOfBlocks: 'false'
+Language: Cpp
+MaxEmptyLinesToKeep: '1'
+ReflowComments: 'false'
+SortIncludes: 'false'
+SortUsingDeclarations: 'false'
+SpaceBeforeAssignmentOperators: 'true'
+SpacesBeforeTrailingComments: '2'
+Standard: Auto
+
+...
