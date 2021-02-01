@@ -23,16 +23,29 @@ TEST_F(Remove, RemovedAfterRun)
     EXPECT_EQ(CountScheduledTasks(), 0u);
 }
 
-TEST_F(Remove, RemovedBeforeAfterSleep)
+TEST_F(Remove, RemoveAll)
 {
     n_tasks = 3;
     InitScheduler(4u);
     StartAllTasksIn(1s);
     RemoveAllTasks();
-    EXPECT_EQ(CountScheduledTasks(), n_tasks);
+    EXPECT_EQ(CountScheduledTasks(), 0u);
 
     Sleep(2s);
     EXPECT_EQ(CountScheduledTasks(), 0u);
+}
+
+
+TEST_F(Remove, RestartAllAfterRemoveAll)
+{
+    n_tasks = 3;
+    InitScheduler(4u);
+    StartAllTasksIn(1s);
+    RemoveAllTasks();
+    EXPECT_EQ(CountScheduledTasks(), 0u);
+
+    StartAllTasksIn(1s);
+    EXPECT_EQ(CountScheduledTasks(), n_tasks);
 }
 
 TEST_F(Remove, RemovedLongTiming)

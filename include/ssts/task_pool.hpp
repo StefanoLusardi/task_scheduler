@@ -82,7 +82,7 @@ public:
         
         _task_cv.notify_all();
 
-        for (auto& t : _threads)
+        for (auto&& t : _threads)
         {
             if (t.joinable())
                 t.join();
