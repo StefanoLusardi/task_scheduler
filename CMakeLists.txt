@@ -28,7 +28,7 @@ target_include_directories(ssts INTERFACE
 option(SSTS_ENABLE_CODE_COVERAGE "Enable code coverage (requires installing library)" OFF)
 option(SSTS_BUILD_DOCS "Build library documentation" OFF)
 option(SSTS_BUILD_TESTS "Build library tests" ON)
-option(SSTS_BUILD_EXAMPLES "Build library examples" OFF)
+option(SSTS_BUILD_EXAMPLES "Build library examples" ON)
 option(SSTS_INSTALL_LIBRARY "Install library" OFF)
 option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library and building examples)" OFF)
 option(SSTS_ENABLE_SANITIZERS "Run unit tests with Thread Sanitizer support" OFF)

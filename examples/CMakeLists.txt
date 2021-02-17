@@ -18,8 +18,10 @@ function(add_example EXAMPLE_TARGET)
 	endif()
 endfunction()
 
-# add_example(example_pool)
-# add_example(example_test)
+add_example(example_duplicate)
+add_example(example_pool)
+add_example(example_test)
+add_example(example_recursive)
 
 add_example(example_scheduler)
 add_example(example_nested)

@@ -125,20 +125,26 @@ public:
     explicit task_scheduler(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _tp{num_threads}
     , _is_running{true}
-    , _is_duplicate_allowed{ false }
+    , _is_duplicate_allowed{ true }
     { 
         _scheduler_thread = std::thread([this] {
             while (_is_running)
             {
+                std::this_thread::yield();
                 std::unique_lock lock(_update_tasks_mtx);
 
                 if (_tasks.empty())
                 {
-                    _update_tasks_cv.wait(lock, [this] { return !_tasks.empty() || !_is_running; });
+                    // _update_tasks_cv.wait(lock, [this] { return !_is_running || (!_tasks.empty() && ssts::clock::now() >= _tasks.begin()->first); });
+                    _update_tasks_cv.wait(lock, [this] { return !_is_running || !_tasks.empty(); });
                 }
                 else
                 {
-                    _update_tasks_cv.wait_until(lock, _tasks.begin()->first, [this] { return !_is_running || ssts::clock::now() >= _tasks.begin()->first; });
+                    if (!_update_tasks_cv.wait_until(
+                            lock, _tasks.begin()->first, [this] { return !_is_running || (!_tasks.empty() && ssts::clock::now() >= _tasks.begin()->first); }))
+                    {
+                        std::this_thread::yield();
+                    }
                 }
 
                 if (!_is_running)
@@ -220,6 +226,7 @@ public:
     void set_duplicate_allowed(bool is_allowed) 
     {
         _is_duplicate_allowed = is_allowed; 
+        _tp.set_duplicate_allowed(is_allowed);
     }
 
     /*!
@@ -465,6 +472,41 @@ private:
         _update_tasks_cv.notify_one();
     }
 
+/*
+    void update_tasks()
+    {
+        // All the tasks whose start time is before ssts::clock::now(),
+        // (which are the ones from _tasks.begin(), up to last_task_to_process)
+        // can be enqueued in the TaskPool.
+        auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
+        for (auto it = _tasks.begin(); it != last_task_to_process; it++)
+        {
+            _tp.run([t = it->second.clone(), start_time = it->first, this] 
+            { 
+                if(t->is_enabled())
+                    t->invoke();
+
+                if (t->interval().has_value())
+                {
+                    // Make sure that next_start_time is greater than ssts::clock::now(), 
+                    // otherwise the task is scheduled in the past.
+                    // Increment next_start_time starting from current start_time with a step equal to t->interval().value()
+                    // in order to keep the scheduling with a fixed sample rate.
+                    it->second.set_enabled(false);
+                    auto interval = it->second.interval().value();
+                    auto next_start_time = it->first + interval;
+                    while(ssts::clock::now() > next_start_time)
+                        next_start_time += interval;
+                    
+                    add_task(std::move(next_start_time), std::move(*t));
+                }
+            });
+        }
+        // Erase tasks already processed.
+        _tasks.erase(_tasks.begin(), last_task_to_process);
+    }
+*/
+
     void update_tasks()
     {
         decltype(_tasks) recursive_tasks;
@@ -474,19 +516,34 @@ private:
         // can be enqueued in the TaskPool.
         auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
         for (auto it = _tasks.begin(); it != last_task_to_process; it++)
-        {            
-            // Add task to the TaskPool if enabled to run.
-            if (it->second.is_enabled())
-                _tp.run([t = it->second.clone(), this] { t->invoke(); });
-            
+        {
+            if(it->second.is_enabled())
+            {
+                _tp.run([t = it->second.clone()]
+                {
+                    t->invoke(); 
+                }, it->second.hash());
+            }
+
             // Keep track of recursive tasks if task has a valid interval value.
             if (it->second.interval().has_value())
-                recursive_tasks.emplace(ssts::clock::now() + it->second.interval().value(), std::move(it->second));
+            {
+                // Make sure that next_start_time is greater than ssts::clock::now(), 
+                // otherwise the task is scheduled in the past.
+                // Increment next_start_time starting from current start_time with a step equal to t->interval().value()
+                // in order to keep the scheduling with a fixed sample rate.
+                auto interval = it->second.interval().value();
+                auto next_start_time = it->first + interval;
+                while(ssts::clock::now() > next_start_time)
+                    next_start_time += interval;
+
+                recursive_tasks.emplace(std::move(next_start_time), std::move(it->second));
+            }
         }
 
         // Erase tasks already processed.
         _tasks.erase(_tasks.begin(), last_task_to_process);
-        
+
         // Re-schedule recursive tasks.
         _tasks.merge(recursive_tasks);
     }

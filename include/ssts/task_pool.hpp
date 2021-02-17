@@ -12,6 +12,7 @@
 #include <thread>
 #include <future>
 #include <condition_variable>
+#include <unordered_set>
 
 #include "task.hpp"
 
@@ -34,6 +35,7 @@ public:
      */
     explicit task_pool(const unsigned int num_threads = std::thread::hardware_concurrency())
     : _is_running{ true }
+    , _is_duplicate_allowed{ true }
     {
         const auto thread_count = std::clamp(num_threads, 1u, std::thread::hardware_concurrency());
         _threads.reserve(thread_count);
@@ -100,27 +102,39 @@ public:
      * Returns the result of the asynchronous computation.
      */
     template<typename FunctionType>
-    auto run(FunctionType&& f)
+    auto run(FunctionType&& f, const std::optional<size_t>& task_hash = std::nullopt)
     {
         using result_type = std::invoke_result_t<std::decay_t<FunctionType>>;
-
         std::packaged_task<result_type()> task(std::forward<FunctionType>(f));
         std::future<result_type> future = task.get_future();
 
         std::unique_lock lock(_task_mtx);
-        _task_queue.emplace(std::move(task));
+
+        if(!_is_duplicate_allowed && is_already_running(task_hash))
+            return future;
+
+        auto hash = task_hash.value_or(0);
+        _task_queue.emplace(hash, std::move(task));
         lock.unlock();
         _task_cv.notify_one();
 
         return future;
     }
 
+    void set_duplicate_allowed(bool is_allowed) 
+    {
+        _is_duplicate_allowed = is_allowed; 
+    }
+
 private:
     std::atomic_bool _is_running;
+    std::atomic_bool _is_duplicate_allowed;
     std::vector<std::thread> _threads;
-    std::queue<ssts::task> _task_queue;
+    std::queue<std::pair<size_t, ssts::task>> _task_queue;
+    std::unordered_set<size_t> _active_hash_set;
     std::condition_variable _task_cv;
     std::mutex _task_mtx;
+    std::mutex _hash_mtx;
 
     void worker_thread()
     {
@@ -132,12 +146,35 @@ private:
             if (!_is_running)
                 return;
 
-            auto task = std::move(_task_queue.front());
+            auto task = std::move(_task_queue.front().second);
+            auto hash = _task_queue.front().first;
+
+            if(!_is_duplicate_allowed)
+            {
+                std::scoped_lock hash_lock(_hash_mtx);
+                _active_hash_set.insert(hash);
+            }
+
             _task_queue.pop();
 
             lock.unlock();
             task();
+
+            if(!_is_duplicate_allowed)
+            {
+                std::scoped_lock hash_lock(_hash_mtx);
+                if (_active_hash_set.find(hash) != _active_hash_set.end())
+                    _active_hash_set.erase(hash);
+            }
         }
+    }
+
+    bool is_already_running(const std::optional<size_t>& opt_hash)
+    {
+        if (!opt_hash.has_value())
+            return false;
+
+        return _active_hash_set.find(opt_hash.value()) != _active_hash_set.end();
     }
 };
 
