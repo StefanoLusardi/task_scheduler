@@ -3,21 +3,16 @@
 
 ssts::task_scheduler s(4);
 
-void t_recursive();
-
-void recursive(const std::string& str)
+void t_recursive_bind(const std::string& str)
 {
     std::cout << str << std::endl;
-    t_recursive();
+    s.in("bind", 1s, std::bind(&t_recursive_bind, str));
 }
 
-void t_recursive()
+void t_recursive_lambda(const std::string& str)
 {
-    s.in("RecursiveTask", 1s, std::bind(&recursive, "I'm a Recursive Task!"));
-    // while(!s.is_scheduled("RecursiveTask"))
-    //     std::this_thread::sleep_for(10ms);
-    
-    // std::cout << std::boolalpha << s.is_scheduled("RecursiveTask") << std::endl;
+    std::cout << str << std::endl;
+    s.in("lambda", 1s, [str]{ t_recursive_lambda(str); });
 }
 
 int main()
@@ -25,9 +20,14 @@ int main()
     ssts::utils::log(ssts::version());
     ssts::utils::timer t;
 
-    t_recursive();
+    t_recursive_bind("BIND - I'm a Recursive Task!");
+    std::this_thread::sleep_for(10s);
+    s.remove_task("bind");
 
-    std::this_thread::sleep_for(20s);
+    t_recursive_lambda("LAMBDA - I'm a Recursive Task!");
+    std::this_thread::sleep_for(10s);
+    s.remove_task("lambda");
+
     ssts::utils::log("Task Scheduler finished");
     return 0;
 }
