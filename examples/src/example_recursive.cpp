@@ -21,12 +21,12 @@ int main()
     ssts::utils::timer t;
 
     t_recursive_bind("BIND - I'm a Recursive Task!");
-    std::this_thread::sleep_for(10s);
-    s.remove_task("bind");
-
     t_recursive_lambda("LAMBDA - I'm a Recursive Task!");
-    std::this_thread::sleep_for(10s);
-    s.remove_task("lambda");
+
+    std::this_thread::sleep_for(5s);
+
+    // s.remove_task("bind");
+    // s.remove_task("lambda");
 
     ssts::utils::log("Task Scheduler finished");
     return 0;

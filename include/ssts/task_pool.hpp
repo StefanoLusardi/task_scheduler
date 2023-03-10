@@ -6,6 +6,7 @@
 #pragma once
 
 #include <atomic>
+#include <optional>
 #include <vector>
 #include <queue>
 #include <mutex>

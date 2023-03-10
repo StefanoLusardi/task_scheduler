@@ -1,0 +1,13 @@
+---
+Checks: > 
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  modernize-*',
+  -cppcoreguidelines-avoid-non-const-global-variables
+  
+WarningsAsErrors: true
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+FormatStyle:     google
+...

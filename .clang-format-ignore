@@ -1,0 +1,15 @@
+﻿**/.git
+**/.vscode
+**/.venv
+**/.cache
+**/.clangd
+**/build
+**/install
+**/coverage
+**/results
+**/unit_tests
+**/profiles
+**/logs
+**/ci
+**/cmake
+**/scripts

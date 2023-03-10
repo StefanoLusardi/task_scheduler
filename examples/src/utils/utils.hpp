@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 #define ENABLE_PRINT_TIMING
 
@@ -89,7 +90,7 @@ protected:
             unsigned i = 0; 
             while(is_running) 
             {
-                std::cout << "." << i++ << std::endl;
+                spdlog::info("[{}]", i++);
                 std::this_thread::sleep_for(1s);
             }
         });

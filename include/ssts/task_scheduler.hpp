@@ -6,11 +6,14 @@
 #pragma once
 
 #include <chrono>
+#include <condition_variable>
+#include <future>
 #include <map>
 #include <unordered_set>
 #include <optional>
 #include <string>
 #include <functional>
+#include <iostream>
 
 #include "task.hpp"
 #include "task_pool.hpp"
@@ -78,6 +81,7 @@ private:
         schedulable_task(schedulable_task&) = delete;
         schedulable_task(const schedulable_task&) = delete;
         schedulable_task& operator=(const schedulable_task&) = delete;
+        schedulable_task& operator=(schedulable_task&&) = delete;
         
         schedulable_task(schedulable_task&& other) noexcept 
         : _task{std::move(other._task)}
@@ -126,34 +130,15 @@ public:
     : _tp{num_threads}
     , _is_running{true}
     , _is_duplicate_allowed{ true }
-    { 
-        _scheduler_thread = std::thread([this] {
-            while (_is_running)
-            {
-                std::this_thread::yield();
-                std::unique_lock lock(_update_tasks_mtx);
-
-                if (_tasks.empty())
-                {
-                    // _update_tasks_cv.wait(lock, [this] { return !_is_running || (!_tasks.empty() && ssts::clock::now() >= _tasks.begin()->first); });
-                    _update_tasks_cv.wait(lock, [this] { return !_is_running || !_tasks.empty(); });
-                }
-                else
-                {
-                    if (!_update_tasks_cv.wait_until(
-                            lock, _tasks.begin()->first, [this] { return !_is_running || (!_tasks.empty() && ssts::clock::now() >= _tasks.begin()->first); }))
-                    {
-                        std::this_thread::yield();
-                    }
-                }
-
-                if (!_is_running)
-                    return;
-
-                update_tasks();
-            }
-        });
+    {
     }
+
+    task_scheduler(task_scheduler&) = delete;
+    task_scheduler(const task_scheduler&) = delete;
+    task_scheduler& operator=(const task_scheduler&) = delete;
+
+    task_scheduler(task_scheduler&&) noexcept = delete;
+    task_scheduler& operator=(task_scheduler&&) = delete;
 
     /*!
      * \brief Destructor.
@@ -164,6 +149,51 @@ public:
     {
         if (_is_running)
             stop();
+    }
+
+    /*!
+     * \brief Start running tasks.
+     *
+     * This function starts the task_scheduler worker thread.
+     * The function is guaranteed to return after the scheduler thread is started.
+     */
+    void start()
+    {
+        std::promise<void> thread_started_notifier;
+        std::future<void> thread_started_watcher = thread_started_notifier.get_future();
+
+        _scheduler_thread = std::thread([this, &thread_started_notifier] 
+        {
+            thread_started_notifier.set_value();
+
+            while (_is_running)
+            {
+                std::unique_lock lock(_update_tasks_mtx);
+
+                if (_tasks.empty())
+                {
+                    _update_tasks_cv.wait(lock, [this]{ return !_is_running || !_tasks.empty(); });
+                    std::cout << "EMPTY" << std::endl;
+                }
+                else
+                {
+                    // If the last enqueued task is the first to be scheduled _next_task_timepoint must be updated to its timepoint.
+                    // Check if the condition variable _update_tasks_cv is triggered because of a timeout (i.e. _next_task_timepoint has just been reached),
+                    // or because of a new notification (i.e. a new task has been enqueued and the condition variable is notified): 
+                    // in case of a timeout proceed with update_tasks(), otherwise continue.
+                    _next_task_timepoint = _tasks.begin()->first;
+                    if (_update_tasks_cv.wait_until(lock, _next_task_timepoint.load()) == std::cv_status::no_timeout)
+                        continue;
+                }
+
+                if (!_is_running)
+                    return;
+
+                update_tasks();
+            }
+        });
+
+        thread_started_watcher.wait();
     }
 
     /*!
@@ -455,6 +485,7 @@ private:
     std::condition_variable _update_tasks_cv;
     std::mutex _update_tasks_mtx;
     std::hash<std::string> _hasher;
+    std::atomic<ssts::clock::time_point> _next_task_timepoint;
 
     void add_task(ssts::clock::time_point&& timepoint, schedulable_task&& st)
     {
@@ -468,44 +499,17 @@ private:
                 return;
 
             _tasks.emplace(std::move(timepoint), std::move(st));
+            _next_task_timepoint = _tasks.begin()->first;
         }
+
         _update_tasks_cv.notify_one();
-    }
 
-/*
-    void update_tasks()
-    {
-        // All the tasks whose start time is before ssts::clock::now(),
-        // (which are the ones from _tasks.begin(), up to last_task_to_process)
-        // can be enqueued in the TaskPool.
-        auto last_task_to_process = _tasks.upper_bound(ssts::clock::now());
-        for (auto it = _tasks.begin(); it != last_task_to_process; it++)
-        {
-            _tp.run([t = it->second.clone(), start_time = it->first, this] 
-            { 
-                if(t->is_enabled())
-                    t->invoke();
-
-                if (t->interval().has_value())
-                {
-                    // Make sure that next_start_time is greater than ssts::clock::now(), 
-                    // otherwise the task is scheduled in the past.
-                    // Increment next_start_time starting from current start_time with a step equal to t->interval().value()
-                    // in order to keep the scheduling with a fixed sample rate.
-                    it->second.set_enabled(false);
-                    auto interval = it->second.interval().value();
-                    auto next_start_time = it->first + interval;
-                    while(ssts::clock::now() > next_start_time)
-                        next_start_time += interval;
-                    
-                    add_task(std::move(next_start_time), std::move(*t));
-                }
-            });
-        }
-        // Erase tasks already processed.
-        _tasks.erase(_tasks.begin(), last_task_to_process);
+        std::string str = "ADDED: " 
+            + std::to_string(st.hash().value_or(std::hash<std::string>{}(""))) 
+            + " - NEXT_TIMEPOINT: " 
+            + std::to_string(_next_task_timepoint.load().time_since_epoch().count());
+        std::cout << str << std::endl;
     }
-*/
 
     void update_tasks()
     {
@@ -532,7 +536,7 @@ private:
                 // otherwise the task is scheduled in the past.
                 // Increment next_start_time starting from current start_time with a step equal to t->interval().value()
                 // in order to keep the scheduling with a fixed sample rate.
-                auto interval = it->second.interval().value();
+                const auto interval = it->second.interval().value();
                 auto next_start_time = it->first + interval;
                 while(ssts::clock::now() > next_start_time)
                     next_start_time += interval;

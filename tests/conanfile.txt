@@ -1,0 +1,9 @@
+[requires]
+gtest/1.13.0
+
+[generators]
+cmake_find_package
+
+[options]
+
+[imports]

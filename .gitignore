@@ -1,5 +1,12 @@
-/build*
-/install*
-/.git
-/.vs*
-CMakeSettings.json
+**/.venv
+**/build
+**/install
+**/coverage
+**/results
+**/unit_tests
+**/profiles
+**/logs
+**/.cache
+**/.clangd
+**/launch.dev.json
+**/compile_commands.json

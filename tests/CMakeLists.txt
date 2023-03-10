@@ -1,18 +1,7 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+set(TARGET_NAME ssts_tests)
 
-set(PROJECT_NAME ssts_tests)
-
-include(DownloadGoogleTest)
-include(GoogleTest)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
-
-add_executable(${PROJECT_NAME}
-	ssts_tests.cpp
+set(TARGET_SRC
+	src/main.cpp
 	src/test_at.cpp
 	src/test_disable.cpp
 	src/test_every.cpp
@@ -22,9 +11,16 @@ add_executable(${PROJECT_NAME}
 	src/test_stop.cpp
 	src/test_duplicated.cpp
 	src/test_pool.cpp
-	# src/test_sanitizer.cpp
+	src/scheduler_fixture.hpp
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ssts gtest)
+find_package(GTest)
+include(GoogleTest)
+add_executable(${TARGET_NAME})
+target_sources(${TARGET_NAME} PRIVATE ${TARGET_SRC})
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_17)
+target_link_libraries(${TARGET_NAME} PRIVATE GTest::GTest PRIVATE ssts::ssts)
 
-gtest_discover_tests(${PROJECT_NAME})
+gtest_discover_tests(${TARGET_NAME})
+
+set(CMAKE_LINK_WHAT_YOU_USE True)

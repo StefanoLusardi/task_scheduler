@@ -11,16 +11,17 @@ class SchedulerTest : public ::testing::Test
 protected:
     SchedulerTest() { }
 
-    virtual ~SchedulerTest() { }
+    ~SchedulerTest() override { }
 
-    virtual void SetUp() override { }
+    void SetUp() override { }
 
-    virtual void TearDown() override { }
+    void TearDown() override { }
 
     void InitScheduler(const unsigned int n_threads)
     {
         log("Initializing Scheduler");
         s = std::make_unique<ssts::task_scheduler>(n_threads);
+        s->start();
         log("Scheduler initialized with", n_threads, "threads");
     }
 

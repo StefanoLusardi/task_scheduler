@@ -55,7 +55,7 @@ It is possible to *install* the library using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_INSTALL_LIBRARY=ON -DCMAKE_INSTALL_PREFIX=</install/folder/path> ..
+$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_INSTALL_LIBRARY=True -DCMAKE_INSTALL_PREFIX=</install/folder/path> ..
 $ cmake --build . --config <Debug|Release> --target install 
 ```
 
@@ -147,6 +147,9 @@ MacOS X Catalina 10.15 - GCC 9.3
 // Create a Task Scheduler instance
 ts::task_scheduler s(2);
 
+// Start Task Scheduler
+s.start()
+
 // Spawn a one-shot task in 5 seconds
 s.in(5s, []{std::cout << "Hello!" << std::endl;});
 ```
@@ -209,7 +212,7 @@ It is possible to build the docs from CMake (*Doxygen*, *Breathe* and *Sphinx* a
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -G<GENERATOR> -DSSTS_BUILD_DOCS=ON ..
+$ cmake -G<GENERATOR> -DSSTS_BUILD_DOCS=True ..
 $ cmake --build . 
 ```
 
@@ -219,7 +222,7 @@ It is possible to build and install the *examples* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_EXAMPLES=ON -DSSTS_INSTALL_LIBRARY=ON -DSSTS_INSTALL_EXAMPLES=ON ..
+$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_EXAMPLES=True -DSSTS_INSTALL_LIBRARY=True -DSSTS_INSTALL_EXAMPLES=True ..
 $ cmake --build . --config <Debug|Release>
 ```
 
@@ -231,6 +234,6 @@ It is possible to build the *tests* using:
 ```console
 $ git clone https://github.com/stefanolusardi/task_scheduler.git
 $ cd ssts && mkdir build && cd build
-$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_TESTS=ON ..
+$ cmake -G<GENERATOR> -DCMAKE_BUILD_TYPE=<Debug|Release> -DSSTS_BUILD_TESTS=True ..
 $ cmake --build . --config <Debug|Release>
 ```

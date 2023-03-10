@@ -1,4 +1,4 @@
-#include "test_scheduler.hpp"
+#include "scheduler_fixture.hpp"
 
 namespace ssts
 {
