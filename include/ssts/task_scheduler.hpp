@@ -13,7 +13,6 @@
 #include <optional>
 #include <string>
 #include <functional>
-#include <iostream>
 
 #include "task.hpp"
 #include "task_pool.hpp"
@@ -173,7 +172,6 @@ public:
                 if (_tasks.empty())
                 {
                     _update_tasks_cv.wait(lock, [this]{ return !_is_running || !_tasks.empty(); });
-                    std::cout << "EMPTY" << std::endl;
                 }
                 else
                 {
@@ -447,7 +445,7 @@ public:
     }
 
     template <typename TaskFunction>
-    auto every(ssts::clock::duration&& interval, TaskFunction &&func)
+    void every(ssts::clock::duration&& interval, TaskFunction &&func)
     {
         auto task = [t = std::forward<TaskFunction>(func)] 
         {
@@ -457,7 +455,7 @@ public:
     }
 
     template <typename TaskFunction, typename... Args>
-    auto every(ssts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
+    void every(ssts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
     {
         auto task = [t = std::forward<TaskFunction>(func), params = std::make_tuple(std::forward<Args>(args)...)] 
         {
@@ -467,7 +465,7 @@ public:
     }
 
     template <typename TaskFunction, typename... Args>
-    auto every(std::string&& task_id, ssts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
+    void every(std::string&& task_id, ssts::clock::duration&& interval, TaskFunction &&func, Args &&... args)
     {
         auto task = [t = std::forward<TaskFunction>(func), params = std::make_tuple(std::forward<Args>(args)...)] 
         {
@@ -495,20 +493,14 @@ private:
         {
             std::scoped_lock lock(_update_tasks_mtx);
 
-            if (!_is_duplicate_allowed && already_exists(st.hash()))
-                return;
+            // if (!_is_duplicate_allowed && already_exists(st.hash()))
+            //     return;
 
             _tasks.emplace(std::move(timepoint), std::move(st));
             _next_task_timepoint = _tasks.begin()->first;
         }
 
         _update_tasks_cv.notify_one();
-
-        std::string str = "ADDED: " 
-            + std::to_string(st.hash().value_or(std::hash<std::string>{}(""))) 
-            + " - NEXT_TIMEPOINT: " 
-            + std::to_string(_next_task_timepoint.load().time_since_epoch().count());
-        std::cout << str << std::endl;
     }
 
     void update_tasks()
@@ -523,10 +515,7 @@ private:
         {
             if(it->second.is_enabled())
             {
-                _tp.run([t = it->second.clone()]
-                {
-                    t->invoke(); 
-                }, it->second.hash());
+                _tp.run([t = it->second.clone()] { t->invoke(); }, it->second.hash());
             }
 
             // Keep track of recursive tasks if task has a valid interval value.
@@ -536,12 +525,13 @@ private:
                 // otherwise the task is scheduled in the past.
                 // Increment next_start_time starting from current start_time with a step equal to t->interval().value()
                 // in order to keep the scheduling with a fixed sample rate.
-                const auto interval = it->second.interval().value();
-                auto next_start_time = it->first + interval;
-                while(ssts::clock::now() > next_start_time)
-                    next_start_time += interval;
+                const auto task_interval = it->second.interval().value();
+                auto task_next_start_time = it->first + task_interval;
+                const auto now = ssts::clock::now();
+                while(now > task_next_start_time)
+                    task_next_start_time += task_interval;
 
-                recursive_tasks.emplace(std::move(next_start_time), std::move(it->second));
+                recursive_tasks.emplace(std::move(task_next_start_time), std::move(it->second));
             }
         }
 

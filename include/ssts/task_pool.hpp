@@ -175,6 +175,7 @@ private:
         if (!opt_hash.has_value())
             return false;
 
+        std::unique_lock lock(_hash_mtx);
         return _active_hash_set.find(opt_hash.value()) != _active_hash_set.end();
     }
 };
