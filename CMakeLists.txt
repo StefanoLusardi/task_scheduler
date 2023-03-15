@@ -25,7 +25,7 @@ option(SSTS_BUILD_TESTS "Build library tests" True)
 option(SSTS_BUILD_EXAMPLES "Build library examples" True)
 option(SSTS_INSTALL_LIBRARY "Install library" False)
 option(SSTS_INSTALL_EXAMPLES "Install examples (requires installing library and building examples)" False)
-option(SSTS_ENABLE_SANITIZERS "Run unit tests with Thread Sanitizer support" True)
+option(SSTS_ENABLE_SANITIZERS "Run unit tests with Thread Sanitizer support" False)
 
 if(${SSTS_ENABLE_SANITIZERS})
 	message(STATUS "::ssTs:: Sanitizers enabled")

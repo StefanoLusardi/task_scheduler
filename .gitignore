@@ -5,6 +5,8 @@
 **/results
 **/unit_tests
 **/profiles
+**/memcheck
+**/callgrind
 **/logs
 **/.cache
 **/.clangd

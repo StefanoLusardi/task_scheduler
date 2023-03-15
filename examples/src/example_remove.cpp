@@ -12,19 +12,16 @@ int main()
     
     ssts::utils::timer t;
     
-    s.every("Foo"s, 2s, []{ spdlog::info("Foo"); });
+    s.in("Foo"s, 2s, []{ spdlog::info("Foo"); });
+    s.in("Bar"s, 3s, []{ spdlog::info("Bar"); });
 
-    s.every("Bar"s, 2s, []{ spdlog::info("Bar"); });
+    spdlog::info("before remove");
+    std::this_thread::sleep_for(2s);
 
-    s.in(1ms, []{ spdlog::info("one millis!"); });
+    s.remove_task("foo"s); // Wrong task ID
+    s.remove_task("Bar"s);
 
-    spdlog::info("before update");
-    std::this_thread::sleep_for(3s);
-
-    s.update_interval("foo"s, 100ms); // Wrong task ID
-    s.update_interval("Bar"s, 100ms);
-
-    spdlog::info("after update");
+    spdlog::info("after remove");
     std::this_thread::sleep_for(2s);
 
     spdlog::info("Task Scheduler shutdown");

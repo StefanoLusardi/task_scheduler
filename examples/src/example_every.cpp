@@ -1,14 +1,11 @@
 #include <ssts/task_scheduler.hpp>
-#include <thread>
-
 #include <spdlog/spdlog.h>
-
 #include "utils/utils.hpp"
 
 int main() 
 {
-    ssts::utils::log(ssts::version());
     spdlog::set_pattern("[%H:%M:%S.%e] %v");
+    spdlog::info(ssts::version());
 
     ssts::task_scheduler s(8);
     s.set_duplicate_allowed(false);
@@ -36,9 +33,9 @@ int main()
 
     std::this_thread::sleep_for(10s);
     
-    ssts::utils::log("Task Scheduler shutdown");
+    spdlog::info("Task Scheduler shutdown");
     s.stop();
 
-    ssts::utils::log("Task Scheduler finished");
+    spdlog::info("Task Scheduler finished");
     return 0;
 }

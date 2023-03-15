@@ -9,6 +9,7 @@
 #include <condition_variable>
 #include <future>
 #include <map>
+#include <type_traits>
 #include <unordered_set>
 #include <optional>
 #include <string>
@@ -351,15 +352,26 @@ public:
      */
     bool update_interval(const std::string& task_id, ssts::clock::duration interval) 
     {
-        std::scoped_lock lock(_update_tasks_mtx);
+        std::unique_lock lock(_update_tasks_mtx);
 
-        if (auto task = get_task_iterator(task_id); task != _tasks.end() 
-            && task->second.interval().has_value())
+        if (auto task_iterator = get_task_iterator(task_id); task_iterator != _tasks.end() && task_iterator->second.interval().has_value())
         {
-            task->second.set_interval(interval);
+            const auto task_interval = task_iterator->second.interval().value();
+            auto task_next_start_time = task_iterator->first - task_interval;
+
+            const auto now = ssts::clock::now();
+            while(now > task_next_start_time)
+                task_next_start_time += interval;
+
+            task_iterator->second.set_interval(interval);
+            _tasks.emplace(std::move(task_next_start_time), std::move(task_iterator->second));
+            _tasks.erase(task_iterator);
+            lock.unlock();
+            
+            _update_tasks_cv.notify_one();
             return true;
         }
-
+        
         return false;
     }
 
@@ -493,11 +505,10 @@ private:
         {
             std::scoped_lock lock(_update_tasks_mtx);
 
-            // if (!_is_duplicate_allowed && already_exists(st.hash()))
-            //     return;
+            if (already_exists(st.hash()))
+                return;
 
             _tasks.emplace(std::move(timepoint), std::move(st));
-            _next_task_timepoint = _tasks.begin()->first;
         }
 
         _update_tasks_cv.notify_one();
